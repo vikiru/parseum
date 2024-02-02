@@ -2,9 +2,8 @@ document
 	= elements: (list / paragraph / emptyLine / header)+ { return elements; }
     
 list
-  = t:([0-9]? "." " "? text ("\n" / !.))+ {
+  = t:([0-9]? "."+ " "? text ("\n" / !.))+ {
       return {
-      t: t,
         type: 'ol',
         original: t.flat().join(''),
         html: '<ol>' + t.map(([num, dot, space, text]) => '<li>' + text + '</li>').join('') + '</ol>'
@@ -13,9 +12,8 @@ list
   t:([-]? " "? text ("\n" / !.))+ {
       return {
         type: 'ul',
-        t: t,
-        original: t.flat().join(''),
-        html: '<ul>' + t.map(([dash, space, text, newLine]) => '<li>' + text + '</li>').join('') + '</ul>'
+        original: t.map(([dash, space, text, newLine = '']) => dash + space + text + newLine).join(''),
+        html: '<ul>' + t.map(([dash, space, text, newLine = '']) => '<li>' + text + '</li>').join('') + '</ul>'
     }}
     
 header 
@@ -33,9 +31,19 @@ emptyLine
   = t: "\n" { return { original: t, html: '<br/>'} }
 
 text
-  = chars:[a-zA-Z0-9]+ { return chars.join(''); }
-  / bolditalic: "**" chars:[a-zA-Z0-9]+ "**" { return '<em><strong>' + chars.join('') + '</strong></em>'; }
-  / bold: "**" chars:[a-zA-Z0-9.]+ "**" { return '<strong>' + chars.join('') + '</strong>'; }
-  / italic: "*" chars:[a-zA-Z0-9.]+ "*" { return '<em>' + chars.join('') + '</em>'; }
-  / code: "`" chars:[a-zA-Z0-9.]+ "`" { return '<code>' + chars.join('') + '</code>'; }
-  / strikethrough: "~~" chars:[a-zA-Z0-9.]+ "~~" { return '<del>' + chars.join('') + '</del>'; }
+  = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough)+ { return chars.join('').replaceAll(',', ''); }
+
+bold
+ = bold: "**" chars:[a-zA-Z0-9.]+ "**" { return '<strong>' + chars.join('') + '</strong>'; }
+
+code
+ = code: "`" chars:[a-zA-Z0-9.]+ "`" { return '<code>' + chars.join('') + '</code>'; }
+ 
+italic
+ = italic: "*" chars:[a-zA-Z0-9.]+ "*" { return '<em>' + chars.join('') + '</em>'; }
+ 
+bolditalic
+ = bolditalic: "***" chars:[a-zA-Z0-9]+ "***" { return '<em><strong>' + chars.join('') + '</strong></em>'; }
+ 
+strikethrough
+ = strikethrough: "~~" chars:[a-zA-Z0-9.]+ "~~" { return '<del>' + chars.join('') + '</del>'; }
