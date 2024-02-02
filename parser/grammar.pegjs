@@ -11,3 +11,6 @@ text
   / bolditalic: "**" chars:[a-zA-Z0-9]+ "**" { return '<em><strong>' + chars.join('') + '</strong></em>'; }
   / bold: "**" chars:[a-zA-Z0-9]+ "**" { return '<strong>' + chars.join('') + '</strong>'; }
   / italic: "*" chars:[a-zA-Z0-9]+ "*" { return '<em>' + chars.join('') + '</em>'; }
+  / code: "`" chars:[a-zA-Z0-0]+ "`" { return '<code>' + chars.join('') + '</code>'; }
+  / strikethrough: "~~" chars:[a-zA-Z0-9]+ "~~" { return '<del>' + chars.join('') + '</del>'; }
+  / newline: "\n" { return '<br>'; }
