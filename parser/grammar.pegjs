@@ -88,7 +88,7 @@ paragraph
   = t:(" "? text "\n"?)+ { return { original: t.map(([s, w]) => (s ? s : '') + w).join(''), html: '<p>' + t.map(([s, w]) => (s ? s : '') + w).join('') + '</p>' }; }
 
 emptyLine
-  = t: "\n" { return { original: '', html: ''} }
+  = t:("\n" / " ")+ { return { original: '', html: ''} }
   
 text
   = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough / emphasis / subScript / superScript )+ { return chars.join('').replaceAll(',', ''); }
