@@ -1,23 +1,6 @@
 document 
 	= elements: (list / paragraph / emptyLine / header)+ { return elements; }
 
-// PrevIndent, PrevType, NextIndent, NextType,
-// 0 0 0 0 => new list end list
-// 0 0 0 1 => new list, end list
-// 0 0 1 0 => new list, end list
-// 0 0 1 1 => new list, dont end
-// 0 1 0 0 => new list, end list
-// 0 1 0 1 => new list, end list
-// 0 1 1 0 => new list, end list
-// 0 1 1 1 => new list, dont end
-// 1 0 0 0 => new list, end list
-// 1 0 0 1 => new list, end list
-// 1 0 1 0 => new list, end list
-// 1 0 1 1 => new list, dont end
-// 1 1 0 0 => no new, end list
-// 1 1 0 1 => no new, end list
-// 1 1 1 0 => no new, end list
-// 1 1 1 1 => no new, dont end
 list
   = spaces:(" ")* t:item+ {
       const lists = t.map(item => item.updatedList).flat();
@@ -49,8 +32,8 @@ list
             html += list.html;
          }
          else if (dontEndList || list.subLists.length > 0){
-            list.html = list.html.replace(`</${listType}>`, '');
-            html += list.html;
+         	list.html = list.html.replace(`</${listType}>`, '');
+         	html += list.html;
          }
          else if (!noNewList && !dontEndList){
             html += list.html;
@@ -58,8 +41,7 @@ list
          const spaces = " ".repeat(listIndent * 4);
          original += spaces + list.original;
       })
-      return {  html: html, original: original, items: lists}
-    }
+      return {  html: html, original: original, items: lists }}
 
 item
   = spaces:(" ")* t:(orderedList / unorderedList) {
@@ -75,10 +57,9 @@ item
         remainderLists.forEach((list) => list.indentLevel = prevLevel);
         remainderLists.forEach((list) => updatedList.push(list));
      }
-      return {
-        updatedList
-    }}
-
+      return { updatedList: updatedList }; 
+     }
+ 
 orderedList
   = spaces:(" ")* t:([0-9] "." " " text ("\n" / !.))+ {
       const objs = [];
@@ -110,7 +91,7 @@ emptyLine
   = t: "\n" { return { original: t, html: '<br/>'} }
 
 text
-  = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough / emphasis )+ { return chars.join('').replaceAll(',', ''); }
+  = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough / emphasis / subScript / superScript )+ { return chars.join('').replaceAll(',', ''); }
 
 bold
  = bold: "**" chars:[a-zA-Z0-9.]+ "**" { return '<strong>' + chars.join('') + '</strong>'; }
@@ -129,3 +110,9 @@ strikethrough
 
 emphasis
  = emphasis: "==" chars:[a-zA-Z0-9.]+ "==" { return '<mark>' + chars.join('') + '</mark>'; }
+
+subScript 
+ = subScript: "~"  chars:[a-zA-Z0-9.]+ "~" { return '<sub>' + chars.join('') + '</sub>'; }
+ 
+superScript
+ = superScript: "^" chars:[a-zA-Z0-9.]+ "^" { return '<sup>' + chars.join('') + '</sup>'; }
