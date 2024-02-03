@@ -10,7 +10,8 @@ list
       const lists = t.map(item => item.updatedList).flat();
       let original = '';
       let html = '';
-      lists[0].html = lists[0].html.replace('</li>', '');
+      const firstList = lists[0];
+      firstList.html = lists[0].html.replace('</li>', '');
       lists.forEach((list) => list.subLists = lists.filter(l => list.indentLevel + 1 === l.indentLevel && lists.indexOf(l) > lists.indexOf(list)));
       const allLists = [];
       lists.forEach((list) => {
@@ -45,6 +46,7 @@ list
          const spaces = " ".repeat(listIndent * 4);
          original += spaces + list.original;
       })
+      html += `</li></${firstList.type}>`;
       return {  html: html, original: original }}
 
 item
@@ -124,9 +126,13 @@ superScript
 horizontalRule
  = rule:("---" "-"* "\n") { return { original: rule.join(''), html: '<hr>'} ; }
 
-// TODO: add better handling for links.
 link
  = link:(title:("[" [a-zA-Z0-9. ]+ "]")+ url:("(" [a-zA-Z0-9.]+ ")")+) { return { original: link.flat().join('')}; }
 
 comment 
  = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
+
+
+ // TODO: add better handling for links. Update original, html for all tags, and add  type to all.
+ // TODO: add rule for HTML tags : <tag></tag> and <tag/> or <tag />. In this case, original and html will be the same.
+ // TODO: combine markdown rules into a single rule seperated by /, then do document: markdown / html at the end.
