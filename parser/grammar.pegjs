@@ -110,7 +110,7 @@ emptyLine
   = t: "\n" { return { original: t, html: '<br/>'} }
 
 text
-  = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough)+ { return chars.join('').replaceAll(',', ''); }
+  = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough / emphasis )+ { return chars.join('').replaceAll(',', ''); }
 
 bold
  = bold: "**" chars:[a-zA-Z0-9.]+ "**" { return '<strong>' + chars.join('') + '</strong>'; }
@@ -126,3 +126,6 @@ bolditalic
  
 strikethrough
  = strikethrough: "~~" chars:[a-zA-Z0-9.]+ "~~" { return '<del>' + chars.join('') + '</del>'; }
+
+emphasis
+ = emphasis: "==" chars:[a-zA-Z0-9.]+ "==" { return '<mark>' + chars.join('') + '</mark>'; }
