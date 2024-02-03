@@ -153,11 +153,23 @@ emphasis
    return { type: 'mark', original: original, html: html};
  }
 
-subScript 
- = subScript: "~"  chars:[a-zA-Z0-9.]+ "~" { return '<sub>' + chars.join('') + '</sub>'; }
+subScript
+ = subScript:("~" words:text+ "~")+ {
+   const listFlattened = subScript.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '~');
+   const original = listFlattened.join('');
+   const html = '<sub>' + filtered.join('') + '</sub>';
+   return { type: 'sub', original: original, html: html};
+ }
  
 superScript
- = superScript: "^" chars:[a-zA-Z0-9.]+ "^" { return '<sup>' + chars.join('') + '</sup>'; }
+ = superScript:("^" words:text+ "^")+ {
+   const listFlattened = superScript.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '^');
+   const original = listFlattened.join('');
+   const html = '<sup>' + filtered.join('') + '</sup>';
+   return { type: 'sup', original: original, html: html};
+ }
 
 horizontalRule
  = rule:("---" "-"* "\n") { return { original: rule.join(''), html: '<hr>'} ; }
