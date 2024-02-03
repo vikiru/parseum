@@ -1,5 +1,5 @@
 document 
-	= elements: (list / paragraph / emptyLine / header)+ { return elements; }
+	= elements: (list  / paragraph / emptyLine / header / horizontalRule)+ { return elements; }
 
 list
   = spaces:(" ")* t:item+ {
@@ -88,8 +88,8 @@ paragraph
   = t:(" "? text "\n"?)+ { return { original: t.map(([s, w]) => (s ? s : '') + w).join(''), html: '<p>' + t.map(([s, w]) => (s ? s : '') + w).join('') + '</p>' }; }
 
 emptyLine
-  = t: "\n" { return { original: t, html: '<br/>'} }
-
+  = t: "\n" { return { original: '', html: ''} }
+  
 text
   = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough / emphasis / subScript / superScript )+ { return chars.join('').replaceAll(',', ''); }
 
@@ -116,3 +116,6 @@ subScript
  
 superScript
  = superScript: "^" chars:[a-zA-Z0-9.]+ "^" { return '<sup>' + chars.join('') + '</sup>'; }
+
+horizontalRule
+ = rule:("---" "-"* "\n") { return { original: rule.join(''), html: '<hr>'} ; }
