@@ -1,6 +1,6 @@
 document 
 	= elements: (list / paragraph / emptyLine / header)+ { return elements; }
-    
+
 list
   = spaces:(" ")* t:item+ {
       const list = t.map(({indentLevel, type, original, html}) => ({
@@ -54,30 +54,38 @@ list
 
 item
   = spaces:(" ")* t:(orderedList / unorderedList) {
+     const indentLevel = spaces.length / 4;
+     const prevLevel = indentLevel > 0 ? indentLevel - 1 : indentLevel;
+     const { lists } = t;
+     const updatedList = [];
+     if (lists && lists.length >= 1){
+        const firstItem = lists[0];
+        firstItem.indentLevel = indentLevel;
+        updatedList.push(firstItem);
+        const remainderLists = lists.slice(1);
+        remainderLists.forEach((list) => list.indentLevel = prevLevel);
+        remainderLists.forEach((list) => updatedList.push(list));
+     }
       return {
-        items: t,
-        indentLevel: typeof(spaces) === 'object' ? spaces.length / 4 : '',
-        type: t.type,
-        original: t.original,
-        html: t.html
+        updatedList
     }}
 
 orderedList
-  = t:([0-9]? "."+ " "? text ("\n" / !.))+ {
+  = spaces:(" ")* t:([0-9]? "."+ " "? text ("\n" / !.))+ {
+      const objs = [];
+      t.forEach((item) => objs.push({type: 'ol', original: item.flat().join(''), html: '<li>' + item[3] + '</li>' }));
       return {
-        type: 'ol',
-        original: t.flat().join(''),
-        html: '<ol>' + t.map(([num, dot, space, text]) => '<li>' + text + '</li>').join('') + '</ol>'
+       lists: objs
     }}
 
 unorderedList
   = t:([-]? " "? text ("\n" / !.))+ {
+      const objs = [];
+      t.forEach((item) => objs.push({type: 'ul', original: item.flat().join(''), html: '<li>' + item[2] + '</li>' }));
       return {
-        x: t,
-        type: 'ul',
-        original: t.map(([dash, space, text, newLine = '']) => dash + space + text + newLine).join(''),
-        html: '<ul>' + t.map(([dash, space, text, newLine = '']) => '<li>' + text.trim() + '</li>').join('') + '</ul>'
+       lists: objs
     }}
+    
     
 header 
   = h:"######" t:(" "+ text "\n"?)+ { return { type: 'h6', original: h + t.map(([s, w]) => s + w).join(''), html: '<h6>' + t.map(([s, w]) => s + w).join('').trim() + '</h6>' }; }
