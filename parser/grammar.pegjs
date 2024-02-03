@@ -131,22 +131,49 @@ text
   = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript)+ { 
      return chars;
   }
-
 code
  = code:("`" words:text+ "`")+ {
    const listFlattened = code.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '`');
-   const original = listFlattened.join('');
-   const html = '<code>' + filtered.join('') + '</code>';
-   return { type: 'code', original: original, html: html};
+   let original = '`';
+   let html = '<code>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   html += '</code>';
+   original += '`';
+   return { type: 'code', original: original, html: html, subItems: subItems};
  }
  
 italic
  = italic: ("*" words:text+ "*")+ {
    const listFlattened = italic.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '*');
-   const original = listFlattened.join('');
-   const html = '<em>' + filtered.join('') + '</em>';
+   let original = '*';
+   let html = '<em>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   html += '</em>';
+   original += '*';
    return { type: 'em', original: original, html: html};
  }
  
@@ -154,55 +181,140 @@ bold
  = bold:("**" words:text+ "**")+ {
    const listFlattened = bold.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '**');
-   const original = listFlattened.join('');
-   const html = '<strong>' + filtered.join('') + '</strong>';
-   return { type: 'strong', original: original, html: html};
+   let original = '**';
+   let html = '<strong>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   original += '**';
+   html += '</strong>';
+   return {  type: 'strong', original: original, html: html, subItems: subItems };
  }
  
 boldItalic
  = boldItalic:("***" words:text+ "***")+ {
    const listFlattened = boldItalic.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '***');
-   const original = listFlattened.join('');
-   const html = '<em><strong>' + filtered.join('') + '</strong></em>';
-   return { type: 'em strong', original: original, html: html};
+   let original = '***';
+   let html = '<em><strong>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   html += '</em></strong>';
+   original += '***';
+   return { type: 'em strong', original: original, html: html, subItems: subItems};
  }
  
 strikethrough
  = strikethrough:("~~" words:text+ "~~")+ {
    const listFlattened = strikethrough.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '~~');
-   const original = listFlattened.join('');
-   const html = '<del>' + filtered.join('') + '</del>';
-   return { type: 'del', original: original, html: html};
+   let original = '~~';
+   let html = '<del>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   html += '</del>';
+   original += '~~';
+   return { type: 'del', original: original, html: html, subItems: subItems};
  }
 
 emphasis
  = emphasis:("==" words:text+ "==")+ {
    const listFlattened = emphasis.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '==');
-   const original = listFlattened.join('');
-   const html = '<mark>' + filtered.join('') + '</mark>';
-   return { type: 'mark', original: original, html: html};
+    let original = '==';
+   let html = '<mark>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   html += '</mark>';
+   original += '==';
+   return { type: 'mark', original: original, html: html, subItems: subItems};
  }
 
 subScript
  = subScript:("~" words:text+ "~")+ {
    const listFlattened = subScript.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '~');
-   const original = listFlattened.join('');
-   const html = '<sub>' + filtered.join('') + '</sub>';
-   return { type: 'sub', original: original, html: html};
+   let original = '~';
+   let html = '<sub>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   html += '</sub>';
+   original += '~';
+   return { type: 'sub', original: original, html: html, subItems};
  }
  
 superScript
  = superScript:("^" words:text+ "^")+ {
    const listFlattened = superScript.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '^');
-   const original = listFlattened.join('');
-   const html = '<sup>' + filtered.join('') + '</sup>';
-   return { type: 'sup', original: original, html: html};
+   let original = '^';
+   let html = '<sup>';
+   const subItems = [];
+   filtered.forEach((item) => {
+      if (typeof(item) === 'object'){
+          original += item.original;
+          html += item.html;
+          subItems.push(item);
+      }
+      else if (typeof(item) === 'string'){
+         original += item;
+         html += item;
+      }
+   })
+   html += '</sup>';
+   original += '^';
+   return { type: 'sup', original: original, html: html, subItems: subItems};
  }
+
 
 horizontalRule
  = rule:("---" "-"* "\n") { return { original: rule.join(''), html: '<hr>'} ; }
@@ -220,5 +332,3 @@ comment
 // TODO: Fix nested list closing. Example input: '1. list 1\n    - list 2\n    - list 2\n1. k\n'
 // TODO: Handle lists with paragraphs or other elements within them and figure out how to handle continuation of list
 // TODO: Handle auto numbering of ordered lists.
-// TODO: Update text formatting to handle nested formatting. Update paragraphs to handle new paragraph vs paragraph seperated
-// by <br>
