@@ -88,13 +88,14 @@ header
     if (headerLevel > 6) { return { original: '' , html: '' }}
     let id = '';
 	if (customId.length === 3){
-      id = ` id="${customId[1].join('')}"`;
+      const idAttribute = customId[1].join('');
+      id = idAttribute !== '' ? ` id="${idAttribute}"` : '';
     }
     let startTag = `<h${headerLevel}` + id + '>';
     let html = startTag + words.flat().join('').replace('\n', `</h${headerLevel}>`);
     return { type: `h${headerLevel}`, original: h.join('') + words.flat().join(''), html: html }
   } 
-  
+
 paragraph
   = t:(" "? text "\n"?)+ { return { original: t.map(([s, w]) => (s ? s : '') + w).join(''), html: '<p>' + t.map(([s, w]) => (s ? s : '') + w).join('') + '</p>' }; }
 
