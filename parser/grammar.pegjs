@@ -1,5 +1,5 @@
-document 
-	= elements: (list  / paragraph / emptyLine / header / horizontalRule / comment / link )+ { 
+document
+	= elements: (list  / paragraph / emptyLine / header / horizontalRule / comment / link )+ {
      let lineNumber = 0;
      elements.forEach((ele) => ele.lineNumber = lineNumber += 1);
      return { elements }
@@ -83,18 +83,22 @@ unorderedList
     }}
     
 header 
-  = h:("#")* words:(" "+ text "\n"?)+ customId:("{" id:([^\}]*) "}")? {
-    const headerLevel = h.length;
-    if (headerLevel > 6) { return { original: '' , html: '' }}
+  = h:(("#")* text+)+ customId:("{" id:([^\}]*) "}" "\n")* {
+    const listFlattened = h.flat(Infinity);
+    const idFlattened = customId.flat(Infinity);
+    let original = listFlattened.join('') + idFlattened.join('');
+    const headerLevel = listFlattened.filter((h) => h === '#').length;
+    if (headerLevel > 6) { return { type: '', original: original, html: '' }} 
     let id = '';
-	if (customId.length === 3){
-      const idAttribute = customId[1].join('');
-      id = idAttribute !== '' ? ` id="${idAttribute}"` : '';
+    if (idFlattened.length > 0){
+        const excludeChars = ['{', '}', '\n'];
+        const filteredId = idFlattened.filter(i => !excludeChars.includes(i));
+        id = ` id="${filteredId.join('')}"`;
     }
-    let startTag = `<h${headerLevel}` + id + '>';
-    let html = startTag + words.flat().join('').replace('\n', `</h${headerLevel}>`);
-    return { type: `h${headerLevel}`, original: h.join('') + words.flat().join(''), html: html }
-  } 
+    const filtered = listFlattened.filter((h) => h !== '#');
+    const html = `<h${headerLevel}${id}>${filtered.join('')}</${headerLevel}>`;
+    return { type: 'header', headerLevel, original, html }
+  }
 
 paragraph
   = t:(" "? text+ "\n"?)+ {
