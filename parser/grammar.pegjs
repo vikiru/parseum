@@ -103,25 +103,37 @@ emptyLine
   = t:("\n" / " ")+ { return { original: '', html: ''} }
   
 text
-  = chars:([a-zA-Z0-9 ]+ / bolditalic / bold / italic / code / strikethrough / emphasis / subScript / superScript )+ { return chars.join('').replaceAll(',', ''); }
-
-bold
- = bold: "**" chars:[a-zA-Z0-9.]+ "**" { return '<strong>' + chars.join('') + '</strong>'; }
+  = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript )+ { return chars.join('').replaceAll(',', ''); }
 
 code
  = code: "`" chars:[a-zA-Z0-9.]+ "`" { return '<code>' + chars.join('') + '</code>'; }
  
 italic
  = italic: ("*" words:text+ "*")+ {
-   const italicFlattened = italic.flat(Infinity);
-   const filteredItalic = italicFlattened.filter((i) => i !== '*');
-   const original = italicFlattened.join('');
-   const html = '<em>' + filteredItalic.join('') + '</em>';
+   const listFlattened = italic.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '*');
+   const original = listFlattened.join('');
+   const html = '<em>' + filtered.join('') + '</em>';
    return { type: 'em', original: original, html: html};
  }
  
-bolditalic
- = bolditalic: "***" chars:[a-zA-Z0-9]+ "***" { return '<em><strong>' + chars.join('') + '</strong></em>'; }
+bold
+ = bold:("**" words:text+ "**")+ {
+   const listFlattened = bold.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '**');
+   const original = listFlattened.join('');
+   const html = '<strong>' + filtered.join('') + '</strong>';
+   return { type: 'strong', original: original, html: html};
+ }
+ 
+boldItalic
+ = boldItalic:("***" words:text+ "***")+ {
+   const listFlattened = boldItalic.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '*');
+   const original = listFlattened.join('');
+   const html = '<em><strong>' + filtered.join('') + '</strong></em>';
+   return { type: 'em strong', original: original, html: html};
+ }
  
 strikethrough
  = strikethrough: "~~" chars:[a-zA-Z0-9.]+ "~~" { return '<del>' + chars.join('') + '</del>'; }
