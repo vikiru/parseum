@@ -129,17 +129,29 @@ bold
 boldItalic
  = boldItalic:("***" words:text+ "***")+ {
    const listFlattened = boldItalic.flat(Infinity);
-   const filtered = listFlattened.filter((i) => i !== '*');
+   const filtered = listFlattened.filter((i) => i !== '***');
    const original = listFlattened.join('');
    const html = '<em><strong>' + filtered.join('') + '</strong></em>';
    return { type: 'em strong', original: original, html: html};
  }
  
 strikethrough
- = strikethrough: "~~" chars:[a-zA-Z0-9.]+ "~~" { return '<del>' + chars.join('') + '</del>'; }
+ = strikethrough:("~~" words:text+ "~~")+ {
+   const listFlattened = strikethrough.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '~~');
+   const original = listFlattened.join('');
+   const html = '<del>' + filtered.join('') + '</del>';
+   return { type: 'del', original: original, html: html};
+ }
 
 emphasis
- = emphasis: "==" chars:[a-zA-Z0-9.]+ "==" { return '<mark>' + chars.join('') + '</mark>'; }
+ = emphasis:("==" words:text+ "==")+ {
+   const listFlattened = emphasis.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '==');
+   const original = listFlattened.join('');
+   const html = '<mark>' + filtered.join('') + '</mark>';
+   return { type: 'mark', original: original, html: html};
+ }
 
 subScript 
  = subScript: "~"  chars:[a-zA-Z0-9.]+ "~" { return '<sub>' + chars.join('') + '</sub>'; }
