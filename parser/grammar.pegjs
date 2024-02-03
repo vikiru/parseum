@@ -1,6 +1,6 @@
 document 
 	= elements: (list  / paragraph / emptyLine / header / horizontalRule / comment / link )+ { 
-     var lineNumber = 0;
+     let lineNumber = 0;
      elements.forEach((ele) => ele.lineNumber = lineNumber += 1);
      return { elements }
     }
@@ -112,7 +112,13 @@ code
  = code: "`" chars:[a-zA-Z0-9.]+ "`" { return '<code>' + chars.join('') + '</code>'; }
  
 italic
- = italic: "*" chars:[a-zA-Z0-9.]+ "*" { return '<em>' + chars.join('') + '</em>'; }
+ = italic: ("*" words:text+ "*")+ {
+   const italicFlattened = italic.flat(Infinity);
+   const filteredItalic = italicFlattened.filter((i) => i !== '*');
+   const original = italicFlattened.join('');
+   const html = '<em>' + filteredItalic.join('') + '</em>';
+   return { type: 'em', original: original, html: html};
+ }
  
 bolditalic
  = bolditalic: "***" chars:[a-zA-Z0-9]+ "***" { return '<em><strong>' + chars.join('') + '</strong></em>'; }
@@ -139,8 +145,11 @@ comment
  = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
 
 
- // TODO: add better handling for links. Update original, html for all tags, and add  type to all.
- // TODO: add rule for HTML tags : <tag></tag> and <tag/> or <tag />. In this case, original and html will be the same.
- // TODO: combine markdown rules into a single rule seperated by /, then do document: markdown / html at the end.
-//  TODO: Fix nested list closing. Example input: '1. list 1\n    - list 2\n    - list 2\n1. k\n'
-
+// TODO: add better handling for links. Update original, html for all tags, and add  type to all.
+// TODO: add rule for HTML tags : <tag></tag> and <tag/> or <tag />. In this case, original and html will be the same.
+// TODO: combine markdown rules into a single rule seperated by /, then do document: markdown / html at the end.
+// TODO: Fix nested list closing. Example input: '1. list 1\n    - list 2\n    - list 2\n1. k\n'
+// TODO: Handle lists with paragraphs or other elements within them and figure out how to handle continuation of list
+// TODO: Handle auto numbering of ordered lists.
+// TODO: Update text formatting to handle nested formatting. Update paragraphs to handle new paragraph vs paragraph seperated
+// by <br>
