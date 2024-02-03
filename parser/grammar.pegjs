@@ -106,7 +106,13 @@ text
   = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript )+ { return chars.join('').replaceAll(',', ''); }
 
 code
- = code: "`" chars:[a-zA-Z0-9.]+ "`" { return '<code>' + chars.join('') + '</code>'; }
+ = code:("`" words:text+ "`")+ {
+   const listFlattened = code.flat(Infinity);
+   const filtered = listFlattened.filter((i) => i !== '`');
+   const original = listFlattened.join('');
+   const html = '<code>' + filtered.join('') + '</code>';
+   return { type: 'code', original: original, html: html};
+ }
  
 italic
  = italic: ("*" words:text+ "*")+ {
