@@ -1,5 +1,9 @@
 document 
-	= elements: (list  / paragraph / emptyLine / header / horizontalRule / link)+ { return elements; }
+	= elements: (list  / paragraph / emptyLine / header / horizontalRule / link)+ { 
+     var lineNumber = 0;
+     elements.forEach((ele) => ele.lineNumber = lineNumber += 1);
+     return { elements }
+    }
 
 list
   = spaces:(" ")* t:item+ {
@@ -41,7 +45,7 @@ list
          const spaces = " ".repeat(listIndent * 4);
          original += spaces + list.original;
       })
-      return {  html: html, original: original, items: lists }}
+      return {  html: html, original: original }}
 
 item
   = spaces:(" ")* t:(orderedList / unorderedList) {
