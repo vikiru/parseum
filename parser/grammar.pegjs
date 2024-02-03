@@ -83,13 +83,18 @@ unorderedList
     }}
     
 header 
-  = h:"######" t:(" "+ text "\n"?)+ { return { type: 'h6', original: h + t.map(([s, w]) => s + w).join(''), html: '<h6>' + t.map(([s, w]) => s + w).join('').trim() + '</h6>' }; }
-  / h:"#####" t:(" "+ text "\n"?)+ { return { type: 'h5', original: h + t.map(([s, w]) => s + w).join(''), html: '<h5>' + t.map(([s, w]) => s + w).join('').trim() + '</h5>' }; }
-  / h:"####" t:(" "+ text "\n"?)+ { return { type: 'h4', original: h + t.map(([s, w]) => s + w).join(''), html: '<h4>' + t.map(([s, w]) => s + w).join('').trim() + '</h4>' }; }
-  / h:"###" t:(" "+ text "\n"?)+ { return { type: 'h3', original: h + t.map(([s, w]) => s + w).join(''), html: '<h3>' + t.map(([s, w]) => s + w).join('').trim() + '</h3>' }; }
-  / h:"##" t:(" "+ text "\n"?)+ { return { type: 'h2', original: h + t.map(([s, w]) => s + w).join(''), html: '<h2>' + t.map(([s, w]) => s + w).join('').trim() + '</h2>' }; }
-  / h:"#" t:(" "+ text "\n"?)+ { return { type: 'h1', original: h + t.map(([s, w]) => s + w).join(''), html: '<h1>' + t.map(([s, w]) => s + w).join('').trim() + '</h1>' }; }
-
+  = h:("#")* words:(" "+ text "\n"?)+ customId:("{" id:([^\}]*) "}")? {
+    const headerLevel = h.length;
+    if (headerLevel > 6) { return { original: '' , html: '' }}
+    let id = '';
+	if (customId.length === 3){
+      id = ` id="${customId[1].join('')}"`;
+    }
+    let startTag = `<h${headerLevel}` + id + '>';
+    let html = startTag + words.flat().join('').replace('\n', `</h${headerLevel}>`);
+    return { type: `h${headerLevel}`, original: h.join('') + words.flat().join(''), html: html }
+  } 
+  
 paragraph
   = t:(" "? text "\n"?)+ { return { original: t.map(([s, w]) => (s ? s : '') + w).join(''), html: '<p>' + t.map(([s, w]) => (s ? s : '') + w).join('') + '</p>' }; }
 
@@ -136,3 +141,5 @@ comment
  // TODO: add better handling for links. Update original, html for all tags, and add  type to all.
  // TODO: add rule for HTML tags : <tag></tag> and <tag/> or <tag />. In this case, original and html will be the same.
  // TODO: combine markdown rules into a single rule seperated by /, then do document: markdown / html at the end.
+//  TODO: Fix nested list closing. Example input: '1. list 1\n    - list 2\n    - list 2\n1. k\n'
+
