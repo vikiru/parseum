@@ -1,5 +1,5 @@
 document 
-	= elements: (list  / paragraph / emptyLine / header / horizontalRule / link)+ { 
+	= elements: (list  / paragraph / emptyLine / header / horizontalRule / comment / link )+ { 
      var lineNumber = 0;
      elements.forEach((ele) => ele.lineNumber = lineNumber += 1);
      return { elements }
@@ -127,3 +127,6 @@ horizontalRule
 // TODO: add better handling for links.
 link
  = link:(title:("[" [a-zA-Z0-9. ]+ "]")+ url:("(" [a-zA-Z0-9.]+ ")")+) { return { original: link.flat().join('')}; }
+
+comment 
+ = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
