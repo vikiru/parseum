@@ -97,13 +97,40 @@ header
   } 
 
 paragraph
-  = t:(" "? text "\n"?)+ { return { original: t.map(([s, w]) => (s ? s : '') + w).join(''), html: '<p>' + t.map(([s, w]) => (s ? s : '') + w).join('') + '</p>' }; }
+  = t:(" "? text+ "\n"?)+ {
+     const paragraphItems = t.flat(Infinity).filter(i => i !== null);
+     const subItems = [];
+     let html = '<p>';
+     let original = '';
+     const length = paragraphItems.length;
+     for (const item of paragraphItems){
+        if (typeof(item) === 'object'){
+           subItems.push(item);
+           original += item.original;
+           html += item.html;
+        }
+        else if (typeof(item) === 'string'){
+           original += item;
+    	   if (item === '\n' && paragraphItems.indexOf(item) !== length - 1){
+              subItems.push({type: 'br', original: item, html: '<br>'});
+              html += item.replace('\n', '<br>');
+           }
+           else {
+              html += item.replace('\n', '');
+           }
+        }
+     }
+     html += '</p>';
+     return { original: original, html: html, subItems: subItems};
+  }
 
 emptyLine
-  = t:("\n" / " ")+ { return { original: '', html: ''} }
+  = t:("\n" / " ")+ { return { type: 'empty', original: '', html: ''} }
   
 text
-  = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript )+ { return chars.join('').replaceAll(',', ''); }
+  = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript)+ { 
+     return chars;
+  }
 
 code
  = code:("`" words:text+ "`")+ {
