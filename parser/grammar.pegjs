@@ -1,55 +1,62 @@
 document 
 	= elements: (list / paragraph / emptyLine / header)+ { return elements; }
 
+// PrevIndent, PrevType, NextIndent, NextType,
+// 0 0 0 0 => new list end list
+// 0 0 0 1 => new list, end list
+// 0 0 1 0 => new list, end list
+// 0 0 1 1 => new list, dont end
+// 0 1 0 0 => new list, end list
+// 0 1 0 1 => new list, end list
+// 0 1 1 0 => new list, end list
+// 0 1 1 1 => new list, dont end
+// 1 0 0 0 => new list, end list
+// 1 0 0 1 => new list, end list
+// 1 0 1 0 => new list, end list
+// 1 0 1 1 => new list, dont end
+// 1 1 0 0 => no new, end list
+// 1 1 0 1 => no new, end list
+// 1 1 1 0 => no new, end list
+// 1 1 1 1 => no new, dont end
 list
   = spaces:(" ")* t:item+ {
-      const list = t.map(({indentLevel, type, original, html}) => ({
-        indentLevel,
-        type,
-        original,
-        html
-      }))
-      let updatedHTML = '';
-      const unorderedLists = list.filter(list => list.type === 'ul');
-      const orderedLists = list.filter(list => list.type === 'ol');
-      let firstItem = [];
+      const lists = t.map(item => item.updatedList).flat();
       let original = '';
       let html = '';
-      let remainingItems = [];
-      if (list.length > 1 && (unorderedLists.length > 1 || orderedLists.length > 1) ){
-     	 firstItem = list[0];
-         const type = firstItem.type;
-         const endTag = `</li></${type}>`;
-         original = firstItem.original;
-         html = firstItem.html.replace(endTag, '').trim();
-         remainingItems = list.slice(1);
-         for (const [index, item] of remainingItems.entries()){
-             const itemType = item.type;
-             const itemIndent = item.indentLevel;
-             let itemOriginal = '';
-             for (let i = 0; i < itemIndent; i++){
-                  itemOriginal += "    ";
-             }
-             itemOriginal += item.original;
-             original += itemOriginal;
-             const nextItem = index + 1 < remainingItems.length ? remainingItems[index + 1] : null;
-             if (nextItem && nextItem.type === itemType) {
-                html += item.html.replace(`</${type}>`, '');
-                const nextStart = `<${nextItem.type}>`;
-                const nextEnd = `</${nextItem.type}>`;
-                let nextHTML = nextItem.html.replace(nextStart, '').replace(nextEnd, '').trim();
-                nextHTML = nextHTML.replace(`</${endTag}>`, '').trim();
-                html += nextHTML;
-                html += `</${type}>`;
-             }
-             else if (nextItem && nextItem.type !== itemType || index === remainingItems.length - 1 && itemType !== remainingItems[index - 1].type) {
-                  html += item.html;
-            }
-            }
-         html += endTag;
-      }
-      
-      return { original: original, html: html, children: remainingItems }
+      lists[0].html = lists[0].html.replace('</li>', '');
+      lists.forEach((list) => list.subLists = lists.filter(l => list.indentLevel + 1 === l.indentLevel && lists.indexOf(l) > lists.indexOf(list)));
+      const allLists = [];
+      lists.forEach((list) => {
+         const listType = list.type;
+         const listIndent = list.indentLevel;
+         const index = lists.indexOf(list);
+         const prevIndex = index - 1 > 0 ? index - 1 : -1;
+         const nextIndex = index + 1 < lists.length ? index + 1 : -1;
+         const prevItem = lists[prevIndex] || {};
+         const nextItem = lists[nextIndex] || {};
+         const prevIndent = prevItem.indentLevel;
+         const nextIndent = nextItem.indentLevel;
+         const prevType = prevItem.type;
+         const nextType = nextItem.type;
+         const prevIndentCheck = listIndent === prevIndent;
+         const nextIndentCheck = listIndent === nextIndent;
+         const prevTypeCheck = listType === prevType;
+         const nextTypeCheck = listType === nextType;
+         const noNewList = prevIndentCheck && prevTypeCheck;
+         const dontEndList = nextIndentCheck && nextTypeCheck;
+         if (noNewList){
+            list.html = list.html.replace(`<${listType}>`, '');
+            html += list.html;
+         }
+         else if (dontEndList || list.subLists.length > 0){
+            list.html = list.html.replace(`</${listType}>`, '');
+            html += list.html;
+         }
+         else if (!noNewList && !dontEndList){
+            html += list.html;
+         }
+      })
+      return {  html: html, original: original, items: lists}
     }
 
 item
@@ -71,21 +78,20 @@ item
     }}
 
 orderedList
-  = spaces:(" ")* t:([0-9]? "."+ " "? text ("\n" / !.))+ {
+  = spaces:(" ")* t:([0-9] "." " " text ("\n" / !.))+ {
       const objs = [];
-      t.forEach((item) => objs.push({type: 'ol', original: item.flat().join(''), html: '<li>' + item[3] + '</li>' }));
+      t.forEach((item) => objs.push({type: 'ol', original: item.flat().join(''), html: `<ol><li>${item[3]}</li></ol>` , subLists: []}));
       return {
        lists: objs
     }}
 
 unorderedList
-  = t:([-]? " "? text ("\n" / !.))+ {
+  = t:([-] " " text ("\n" / !.))+ {
       const objs = [];
-      t.forEach((item) => objs.push({type: 'ul', original: item.flat().join(''), html: '<li>' + item[2] + '</li>' }));
+      t.forEach((item) => objs.push({type: 'ul', original: item.flat().join(''), html: `<ul><li>${item[2]}</li></ul>`, subLists: []}));
       return {
        lists: objs
     }}
-    
     
 header 
   = h:"######" t:(" "+ text "\n"?)+ { return { type: 'h6', original: h + t.map(([s, w]) => s + w).join(''), html: '<h6>' + t.map(([s, w]) => s + w).join('').trim() + '</h6>' }; }
@@ -96,7 +102,7 @@ header
   / h:"#" t:(" "+ text "\n"?)+ { return { type: 'h1', original: h + t.map(([s, w]) => s + w).join(''), html: '<h1>' + t.map(([s, w]) => s + w).join('').trim() + '</h1>' }; }
 
 paragraph
-  = t:(" "? text "\n"?)+ { return { original: t.map(([s, w]) => (s ? s : '') + w).join(''), html: '<p>' + t.map(([s, w]) => (s ? s : '') + w).join('').trim() + '</p>' }; }
+  = t:(" "? text "\n"?)+ { return { original: t.map(([s, w]) => (s ? s : '') + w).join(''), html: '<p>' + t.map(([s, w]) => (s ? s : '') + w).join('') + '</p>' }; }
 
 emptyLine
   = t: "\n" { return { original: t, html: '<br/>'} }
