@@ -55,6 +55,8 @@ list
          else if (!noNewList && !dontEndList){
             html += list.html;
          }
+         const spaces = " ".repeat(listIndent * 4);
+         original += spaces + list.original;
       })
       return {  html: html, original: original, items: lists}
     }
