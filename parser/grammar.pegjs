@@ -1,5 +1,5 @@
 document 
-	= elements: (list  / paragraph / emptyLine / header / horizontalRule)+ { return elements; }
+	= elements: (list  / paragraph / emptyLine / header / horizontalRule / link)+ { return elements; }
 
 list
   = spaces:(" ")* t:item+ {
@@ -119,3 +119,7 @@ superScript
 
 horizontalRule
  = rule:("---" "-"* "\n") { return { original: rule.join(''), html: '<hr>'} ; }
+
+// TODO: add better handling for links.
+link
+ = link:(title:("[" [a-zA-Z0-9. ]+ "]")+ url:("(" [a-zA-Z0-9.]+ ")")+) { return { original: link.flat().join('')}; }
