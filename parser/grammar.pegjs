@@ -1,9 +1,9 @@
 document 
-	  = elements: (list / newline / emptyLine / header / horizontalRule / comment / link / paragraph)+  { 
-     let lineNumber = 0;
-     elements.forEach((ele) => ele.lineNumber = lineNumber += 1);
-     return { elements }
+	 = elements: (list / newline / emptyLine / header / horizontalRule / comment / link / paragraph)+  { 
+        return { elements }
     }
+    / !.
+
 
 list
   = spaces:(" ")* t:item+ {
