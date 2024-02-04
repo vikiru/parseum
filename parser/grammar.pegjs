@@ -1,5 +1,5 @@
-document
-	= elements: (list  / paragraph / emptyLine / header / horizontalRule / comment / link )+ {
+document 
+	  = elements: (list / newline / emptyLine / header / horizontalRule / comment / link / paragraph)+  { 
      let lineNumber = 0;
      elements.forEach((ele) => ele.lineNumber = lineNumber += 1);
      return { elements }
@@ -7,7 +7,7 @@ document
 
 list
   = spaces:(" ")* t:item+ {
-      const lists = t.map(item => item.updatedList).flat();
+      const lists = t.map(item => item.updatedList).flat(Infinity);
       let original = '';
       let html = '';
       const firstList = lists[0];
@@ -80,28 +80,27 @@ unorderedList
       t.forEach((item) => objs.push({type: 'ul', original: item.flat().join(''), html: `<ul><li>${item[2]}</li></ul>`, subLists: []}));
       return {
        lists: objs
-    }}
-    
+    };}
+
+image
+  = "!" "[" altText:$( (!"]") . )* "]" "(" url:$( (!")") . )* ")" { return { type: 'image', altText, url }; }
+  
+header_content
+ = content:(newline / list / emptyLine / horizontalRule / comment / link / paragraph)* { return content }
+
 header 
-  = h:(("#")* text+)+ customId:("{" id:([^\}]*) "}" "\n")* {
-    const listFlattened = h.flat(Infinity);
-    const idFlattened = customId.flat(Infinity);
-    let original = listFlattened.join('') + idFlattened.join('');
+  = header:("#"+ space+ text+) id:("{" [^\}]* "}" space* "\n")? content:(header_content) "\n"?
+  {
+    const listFlattened = header.flat(Infinity);
     const headerLevel = listFlattened.filter((h) => h === '#').length;
-    if (headerLevel > 6) { return { type: '', original: original, html: '' }} 
-    let id = '';
-    if (idFlattened.length > 0){
-        const excludeChars = ['{', '}', '\n'];
-        const filteredId = idFlattened.filter(i => !excludeChars.includes(i));
-        id = ` id="${filteredId.join('')}"`;
-    }
-    const filtered = listFlattened.filter((h) => h !== '#');
-    const html = `<h${headerLevel}${id}>${filtered.join('')}</${headerLevel}>`;
-    return { type: 'header', headerLevel, original, html }
+    const subItems = [];
+    if (headerLevel > 6) { return { type: '', original: original, html: '' }}   
+    return {h: header.flat(Infinity), id, content: content.flat(Infinity)}
   }
 
+
 paragraph
-  = t:(" "? text+ "\n"?)+ {
+  = t:(text)+ "\n"?  {
      const paragraphItems = t.flat(Infinity).filter(i => i !== null);
      const subItems = [];
      let html = '<p>';
@@ -128,13 +127,23 @@ paragraph
      return { original: original, html: html, subItems: subItems};
   }
 
+space 
+  = [ \t] 
+
+newline
+  = "\n" ("\n" / !.)
+  { return { type: 'newline', original: '\n', html: '' }; }
+  / "\n"
+  { return { type: 'newline', original: '\n', html: '' }; }
+  
 emptyLine
-  = t:("\n" / " ")+ { return { type: 'empty', original: '', html: ''} }
+  = t:(" " ![^ ])+ / t:("\n" !"\n")+ { return { type: 'empty', original: t.join(''), html: ''} }
   
 text
   = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript)+ { 
      return chars;
   }
+
 code
  = code:("`" words:text+ "`")+ {
    const listFlattened = code.flat(Infinity);
@@ -182,7 +191,7 @@ italic
  }
  
 bold
- = bold:("**" words:text+ "**")+ {
+ = bold:("**" text:text+ "**")+ {
    const listFlattened = bold.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '**');
    let original = '**';
@@ -319,7 +328,6 @@ superScript
    return { type: 'sup', original: original, html: html, subItems: subItems};
  }
 
-
 horizontalRule
  = rule:("---" "-"* "\n") { return { original: rule.join(''), html: '<hr>'} ; }
 
@@ -328,11 +336,3 @@ link
 
 comment 
  = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
-
-
-// TODO: add better handling for links. Update original, html for all tags, and add  type to all.
-// TODO: add rule for HTML tags : <tag></tag> and <tag/> or <tag />. In this case, original and html will be the same.
-// TODO: combine markdown rules into a single rule seperated by /, then do document: markdown / html at the end.
-// TODO: Fix nested list closing. Example input: '1. list 1\n    - list 2\n    - list 2\n1. k\n'
-// TODO: Handle lists with paragraphs or other elements within them and figure out how to handle continuation of list
-// TODO: Handle auto numbering of ordered lists.
