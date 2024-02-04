@@ -7,51 +7,11 @@ document
 
 list
   = spaces:(" ")* t:item+ {
-      const lists = t.map(item => item.updatedList).flat(Infinity);
-      let original = '';
-      let html = '';
-      const firstList = lists[0];
-      firstList.html = lists[0].html.replace('</li>', '');
-      lists.forEach((list) => list.subLists = lists.filter(l => list.indentLevel + 1 === l.indentLevel && lists.indexOf(l) > lists.indexOf(list)));
-      const allLists = [];
-      lists.forEach((list) => {
-         const listType = list.type;
-         const listIndent = list.indentLevel;
-         const index = lists.indexOf(list);
-         const prevIndex = index - 1 > 0 ? index - 1 : -1;
-         const nextIndex = index + 1 < lists.length ? index + 1 : -1;
-         const prevItem = lists[prevIndex] || {};
-         const nextItem = lists[nextIndex] || {};
-         const prevIndent = prevItem.indentLevel;
-         const nextIndent = nextItem.indentLevel;
-         const prevType = prevItem.type;
-         const nextType = nextItem.type;
-         const prevIndentCheck = listIndent === prevIndent;
-         const nextIndentCheck = listIndent === nextIndent;
-         const prevTypeCheck = listType === prevType;
-         const nextTypeCheck = listType === nextType;
-         const noNewList = prevIndentCheck && prevTypeCheck;
-         const dontEndList = nextIndentCheck && nextTypeCheck;
-         if (noNewList){
-            list.html = list.html.replace(`<${listType}>`, '');
-            html += list.html;
-         }
-         else if (dontEndList || list.subLists.length > 0){
-         	list.html = list.html.replace(`</${listType}>`, '');
-         	html += list.html;
-         }
-         else if (!noNewList && !dontEndList){
-            html += list.html;
-         }
-         const spaces = " ".repeat(listIndent * 4);
-         original += spaces + list.original;
-      })
-      html += `</li></${firstList.type}>`;
-      return {  html: html, original: original }}
+      return {  t }}
 
 item
   = spaces:(" ")* t:(orderedList / unorderedList) {
-     const indentLevel = spaces.length / 4;
+     const indentLevel = spaces.length / 4 + 1;
      const prevLevel = indentLevel > 0 ? indentLevel - 1 : indentLevel;
      const { lists } = t;
      const updatedList = [];
@@ -69,7 +29,7 @@ item
 orderedList
   = spaces:(" ")* t:([0-9] "." " " text ("\n" / !.))+ {
       const objs = [];
-      t.forEach((item) => objs.push({type: 'ol', original: item.flat().join(''), html: `<ol><li>${item[3]}</li></ol>` , subLists: []}));
+      t.forEach((item) => objs.push({type: 'ol', original: item.flat(Infinity).join(''), html: `<ol><li>${item[3].flat().join('')}</li></ol>` , subLists: []}));
       return {
        lists: objs
     }}
@@ -77,7 +37,7 @@ orderedList
 unorderedList
   = t:([-] " " text ("\n" / !.))+ {
       const objs = [];
-      t.forEach((item) => objs.push({type: 'ul', original: item.flat().join(''), html: `<ul><li>${item[2]}</li></ul>`, subLists: []}));
+      t.forEach((item) => objs.push({type: 'ul', original: item.flat(Infinity).join(''), html: `<ul><li>${item[2].flat().join('')}</li></ul>`, subLists: []}));
       return {
        lists: objs
     };}
