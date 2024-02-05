@@ -49,13 +49,26 @@ header_content
  = content:(newline / list / emptyLine / horizontalRule / comment / link / paragraph)* { return content }
 
 header 
-  = header:("#"+ space+ text+) id:("{" [^\}]* "}" space* "\n")? content:(header_content) "\n"?
+  = header:("#"+ space+ text+) id:("{" [^\}]* "}" space* "\n")* content:(header_content) "\n"?
   {
     const listFlattened = header.flat(Infinity);
+    const idFlattened = id.flat(Infinity);
+    const filteredList = listFlattened.filter((i) => i !== '#');
     const headerLevel = listFlattened.filter((h) => h === '#').length;
-    const subItems = [];
-    if (headerLevel > 6) { return { type: '', original: original, html: '' }}   
-    return {h: header.flat(Infinity), id, content: content.flat(Infinity)}
+    let original = listFlattened.join('') + idFlattened.join('');
+    let html = `<h${headerLevel}`;
+    let customId = '';
+    if (headerLevel > 6) { return { type: 'p', original: original, html: `<p>${original}</p>` }}
+    if (id.length > 0){
+       const idText = id[0][1].join('');
+       customId = ` id="${idText}"`;
+    }
+    content.forEach((c) => {
+       original += c.original;
+       html += c.html;
+    });
+    html += `${customId}>${filteredList.join('').trim()}</h${headerLevel}>`;
+    return { type: 'header', original: original, html: html, subItems: content.flat(Infinity), headerLevel}
   }
 
 
@@ -223,7 +236,7 @@ emphasis
  = emphasis:("==" words:text+ "==")+ {
    const listFlattened = emphasis.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '==');
-    let original = '==';
+   let original = '==';
    let html = '<mark>';
    const subItems = [];
    filtered.forEach((item) => {
