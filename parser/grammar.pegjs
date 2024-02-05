@@ -1,8 +1,26 @@
 document 
-	 = elements: (list / newline / emptyLine / header / horizontalRule / comment / link / paragraph )+  { 
+	 = elements: (codeblock / list / newline / emptyLine / header / horizontalRule / comment / link / paragraph )+  { 
         return { elements }
     }
     / !.
+
+codeblock
+ = "```" content:(!"```" .)* "```" {
+    let original = '```';
+    let html = '<pre><code>';
+    const items = content.flat(Infinity);
+    items.forEach((c) => {
+       if (typeof(c) === 'string'){
+          original += c;
+          if (c !== '\n'){
+             html += c;
+          }
+       }
+    }
+    );
+    html += '</code></pre>';
+    return { type: 'code block', original, html }
+ }
 
 space = space:([ \t]) { return space };
 
