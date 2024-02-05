@@ -4,6 +4,8 @@ document
     }
     / !.
 
+space = space:([ \t]) { return space };
+
 codeblock
  = "```" content:(!"```" .)* "```" {
     let original = '```';
@@ -21,8 +23,6 @@ codeblock
     html += '</code></pre>';
     return { type: 'code block', original, html }
  }
-
-space = space:([ \t]) { return space };
 
 list
  = spaces:(space)* t:item+ {
@@ -108,30 +108,40 @@ header_content
  = content:(newline / list / emptyLine / horizontalRule / comment / link / paragraph)* { return content }
 
 header
- = header:("#"+ space+ (text / image)+ )+ id:("{" [^\}]* "}" space* "\n"?)* content:(header_content) "\n"?
- {
+ = header:("#"+ space+ (formatting / !"\n" .)+ )+ id:("{" [^\}]* "}" space* "\n"?)* content:(header_content) "\n"?  {
     const listFlattened = header.flat(Infinity);
     const idFlattened = id.flat(Infinity);
     const headerLevel = listFlattened.filter((h) => h === '#').length;
+    const filteredList = listFlattened.slice(headerLevel + 1);
     let original = '';
-    listFlattened.forEach((l) => {
-       if (typeof(l) === 'string') { original += l}
-       else { original += l.original }
-    })
     let html = `<h${headerLevel}`;
     let customId = '';
-    if (headerLevel > 6) { return { type: 'p', original: original, html: `<p>${original}</p>` }}
     if (id.length > 0){
        const idText = id[0][1].join('');
        customId = ` id="${idText}"`;
     }
     html += `${customId}>`;
+    listFlattened.forEach((l) => {
+       if (typeof(l) === 'string') { 
+           original += l; 
+         }
+       else if (typeof(l) === 'object') { 
+          original += l.original; 
+       }
+    });
+    
+    filteredList.forEach((l) => {
+       if (typeof(l) === 'string') { html += l || ''; }
+       else if (typeof(l) === 'object') { html += l.html || ''; }
+    });
+    
+	if (headerLevel > 6) { return { type: 'p', original: original, html: `<p>${original}</p>` }}
     content.forEach((c) => {
-       original += c.original;
-       html += c.html;
+       original += c.original || '';
+       html += c.html || '';
     });
     html += `</h${headerLevel}>`;
-    return { type: 'header', headerLevel, original: original, html: html, subItems: content.flat(Infinity)};
+    return { customId, type: 'header', headerLevel, original: original, html: html, subItems: content.flat(Infinity)};
  }
 
 paragraph
@@ -170,12 +180,12 @@ emptyLine
   = t:(" " ![^ ])+ / t:("\n" !"\n")+
   
 text
-  = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript / specialCharacters)+ { 
+ = chars:(specialCharacters / [a-zA-Z0-9 ]+ / bold / boldItalic / italic / code / strikethrough / emphasis / subScript / superScript )+ { 
      return chars;
-  }
+ }
 
 code
- = code:("`" words:text+ "`")+ {
+ = code:("`" text:(formatting / !"`" .)+ "`")+ {
    const listFlattened = code.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '`');
    let original = '`';
@@ -198,7 +208,7 @@ code
  }
  
 italic
- = italic: ("*" words:text+ "*")+ {
+ = italic: ("*" text:(formatting / !"*" .)+ "*")+ {
    const listFlattened = italic.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '*');
    let original = '*';
@@ -221,30 +231,30 @@ italic
  }
  
 bold
- = bold:("**" text:text+ "**")+ {
-   const listFlattened = bold.flat(Infinity);
-   const filtered = listFlattened.filter((i) => i !== '**');
-   let original = '**';
-   let html = '<strong>';
-   const subItems = [];
-   filtered.forEach((item) => {
-      if (typeof(item) === 'object'){
+ = bold:("**" text:(formatting / !"**" . )+ "**")+ {
+    const listFlattened = bold.flat(Infinity);
+    const filtered = listFlattened.filter((i) => i !== '**');
+    let original = '**';
+    let html = '<strong>';
+    const subItems = [];
+    filtered.forEach((item) => {
+       if (typeof(item) === 'object'){
           original += item.original;
           html += item.html;
           subItems.push(item);
-      }
-      else if (typeof(item) === 'string'){
-         original += item;
-         html += item;
-      }
-   })
-   original += '**';
-   html += '</strong>';
-   return {  type: 'strong', original: original, html: html, subItems: subItems };
+       }
+       else if (typeof(item) === 'string'){
+          original += item;
+          html += item;
+       }
+    })
+    original += '**';
+    html += '</strong>';
+    return { type: 'strong', original: original, html: html, subItems: subItems };
  }
  
 boldItalic
- = boldItalic:("***" words:text+ "***")+ {
+ = boldItalic:("***" text:(formatting /  !"***" .)+ "***")+ {
    const listFlattened = boldItalic.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '***');
    let original = '***';
@@ -267,7 +277,7 @@ boldItalic
  }
  
 strikethrough
- = strikethrough:("~~" words:text+ "~~")+ {
+ = strikethrough:("~~" text:(formatting / !"~~" .)+"~~")+ {
    const listFlattened = strikethrough.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '~~');
    let original = '~~';
@@ -290,7 +300,7 @@ strikethrough
  }
 
 emphasis
- = emphasis:("==" words:text+ "==")+ {
+ = emphasis:("==" text:(formatting / !"==" .)+ "==")+ {
    const listFlattened = emphasis.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '==');
    let original = '==';
@@ -313,7 +323,7 @@ emphasis
  }
 
 subScript
- = subScript:("~" words:text+ "~")+ {
+ = subScript:("~" text:(formatting / !"~" .)+ "~")+ {
    const listFlattened = subScript.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '~');
    let original = '~';
@@ -336,7 +346,7 @@ subScript
  }
  
 superScript
- = superScript:("^" words:text+ "^")+ {
+ = superScript:("^" text:(formatting / !"^" .)+ "^")+ {
    const listFlattened = superScript.flat(Infinity);
    const filtered = listFlattened.filter((i) => i !== '^');
    let original = '^';
@@ -359,13 +369,18 @@ superScript
  }
 
 horizontalRule
- = rule:("---" "-"* "\n") { return { original: rule.join(''), html: '<hr>'} ; }
+ = rule:("---" "-"* / !formatting "***" "*"* / "___" "_"*)+ !(text) "\n"? { return { original: rule.flat(Infinity).join(''), html: '<hr>'} ; }
 
 link
- = link:(title:("[" [a-zA-Z0-9. ]+ "]")+ url:("(" [a-zA-Z0-9.]+ ")")+) { return { original: link.flat().join('')}; }
+ = "[" altText:text+ "]" "(" url:text+  title:(' "' [a-zA-Z0-9 ]+ '"')? ")"
 
 comment 
  = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
 
+formatting
+  = boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript
+
 specialCharacters
- = chars:[^\n] / newline
+ = !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") { 
+    return char;
+ }
