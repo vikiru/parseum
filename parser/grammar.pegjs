@@ -144,19 +144,15 @@ paragraph
      return { original: original, html: html, subItems: subItems};
   }
 
-
-
 newline
   = "\n" ("\n" / !.)
-  { return { type: 'newline', original: '\n', html: '' }; }
   / "\n"
-  { return { type: 'newline', original: '\n', html: '' }; }
   
 emptyLine
-  = t:(" " ![^ ])+ / t:("\n" !"\n")+ { return { type: 'empty', original: t.join(''), html: ''} }
+  = t:(" " ![^ ])+ / t:("\n" !"\n")+
   
 text
-  = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript)+ { 
+  = chars:([a-zA-Z0-9 ]+ / boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript / specialCharacters)+ { 
      return chars;
   }
 
@@ -352,3 +348,6 @@ link
 
 comment 
  = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
+
+specialCharacters
+ = chars:[^\n] / newline
