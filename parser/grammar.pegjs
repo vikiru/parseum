@@ -1,5 +1,5 @@
 document 
-	 = elements: (list / newline / emptyLine / header / horizontalRule / comment / link / paragraph)+  { 
+	 = elements: (list / newline / emptyLine / header / horizontalRule / comment / link / paragraph )+  { 
         return { elements }
     }
     / !.
@@ -80,33 +80,41 @@ unorderedList
  }
 
 image
-  = "!" "[" altText:$( (!"]") . )* "]" "(" url:$( (!")") . )* ")" { return { type: 'image', altText, url }; }
-  
+ = "!" "[" altText:$( (!"]") . )* "]" "(" url:$( (!")") . )* ")" {
+       const html = `<img src="${url}" alt="${altText}"/>`; 
+       const original = "!" + "[" + altText + "]" + "(" + url + ")"; 
+       return { type: 'img', original: original, html: html };
+       }
+       
 header_content
  = content:(newline / list / emptyLine / horizontalRule / comment / link / paragraph)* { return content }
 
-header 
-  = header:("#"+ space+ text+)+ id:("{" [^\}]* "}" space* "\n")* content:(header_content) "\n"?
-  {
+header
+ = header:("#"+ space+ (text / image)+ )+ id:("{" [^\}]* "}" space* "\n"?)* content:(header_content) "\n"?
+ {
     const listFlattened = header.flat(Infinity);
     const idFlattened = id.flat(Infinity);
-    const filteredList = listFlattened.filter((i) => i !== '#');
     const headerLevel = listFlattened.filter((h) => h === '#').length;
-    let original = listFlattened.join('') + idFlattened.join('');
-    let html = `<h${headerLevel}>`;
+    let original = '';
+    listFlattened.forEach((l) => {
+       if (typeof(l) === 'string') { original += l}
+       else { original += l.original }
+    })
+    let html = `<h${headerLevel}`;
     let customId = '';
     if (headerLevel > 6) { return { type: 'p', original: original, html: `<p>${original}</p>` }}
     if (id.length > 0){
        const idText = id[0][1].join('');
        customId = ` id="${idText}"`;
     }
+    html += `${customId}>`;
     content.forEach((c) => {
        original += c.original;
        html += c.html;
     });
-    html += `${customId}>${filteredList.join('').trim()}</h${headerLevel}>`;
-    return { type: 'header', original: original, html: html, subItems: content.flat(Infinity), headerLevel}
-  }
+    html += `</h${headerLevel}>`;
+    return { type: 'header', headerLevel, original: original, html: html, subItems: content.flat(Infinity)};
+ }
 
 paragraph
   = t:(text)+ "\n"?  {
@@ -135,6 +143,8 @@ paragraph
      html += '</p>';
      return { original: original, html: html, subItems: subItems};
   }
+
+
 
 newline
   = "\n" ("\n" / !.)

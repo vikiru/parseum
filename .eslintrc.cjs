@@ -15,12 +15,14 @@ module.exports = {
         'plugin:tailwindcss/recommended',
         'plugin:@peggyjs/recommended'
     ],
-    ignorePatterns: ['dist', '.eslintrc.cjs', 'grammar.pegjs'],
+    ignorePatterns: ['dist', '.eslintrc.cjs'],
     parserOptions: { ecmaVersion: 'latest', sourceType: 'module', ecmaFeatures: { jsx: true } },
     settings: { react: { version: '18.2' } },
     plugins: ['react-refresh', 'prettier', 'import', 'node', 'jsdoc', 'tailwindcss', 'comment-length', 'sort-exports'],
     rules: {
         'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
         'prettier/prettier': 'off',
+        'jsdoc/require-returns-type': 'off',
+        'jsdoc/require-returns-description': 'off',
     },
 };
