@@ -4,43 +4,80 @@ document
     }
     / !.
 
+space = space:([ \t]) { return space };
 
 list
-  = spaces:(" ")* t:item+ {
-      return {  t }}
+ = spaces:(space)* t:item+ {
+      let html = '';
+      let original = '';
+      let lists = t.flat(Infinity);
+      lists[0].indentLevel = (spaces.length / 4) + 1;
+      lists.forEach((list) => {
+          list.subLists = lists.filter(l => l.indentLevel === list.indentLevel + 1 && lists.indexOf(l) > lists.indexOf(list));
+      });
+      
+      lists.forEach((list) => {
+          list.parent = lists.find(l => l.subLists.includes(list)) || {};
+      });
+
+      for (let i = 0; i < lists.length; i++) {
+          let list = lists[i];
+          let parent = list.parent;
+          let subLists = parent.subLists || [];
+          let listType = list.type;
+          let listIndent = list.indentLevel;
+          let prevItem = lists[i - 1] || {};
+          let nextItem = lists[i + 1] || {};
+          let prevIndent = prevItem.indentLevel;
+          let nextIndent = nextItem.indentLevel;
+          let prevType = prevItem.type;
+          let nextType = nextItem.type;
+          let noNewList = listIndent === prevIndent && listType === prevType;
+          let dontEndList = listIndent === nextIndent && listType === nextType;
+          if (noNewList) {
+             list.html = list.html.replace(`<${listType}>`, '');
+          } else if (dontEndList) {
+             list.html = list.html.replace(`</${listType}>`, '');
+          } else if (!dontEndList && subLists.includes(list) && subLists.indexOf(list) === subLists.length - 1) {
+              list.html += `</li></${parent.type}>`;
+          }
+          original += list.original;
+          html += list.html;
+      }
+      return { type: 'list', html: html, original: original, subItems: lists };
+}
 
 item
-  = spaces:(" ")* t:(orderedList / unorderedList) {
-     const indentLevel = spaces.length / 4 + 1;
-     const prevLevel = indentLevel > 0 ? indentLevel - 1 : indentLevel;
-     const { lists } = t;
-     const updatedList = [];
-     if (lists && lists.length >= 1){
-        const firstItem = lists[0];
-        firstItem.indentLevel = indentLevel;
-        updatedList.push(firstItem);
-        const remainderLists = lists.slice(1);
-        remainderLists.forEach((list) => list.indentLevel = prevLevel);
-        remainderLists.forEach((list) => updatedList.push(list));
-     }
-      return { updatedList: updatedList }; 
-     }
- 
+ = spaces:(space)* t:(orderedList / unorderedList) {
+      const indentLevel = (spaces.length / 4) + 1;
+      const { lists } = t;
+      const updatedList = lists.map(list => ({ ...list, indentLevel }));
+      return updatedList;
+ }
+
 orderedList
-  = spaces:(" ")* t:([0-9] "." " " text ("\n" / !.))+ {
-      const objs = [];
-      t.forEach((item) => objs.push({type: 'ol', original: item.flat(Infinity).join(''), html: `<ol><li>${item[3].flat().join('')}</li></ol>` , subLists: []}));
-      return {
-       lists: objs
-    }}
+ = spaces:(space)* t:([0-9] "." " " text ("\n" / !.))+ {
+      const objs = t.map((item) => ({
+          type: 'ol',
+          original: item.flat(Infinity).join(''),
+          html: `<ol><li>${item[3].flat(Infinity).join('')}</li></ol>`,
+          subLists: [],
+          indentLevel: -1
+      }));
+      return { lists: objs };
+ }
 
 unorderedList
-  = t:([-] " " text ("\n" / !.))+ {
-      const objs = [];
-      t.forEach((item) => objs.push({type: 'ul', original: item.flat(Infinity).join(''), html: `<ul><li>${item[2].flat().join('')}</li></ul>`, subLists: []}));
-      return {
-       lists: objs
-    };}
+ = spaces:(space)* t:([-] " " text ("\n" / !.))+ {
+      const objs = t.map((item) => ({
+          type: 'ul',
+          original: item.flat(Infinity).join(''),
+          html: `<ul><li>${item[2].flat(Infinity).join('')}</li></ul>`,
+          subLists: [],
+          indentLevel: -1
+      }));
+      return { lists: objs } ;
+ }
 
 image
   = "!" "[" altText:$( (!"]") . )* "]" "(" url:$( (!")") . )* ")" { return { type: 'image', altText, url }; }
@@ -49,14 +86,14 @@ header_content
  = content:(newline / list / emptyLine / horizontalRule / comment / link / paragraph)* { return content }
 
 header 
-  = header:("#"+ space+ text+) id:("{" [^\}]* "}" space* "\n")* content:(header_content) "\n"?
+  = header:("#"+ space+ text+)+ id:("{" [^\}]* "}" space* "\n")* content:(header_content) "\n"?
   {
     const listFlattened = header.flat(Infinity);
     const idFlattened = id.flat(Infinity);
     const filteredList = listFlattened.filter((i) => i !== '#');
     const headerLevel = listFlattened.filter((h) => h === '#').length;
     let original = listFlattened.join('') + idFlattened.join('');
-    let html = `<h${headerLevel}`;
+    let html = `<h${headerLevel}>`;
     let customId = '';
     if (headerLevel > 6) { return { type: 'p', original: original, html: `<p>${original}</p>` }}
     if (id.length > 0){
@@ -70,7 +107,6 @@ header
     html += `${customId}>${filteredList.join('').trim()}</h${headerLevel}>`;
     return { type: 'header', original: original, html: html, subItems: content.flat(Infinity), headerLevel}
   }
-
 
 paragraph
   = t:(text)+ "\n"?  {
@@ -99,9 +135,6 @@ paragraph
      html += '</p>';
      return { original: original, html: html, subItems: subItems};
   }
-
-space 
-  = [ \t] 
 
 newline
   = "\n" ("\n" / !.)
