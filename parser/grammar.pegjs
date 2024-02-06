@@ -183,9 +183,9 @@ formatting
   = boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript
 
 specialCharacters
- = !escapedCharacters !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") {
+  = !escapedCharacters !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/" / "'" / "`" / "<" / ">" / "!" / "+" / "=" / "-" / ":" / "|" / "/") {
     return char;
- }
+  }
 
 escapedCharacters
   = "\\" char:(.) { return char; }
