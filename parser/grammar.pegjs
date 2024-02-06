@@ -168,7 +168,7 @@ newLine
   = lines:(!text "\n") { return { type: 'new line', original: lines.join(''), html: '' }}
 
 emptyLine
-  = spaces:(" " / "\t")+ newLine? { return { type: 'empty', original: spaces.join(''), html: '' }}
+  = spaces:(" " / "\t")+ !text newLine? { return { type: 'empty', original: spaces.join(''), html: '' }}
 
 text
  = chars:(escapedCharacters / specialCharacters / [a-zA-Z0-9 ]+ / formatting )+ {
