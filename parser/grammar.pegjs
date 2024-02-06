@@ -105,47 +105,44 @@ image
        }
        
 header_content
- = content:(newline / list / emptyLine / horizontalRule / comment / link / paragraph)* { return content }
+ = content:(list / newline / emptyLine / horizontalRule / comment / link / paragraph)* { return content.filter((c) => c !== '\n'); }
 
 header
- = header:("#"+ space+ (formatting / !"\n" .)+ )+ id:("{" [^\}]* "}" space* "\n"?)* content:(header_content) "\n"?  {
-    const listFlattened = header.flat(Infinity);
-    const idFlattened = id.flat(Infinity);
-    const headerLevel = listFlattened.filter((h) => h === '#').length;
-    const filteredList = listFlattened.slice(headerLevel + 1);
+ = hashes:("#"+)+ space+ headerText:(formatting / text )* content:header_content "\n"*  {
+    const headerLevel = hashes.length;
+    const text = headerText.flat(Infinity);
+    const startIndex = text.indexOf('{');
+    const endIndex = text.indexOf('}');
+    let customId = startIndex !== -1 && endIndex !== -1 ? text.slice(startIndex + 1, endIndex).join('') : '';
     let original = '';
     let html = `<h${headerLevel}`;
-    let customId = '';
-    if (id.length > 0){
-       const idText = id[0][1].join('');
-       customId = ` id="${idText}"`;
+    if (customId !== '') {
+       html += ` id="${customId}">`;
     }
-    html += `${customId}>`;
-    listFlattened.forEach((l) => {
-       if (typeof(l) === 'string') { 
-           original += l; 
-         }
-       else if (typeof(l) === 'object') { 
-          original += l.original; 
+    original += hashes.flat(Infinity).join('') + ' ';
+    const slicedText = text.slice(0, startIndex);
+    slicedText.forEach((t) => {
+       if (typeof(t) === 'string') {
+          original += t;
+          html += t;
+       }
+       else if (typeof(t) === 'object') {
+          original += t.original;
+          html += t.html;
        }
     });
-    
-    filteredList.forEach((l) => {
-       if (typeof(l) === 'string') { html += l || ''; }
-       else if (typeof(l) === 'object') { html += l.html || ''; }
-    });
-    
-	if (headerLevel > 6) { return { type: 'p', original: original, html: `<p>${original}</p>` }}
-    content.forEach((c) => {
-       original += c.original || '';
-       html += c.html || '';
-    });
     html += `</h${headerLevel}>`;
-    return { customId, type: 'header', headerLevel, original: original, html: html, subItems: content.flat(Infinity)};
- }
+    if (content) {
+      content.forEach((c) => {
+         original += c.original || '';
+         html += c.html || '';
+      });
+    }
+    return { type: 'header', headerLevel, original, html, subItems: content };
+  }
 
 paragraph
-  = t:(text)+ "\n"?  {
+  = t:(text)+  {
      const paragraphItems = t.flat(Infinity).filter(i => i !== null);
      const subItems = [];
      let html = '<p>';
@@ -173,8 +170,7 @@ paragraph
   }
 
 newline
-  = "\n" ("\n" / !.)
-  / "\n"
+  = "\n"
   
 emptyLine
   = t:(" " ![^ ])+ / t:("\n" !"\n")+
@@ -369,7 +365,7 @@ superScript
  }
 
 horizontalRule
- = rule:("---" "-"* / !formatting "***" "*"* / "___" "_"*)+ !(text) "\n"? { return { original: rule.flat(Infinity).join(''), html: '<hr>'} ; }
+ = rule:( !formatting "---" "-"* / !formatting "***" "*"* /  !formatting "___" "_"*)+ !(text) "\n"? { return { original: rule.flat(Infinity).join(''), html: '<hr>'} ; }
 
 link
  = "[" altText:text+ "]" "(" url:text+  title:(' "' [a-zA-Z0-9 ]+ '"')? ")"
@@ -384,3 +380,10 @@ specialCharacters
  = !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") { 
     return char;
  }
+
+escapedCharacters
+ = "\\" char:specialCharacters
+
+// TODO: update item rule to accept other elements such as paragraphs, code blocks, blockquotes, headings, images, links, tables
+// TODO: add other markdown elements and formatting alternate syntax, header alternate syntax, escape characters
+// TODO: once the above is done merge and start work on next proj.
