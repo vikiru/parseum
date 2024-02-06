@@ -1,12 +1,12 @@
-document 
-	 = elements: (codeblock / list / newline / emptyLine / header / horizontalRule / comment / link / paragraph )+  { 
+document
+	 = elements: (codeBlock / list / newLine / emptyLine / header / horizontalRule / comment / link / paragraph )+  {
         return { elements }
     }
     / !.
 
 space = space:([ \t]) { return space };
 
-codeblock
+codeBlock
  = "```" content:(!"```" .)* "```" {
     let original = '```';
     let html = '<pre><code>';
@@ -33,7 +33,7 @@ list
       lists.forEach((list) => {
           list.subLists = lists.filter(l => l.indentLevel === list.indentLevel + 1 && lists.indexOf(l) > lists.indexOf(list));
       });
-      
+
       lists.forEach((list) => {
           list.parent = lists.find(l => l.subLists.includes(list)) || {};
       });
@@ -62,7 +62,7 @@ list
           original += list.original;
           html += list.html;
       }
-      return { type: 'list', html: html, original: original, subItems: lists };
+      return { type: 'list', html, original, subItems: lists };
 }
 
 item
@@ -99,16 +99,13 @@ unorderedList
 
 image
  = "!" "[" altText:$( (!"]") . )* "]" "(" url:$( (!")") . )* ")" {
-       const html = `<img src="${url}" alt="${altText}"/>`; 
-       const original = "!" + "[" + altText + "]" + "(" + url + ")"; 
-       return { type: 'img', original: original, html: html };
+       const html = `<img src="${url}" alt="${altText}"/>`;
+       const original = "!" + "[" + altText + "]" + "(" + url + ")";
+       return { type: 'img', original, html };
        }
-       
-header_content
- = content:(list / newline / emptyLine / horizontalRule / comment / link / paragraph)* { return content.filter((c) => c !== '\n'); }
 
 header
- = hashes:("#"+)+ space+ headerText:(formatting / text )* content:header_content "\n"*  {
+  = hashes:("#"+)+ space+ headerText:(formatting / text )* "\n"?  {
     const headerLevel = hashes.length;
     const text = headerText.flat(Infinity);
     const startIndex = text.indexOf('{');
@@ -119,8 +116,12 @@ header
     if (customId !== '') {
        html += ` id="${customId}">`;
     }
+    else {
+       html += ">";
+    }
     original += hashes.flat(Infinity).join('') + ' ';
-    const slicedText = text.slice(0, startIndex);
+    const endingIndex = startIndex === -1 ? text.length : startIndex - 1;
+    const slicedText = text.slice(0, endingIndex);
     slicedText.forEach((t) => {
        if (typeof(t) === 'string') {
           original += t;
@@ -132,17 +133,11 @@ header
        }
     });
     html += `</h${headerLevel}>`;
-    if (content) {
-      content.forEach((c) => {
-         original += c.original || '';
-         html += c.html || '';
-      });
-    }
-    return { type: 'header', headerLevel, original, html, subItems: content };
+    return { type: 'header', headerLevel, original, html};
   }
 
 paragraph
-  = t:(text)+  {
+  = t:(text)+ "\n"?  {
      const paragraphItems = t.flat(Infinity).filter(i => i !== null);
      const subItems = [];
      let html = '<p>';
@@ -166,17 +161,17 @@ paragraph
         }
      }
      html += '</p>';
-     return { original: original, html: html, subItems: subItems};
+     return { type: 'p', original, html, subItems: subItems};
   }
 
-newline
-  = "\n"
-  
+newLine
+  = lines:(!text "\n") { return { type: 'new line', original: lines.join(''), html: '' }}
+
 emptyLine
-  = t:(" " ![^ ])+ / t:("\n" !"\n")+
-  
+  = spaces:(" " / "\t")+ newLine? { return { type: 'empty', original: spaces.join(''), html: '' }}
+
 text
- = chars:(specialCharacters / [a-zA-Z0-9 ]+ / bold / boldItalic / italic / code / strikethrough / emphasis / subScript / superScript )+ { 
+ = chars:(specialCharacters / [a-zA-Z0-9 ]+ / bold / boldItalic / italic / code / strikethrough / emphasis / subScript / superScript )+ {
      return chars;
  }
 
@@ -200,9 +195,9 @@ code
    })
    html += '</code>';
    original += '`';
-   return { type: 'code', original: original, html: html, subItems: subItems};
+   return { type: 'code', original, html, subItems: subItems};
  }
- 
+
 italic
  = italic: ("*" text:(formatting / !"*" .)+ "*")+ {
    const listFlattened = italic.flat(Infinity);
@@ -223,9 +218,9 @@ italic
    })
    html += '</em>';
    original += '*';
-   return { type: 'em', original: original, html: html};
+   return { type: 'em', original, html};
  }
- 
+
 bold
  = bold:("**" text:(formatting / !"**" . )+ "**")+ {
     const listFlattened = bold.flat(Infinity);
@@ -246,9 +241,9 @@ bold
     })
     original += '**';
     html += '</strong>';
-    return { type: 'strong', original: original, html: html, subItems: subItems };
+    return { type: 'strong', original, html, subItems: subItems };
  }
- 
+
 boldItalic
  = boldItalic:("***" text:(formatting /  !"***" .)+ "***")+ {
    const listFlattened = boldItalic.flat(Infinity);
@@ -269,9 +264,9 @@ boldItalic
    })
    html += '</em></strong>';
    original += '***';
-   return { type: 'em strong', original: original, html: html, subItems: subItems};
+   return { type: 'em strong', original, html, subItems: subItems};
  }
- 
+
 strikethrough
  = strikethrough:("~~" text:(formatting / !"~~" .)+"~~")+ {
    const listFlattened = strikethrough.flat(Infinity);
@@ -292,7 +287,7 @@ strikethrough
    })
    html += '</del>';
    original += '~~';
-   return { type: 'del', original: original, html: html, subItems: subItems};
+   return { type: 'del', original, html, subItems: subItems};
  }
 
 emphasis
@@ -315,7 +310,7 @@ emphasis
    })
    html += '</mark>';
    original += '==';
-   return { type: 'mark', original: original, html: html, subItems: subItems};
+   return { type: 'mark', original, html, subItems: subItems};
  }
 
 subScript
@@ -338,9 +333,9 @@ subScript
    })
    html += '</sub>';
    original += '~';
-   return { type: 'sub', original: original, html: html, subItems};
+   return { type: 'sub', original, html, subItems};
  }
- 
+
 superScript
  = superScript:("^" text:(formatting / !"^" .)+ "^")+ {
    const listFlattened = superScript.flat(Infinity);
@@ -361,7 +356,7 @@ superScript
    })
    html += '</sup>';
    original += '^';
-   return { type: 'sup', original: original, html: html, subItems: subItems};
+   return { type: 'sup', original, html, subItems: subItems};
  }
 
 horizontalRule
@@ -370,14 +365,14 @@ horizontalRule
 link
  = "[" altText:text+ "]" "(" url:text+  title:(' "' [a-zA-Z0-9 ]+ '"')? ")"
 
-comment 
+comment
  = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
 
 formatting
   = boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript
 
 specialCharacters
- = !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") { 
+ = !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") {
     return char;
  }
 
