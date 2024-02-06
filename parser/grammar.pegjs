@@ -1,11 +1,15 @@
 document
-	 = elements: (codeBlock / list / newLine / emptyLine / header / horizontalRule / comment / link / paragraph )+  {
+	 = elements: (blockquote / codeBlock / list / newLine / emptyLine / header / horizontalRule / comment / link / paragraph )+  {
         return { elements }
     }
     / !.
 
-space = space:([ \t]) { return space };
-
+blockquoteContent 
+ = ">" header / image / link / list / paragraph 
+ 
+blockquote
+ = quotes:">"+ content:(blockquoteContent+ "\n"*)  { return { q: quotes.flat(Infinity), c: content.flat(Infinity) } }
+ 
 codeBlock
  = "```" content:(!"```" .)* "```" {
     let original = '```';
@@ -25,7 +29,7 @@ codeBlock
  }
 
 list
- = spaces:(space)* t:item+ {
+ = spaces:(" ")* t:item+ {
       let html = '';
       let original = '';
       let lists = t.flat(Infinity);
@@ -66,7 +70,7 @@ list
 }
 
 item
- = spaces:(space)* t:(orderedList / unorderedList) {
+ = spaces:(" ")* t:(orderedList / unorderedList / image / link ) {
       const indentLevel = (spaces.length / 4) + 1;
       const { lists } = t;
       const updatedList = lists.map(list => ({ ...list, indentLevel }));
@@ -74,7 +78,7 @@ item
  }
 
 orderedList
- = spaces:(space)* t:([0-9] "." " " text ("\n" / !.))+ {
+ = spaces:(" ")* t:([0-9] "." " " text ("\n" / !.))+ {
       const objs = t.map((item) => ({
           type: 'ol',
           original: item.flat(Infinity).join(''),
@@ -86,7 +90,7 @@ orderedList
  }
 
 unorderedList
- = spaces:(space)* t:([-] " " text ("\n" / !.))+ {
+ = spaces:(" ")* t:([-] " " text ("\n" / !.))+ {
       const objs = t.map((item) => ({
           type: 'ul',
           original: item.flat(Infinity).join(''),
@@ -105,7 +109,7 @@ image
        }
 
 header
-  = hashes:("#"+)+ space+ headerText:(formatting / text )* "\n"?  {
+  = hashes:("#"+)+ " "+ headerText:(formatting / text )* "\n"?  {
     const headerLevel = hashes.length;
     const text = headerText.flat(Infinity);
     const startIndex = text.indexOf('{');
@@ -171,10 +175,21 @@ emptyLine
   = spaces:(" " / "\t")+ !text newLine? { return { type: 'empty', original: spaces.join(''), html: '' }}
 
 text
- = chars:(escapedCharacters / specialCharacters / [a-zA-Z0-9 ]+ / formatting )+ {
+ = chars:(escapedCharacters / specialCharacters / [a-zA-Z0-9 \t]+ / formatting )+ {
      return chars;
  }
 
+formatting
+  = boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript
+
+specialCharacters
+ = !escapedCharacters !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") {
+    return char;
+ }
+
+escapedCharacters
+  = "\\" char:(.) { return char; }
+  
 code
  = code:("`" text:(formatting / !"`" .)+ "`")+ {
    const listFlattened = code.flat(Infinity);
@@ -360,26 +375,14 @@ superScript
  }
 
 horizontalRule
- = rule:( !formatting "---" "-"* / !formatting "***" "*"* /  !formatting "___" "_"*)+ !(text) "\n"? { return { original: rule.flat(Infinity).join(''), html: '<hr>'} ; }
+ = rule:(!formatting "---" "-"* / !formatting "***" "*"* /  !formatting "___" "_"*)+ !(text) "\n"? { return { original: rule.flat(Infinity).join(''), html: '<hr>'} ; }
 
 link
  = "[" altText:text+ "]" "(" url:text+  title:(' "' [a-zA-Z0-9 ]+ '"')? ")"
 
 comment
- = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#")+ { return {type: 'comment', original: '', html: ''} }
-
-formatting
-  = boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript
-
-specialCharacters
- = !escapedCharacters !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") {
-    return char;
- }
-
-escapedCharacters
-  = "\\" char:(.) { return char; }
-
+ = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#"  text+)+ { return {type: 'comment', original: comment, html: ''} }
 
 // TODO: update item rule to accept other elements such as paragraphs, code blocks, blockquotes, headings, images, links, tables
 // TODO: add other markdown elements and formatting alternate syntax, header alternate syntax, escape characters
-// TODO: once the above is done merge and start work on next proj.
+// TODO: update paragraph breaks
