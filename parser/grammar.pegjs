@@ -171,7 +171,7 @@ emptyLine
   = spaces:(" " / "\t")+ newLine? { return { type: 'empty', original: spaces.join(''), html: '' }}
 
 text
- = chars:(specialCharacters / [a-zA-Z0-9 ]+ / bold / boldItalic / italic / code / strikethrough / emphasis / subScript / superScript )+ {
+ = chars:(escapedCharacters / specialCharacters / [a-zA-Z0-9 ]+ / formatting )+ {
      return chars;
  }
 
@@ -372,12 +372,13 @@ formatting
   = boldItalic / bold / italic / code / strikethrough / emphasis / subScript / superScript
 
 specialCharacters
- = !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") {
+ = !escapedCharacters !formatting char:("?" / "!" / "~" / "@" / "#" / "$" / "%" / "^" / "&" / "*" / "(" / ")" / "_" / "-" / "+" / "=" / "{" / "}" / "[" / "]" / "|" / "\\" / "`" / ":" / ";" / "<" / ">" / "," / "." / "/") {
     return char;
  }
 
 escapedCharacters
- = "\\" char:specialCharacters
+  = "\\" char:(.) { return char; }
+
 
 // TODO: update item rule to accept other elements such as paragraphs, code blocks, blockquotes, headings, images, links, tables
 // TODO: add other markdown elements and formatting alternate syntax, header alternate syntax, escape characters
