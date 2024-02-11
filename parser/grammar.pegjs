@@ -350,5 +350,7 @@ comment
 // TODO: update item rule to accept other elements such as paragraphs, code blocks, blockquotes, headings, images, links, tables
 // TODO: add other markdown elements and formatting alternate syntax, header alternate syntax, escape characters
 // TODO: update paragraph breaks
-
 // TODO: cleanup blockquote and lists handling of content
+// TODO: update horizontal rule to be: !formatting "-"* / "*"* / "_"* !text "\n"?
+ 
+// tables, definition lists, task lists, link references and image, html, auto links, footnotes, alt header, 
