@@ -80,8 +80,8 @@ emptyLine
   = spaces:(" " / "\t")+ "\n"? { return { type: 'empty line' }; }
 
 text
-  = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+)+ {
-    return chars;
+  = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / .)+ {
+    return chars.flat(Infinity).join('');
   }
 
 formatting
