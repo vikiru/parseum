@@ -24,10 +24,6 @@ taskItem
     return { type: 'task item', checked: checkbox === '[x]', text };
   }
 
-autoLink
-  = "<" url:$( !">" . )* ">" {
-    return { type: 'auto link', url };
-  }
 
 altHeader
   = t:(text)+ "\n" underline:("="+ / "-"+) "\n"? {
@@ -35,10 +31,6 @@ altHeader
     return { type: 'header', level, t };
   }
 
-image
-  = "!" "[" altText:$((!"]") . )* "]" "(" url:$( (!")") . )* title:(' "' [a-zA-Z0-9 ]+ '"')? ")" {
-    return { type: 'image', altText, url, title };
-  }
 
 blockquoteContent
   = !blockquote (header / image / link / list / emptyLine / newLine / paragraph)+
@@ -88,7 +80,7 @@ emptyLine
   = spaces:(" " / "\t")+ "\n"? { return { type: 'empty line' }; }
 
 text
-  = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+  )+ {
+  = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+)+ {
     return chars;
   }
 
@@ -148,12 +140,28 @@ horizontalRule
     return { type: 'horizontal rule', rule };
   }
 
+
+image
+  = "!" "[" altText:$((!"]") . )* "]" "(" url:$( (!")") . )* title:(' "' [a-zA-Z0-9 ]+ '"')? ")" {
+    return { type: 'image', altText, url, title };
+  }
+  
 link
   = "[" altText:$( (!"]") . )* "]" "(" url:$( (!")") . )* title:(' "' [a-zA-Z0-9 ]+ '"')? ")" {
     return { type: 'link', altText, url, title };
   }
+  
+scheme
+  = "http" "://" / "https" "://" / "www" "."
+  
+autoLink
+  = scheme (!">" .)* { return text().replace(/^<|>$/g, ''); }
 
 comment
   = comment:("["  [a-zA-Z0-9. ]+ "]" ":" " " "#"  text+)+ {
     return { type: 'comment', comment };
   }
+
+htmlTag
+  = "<" tagName:([a-zA-Z0-9]+) ">" content:(htmlTag / (!("<" / ">") .))* "</" tagName2:([a-zA-Z0-9]+) ">"
+  / "<" tagName:([a-zA-Z0-9]+) "/>"
