@@ -102,49 +102,77 @@ escapedCharacters
   = "\\" char:(.) { return char; }
 
 code
-  = code:("`" text:(formatting / !"`" .)+ "`")+ {
-    return { type: 'code', code };
+  = "`" code:(text:(formatting / !"`" .)+)+  "`"{
+    const text = code.flat(Infinity);
+    const original = '`' + text.join('') + '`';
+    const html = `<code>${text.join('')}</code>`;
+    return { type: 'code', original, html };
   }
 
 italic
-  = italic: ("*" text:(formatting / !"*" .)+ "*")+ {
-    return { type: 'italic', italic };
+  = "*" italic:(text:(formatting / !"*" .)+)+  "*"{
+    const text = italic.flat(Infinity);
+    const original = '*' + text.join('') + '*';
+    const html = `<em>${text.join('')}</em>`;
+    return { type: 'italic', original, html };
   }
 
 bold
-  = bold:("**" text:(formatting / !"**" . )+ "**")+ {
-    return { type: 'bold', bold };
-  }
+ = "**" bold:(text:(formatting / !"**" . )+)+ "**" {
+    const text = bold.flat(Infinity);
+    const original = '**' + text.join('') + '**';
+    const html = `<strong>${text.join('')}</strong>`;
+    return { type: 'bold', original, html };
+ }
 
 boldItalic
-  = boldItalic:("***" text:(formatting /  !"***" .)+ "***")+ {
-    return { type: 'bold italic', boldItalic };
-  }
+ = "***" boldItalic:(text:(formatting / !"***" .)+)+ "***" {
+    const text = boldItalic.flat(Infinity);
+    const original = '***' + text.join('') + '***';
+    const html = `<strong><em>${text.join('')}</em></strong>`;
+    return { type: 'bold italic', original, html };
+ }
 
 strikethrough
-  = strikethrough:("~~" text:(formatting / !"~~" .)+"~~")+ {
-    return { type: 'strikethrough', strikethrough };
-  }
+ = "~~" strikethrough:(text:(formatting / !"~~" .)+)+ "~~"  {
+    const text = strikethrough.flat(Infinity);
+    const original = '~~' + text.join('') + '~~';
+    const html = `<del>${text.join('')}</del>`;
+    return { type: 'strikethrough', original, html };
+ }
 
 emphasis
-  = emphasis:("==" text:(formatting / !"==" .)+ "==")+ {
-    return { type: 'emphasis', emphasis };
-  }
+ = "==" emphasis:(text:(formatting / !"==" .)+)+ "=="{
+    const text = emphasis.flat(Infinity);
+    const original = '==' + text.join('') + '==';
+    const html = `<mark>${text.join('')}</mark>`;
+    return { type: 'emphasis', original, html };
+ }
 
 subScript
-  = subScript:("~" text:(formatting / !"~" .)+ "~")+ {
-    return { type: 'subscript', subScript };
-  }
+ = "~" subScript:(text:(formatting / !"~" .)+)+ "~" {
+    const text = subScript.flat(Infinity);
+    const original = '~' + text.join('') + '~';
+    const html = `<sub>${text.join('')}</sub>`;
+    return { type: 'subscript', original, html };
+ }
 
 superScript
-  = superScript:("^" text:(formatting / !"^" .)+ "^")+ {
-    return { type: 'superscript', superScript };
+  = "^" superScript:(text:(formatting / !"^" .)+)+ "^"  {
+    const text = superScript.flat(Infinity);
+    const original = '^' + text.join('') + '^';
+    const html = `<sup>${text.join('')}</sup>`;
+    return { type: 'superscript', original, html };
   }
 
 horizontalRule
-  = rule:(!formatting "---" "-"* / !formatting "***" "*"* /  !formatting "___" "_"*)+ !(text) "\n"? {
-    return { type: 'horizontal rule', rule };
-  }
+ = rule:(!formatting "---" "-"* / !formatting "***" "*"* / !formatting "___" "_"*)+ !(text) "\n"? {
+    const text = rule.flat(Infinity);
+    const original = text.join('');
+    const html = `<hr>`;
+    return { type: 'horizontal rule', original, html };
+ }
+
 
 image
   = "!" "[" altText:$((!"]") . )* "]" "(" url:$( (!")") . )* title:(' "' [a-zA-Z0-9 ]+ '"')? ")" {
