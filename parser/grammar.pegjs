@@ -33,10 +33,10 @@ altHeader
 
 
 blockquoteContent
-  = !blockquote (header / image / link / list / emptyLine / newLine / paragraph)+
+ = (header / image / link / emptyLine / newLine / blockquote / paragraph / list)+
 
 blockquote
-  = quotes:(">" " "*)+ content:(blockquoteContent+ "\n"*) {
+  = quotes:(">"+ " "*)+ content:(blockquoteContent+ "\n"*) {
     return { quotes, content };
   }
 
@@ -44,14 +44,14 @@ codeBlock
   = "``` " content:(!"" .)* "```"
 
 list
-  = spaces:(" ")* t:item+ {
+ = spaces:(" ")* t:item+ {
     return { type: 'list', items: t };
-  }
+ }
 
 item
-  = spaces:(" ")* t:(orderedList / unorderedList / header / image / link / emptyLine / newLine / blockquote / paragraph) {
+ = spaces:(" ")* t:(orderedList / unorderedList / header / image / link / emptyLine / newLine / blockquote / paragraph) {
     return { type: 'item', content: t };
-  }
+ }
 
 orderedList
   = spaces:(" ")* t:([0-9] "." " " text ("\n" / !.))+ {
@@ -63,15 +63,15 @@ unorderedList
     return { type: 'unordered list', items: t };
   }
 
-header
-  = hashes:("#"+)+ " "+ headerText:(formatting / text )* "\n"?  {
-    return { type: 'header', hashes, headerText };
-  }
-
 paragraph
-  = !(spaces:(" ")* t:([-] / [0-9] ".")) t:(text)+ "\n"?  {
+ = !(spaces:(" ")* t:([-] / [0-9] ".")) t:(text)+ "\n"? {
     return { type: 'paragraph', text: t };
-  }
+ }
+
+header
+ = hashes:("#"+)+ " "+ headerText:(formatting / text )* {
+    return { type: 'header', hashes, headerText };
+ }
 
 newLine
   = "\n" { return { type: 'new line' }; }
@@ -80,8 +80,8 @@ emptyLine
   = spaces:(" " / "\t")+ "\n"? { return { type: 'empty line' }; }
 
 text
-  = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / .)+ {
-    return chars.flat(Infinity).join('');
+  = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {
+    return chars.flat(Infinity).join(''); 
   }
 
 formatting
@@ -139,7 +139,6 @@ horizontalRule
   = rule:(!formatting "---" "-"* / !formatting "***" "*"* /  !formatting "___" "_"*)+ !(text) "\n"? {
     return { type: 'horizontal rule', rule };
   }
-
 
 image
   = "!" "[" altText:$((!"]") . )* "]" "(" url:$( (!")") . )* title:(' "' [a-zA-Z0-9 ]+ '"')? ")" {
