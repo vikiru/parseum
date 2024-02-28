@@ -69,8 +69,14 @@ paragraph
  }
 
 header
- = hashes:("#"+)+ " "+ headerText:(formatting / text )* {
-    return { type: 'header', hashes, headerText };
+ = hashes:("#"+)+ " " headerText:(formatting / text )* '\n'? {
+    const hashArr = hashes.flat(Infinity);
+    const text = headerText.flat(Infinity);
+ 	  const headerLevel = hashArr.length;
+    const original = `${hashArr.join('')}${text.join('')}`;
+	  if (headerLevel > 6) return { type: 'paragraph', original: original, html: `<p>${original}</p>`};
+    const html = `<h${headerLevel}>${text.join('')}</h${headerLevel}>`;
+    return { type: 'header', headerLevel, original, html };
  }
 
 newLine
