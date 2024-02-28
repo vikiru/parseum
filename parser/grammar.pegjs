@@ -64,8 +64,11 @@ unorderedList
   }
 
 paragraph
- = !(spaces:(" ")* t:([-] / [0-9] ".")) t:(text)+ "\n"? {
-    return { type: 'paragraph', text: t };
+ = !(spaces:(" ")* t:([-] / [0-9] ".")) t:(text)+ '\n'?{
+    const text = t.flat(Infinity);
+    const original = text.join('');
+    const html = `<p>${original}</p>`;
+    return { type: 'paragraph', original, html};
  }
 
 header
