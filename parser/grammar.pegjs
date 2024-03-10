@@ -1,5 +1,5 @@
 document
-  = elements: (blockquote / codeBlock / newLine / emptyLine / header / horizontalRule / comment / definitionList / taskList / altHeader / paragraph / list)+  {
+  = elements: (blockquote / codeBlock / newLine / emptyLine / header / horizontalRule / comment / definitionList / taskList / altHeader / htmlTag / nestedParagraph / list)+  {
     return elements;
   }
   / !.
@@ -33,7 +33,7 @@ altHeader
 
 
 blockquoteContent
- = (header / image / link / emptyLine / newLine / blockquote / paragraph / list)+
+ = (header / image / link / emptyLine / newLine / blockquote / nestedParagraph / list)+
 
 blockquote
   = quotes:(">"+ " "*)+ content:(blockquoteContent+ "\n"*) {
@@ -63,11 +63,28 @@ unorderedList
     return { type: 'unordered list', items: t };
   }
 
+nestedParagraph
+= paragraphs:(paragraph)+ "\n"? {
+	return { paragraphs }
+}
+
+
 paragraph
- = !(spaces:(" ")* t:([-] / [0-9] ".")) t:(text)+ '\n'?{
+ = !(spaces:(" ")* ([-] / [0-9] ".")) t:(text)+ '\n'?{
     const text = t.flat(Infinity);
-    const original = text.join('');
-    const html = `<p>${original}</p>`;
+    let original = '';
+    let html = '<p>';
+    for (const t of text){
+    	if (typeof t === 'object'){
+        	original += t.original;
+            html += t.html;
+        }
+        else {
+        	original += t;
+            html += t;
+        }
+    }
+    html += '</p>';
     return { type: 'paragraph', original, html};
  }
 
@@ -75,7 +92,7 @@ header
  = hashes:("#"+)+ " " headerText:(formatting / text )* '\n'? {
     const hashArr = hashes.flat(Infinity);
     const text = headerText.flat(Infinity);
- 	  const headerLevel = hashArr.length;
+ 	const headerLevel = hashArr.length;
     const original = `${hashArr.join('')}${text.join('')}`;
 	  if (headerLevel > 6) return { type: 'paragraph', original: original, html: `<p>${original}</p>`};
     const html = `<h${headerLevel}>${text.join('')}</h${headerLevel}>`;
@@ -90,7 +107,7 @@ emptyLine
 
 text
   = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {
-    return chars.flat(Infinity).join(''); 
+    return chars; 
   }
 
 formatting
