@@ -15,8 +15,16 @@ termDefinition
   }
 
 taskList
-  = "-" " " items:taskItem+ "\n"? {
-    return { type: 'task list', items };
+  = list:("-" " " items:taskItem+ "\n"?)+ {
+  	const listArray = list.flat(Infinity);
+    const filteredArray = listArray.filter(l => typeof l === 'object' && l !== null);
+    let original = '';
+    let html = '<ul>';
+    filteredArray.forEach(l => {
+    	original += l.original + '\n';
+        html += l.html;
+    })
+    return { type: 'task list', original, html};
   }
 
 taskItem
