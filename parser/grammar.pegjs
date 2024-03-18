@@ -50,6 +50,33 @@ altHeader
             return { type: 'header', level, t, underline };
         }
 
+header
+    = hashes:("#"+)+ " " headerText:(formatting / text)* "\n"? {
+            const hashArr = hashes.flat(Infinity);
+            const textArr = headerText.flat(Infinity);
+            const headerLevel = hashArr.length;
+            let original = `${hashArr.join('')} `;
+            let html = `<h${headerLevel}>`;
+            textArr.forEach((l) => {
+                const type = typeof l;
+                if (type === 'object') {
+                    original += `${l.original}`;
+                    html += l.html;
+                } else {
+                    original += l;
+                    html += l;
+                }
+            });
+            html += `</h${headerLevel}>`;
+            if (headerLevel > 6) {
+                html = html
+                    .replace(`<h${headerLevel}>`, `<p>${hashArr.join('')} `)
+                    .replace(`</h${headerLevel}>`, '</p>');
+                return { type: 'paragraph', original, html };
+            }
+            return { type: 'header', textArr, headerLevel, original, html };
+        }
+
 blockquoteContent = (header / image / link / emptyLine / newLine / blockquote / nestedParagraph / list)+
 
 blockquote = quotes:(">"+ " "*)+ content:(blockquoteContent+ "\n"*) { return { quotes, content }; }
@@ -86,17 +113,6 @@ paragraph
             }
             html += '</p>';
             return { type: 'paragraph', original, html };
-        }
-
-header
-    = hashes:("#"+)+ " " headerText:(formatting / text)* "\n"? {
-            const hashArr = hashes.flat(Infinity);
-            const text = headerText.flat(Infinity);
-            const headerLevel = hashArr.length;
-            const original = `${hashArr.join('')}${text.join('')}`;
-            if (headerLevel > 6) return { type: 'paragraph', original: original, html: `<p>${original}</p>` };
-            const html = `<h${headerLevel}>${text.join('')}</h${headerLevel}>`;
-            return { type: 'header', headerLevel, original, html };
         }
 
 newLine = "\n" { return { type: 'new line' }; }
