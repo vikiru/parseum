@@ -24,6 +24,7 @@ taskList
     	original += l.original + '\n';
         html += l.html;
     })
+    html += '</ul>';
     return { type: 'task list', original, html};
   }
 
