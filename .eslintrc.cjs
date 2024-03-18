@@ -13,7 +13,7 @@ module.exports = {
         'plugin:node/recommended',
         'plugin:jsdoc/recommended',
         'plugin:tailwindcss/recommended',
-        'plugin:@peggyjs/recommended'
+        'plugin:@peggyjs/recommended',
     ],
     ignorePatterns: ['dist', '.eslintrc.cjs'],
     parserOptions: { ecmaVersion: 'latest', sourceType: 'module', ecmaFeatures: { jsx: true } },

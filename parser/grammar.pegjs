@@ -15,20 +15,24 @@ termDefinition
   }
 
 taskList
-  = "-" " " items:taskItem+ {
+  = "-" " " items:taskItem+ "\n"? {
     return { type: 'task list', items };
   }
 
 taskItem
   = spaces:(" ")* checkbox:("[ ]" / "[x]") " " text:text+ "\n"? {
-    return { type: 'task item', checked: checkbox === '[x]', text };
+  	const checked = checkbox === '[x]';
+    const textContent = text.flat(Infinity).join('');
+  	const original = `- ${checkbox} ${textContent}`;
+    const checkedEnabled = checked === true ? 'checked ' : '';
+    const html = `<li><input type="checkbox" ${checkedEnabled}disabled/>${textContent}</li>`;
+    return { type: 'task item', checked, original, html};
   }
-
 
 altHeader
   = t:(text)+ "\n" underline:("="+ / "-"+) "\n"? {
     const level = underline.length ===  1 ?  2 :  1;
-    return { type: 'header', level, t };
+    return { type: 'header', level, t, underline};
   }
 
 
@@ -68,7 +72,6 @@ nestedParagraph
 	return { paragraphs }
 }
 
-
 paragraph
  = !(spaces:(" ")* ([-] / [0-9] ".")) t:(text)+ '\n'?{
     const text = t.flat(Infinity);
@@ -103,7 +106,7 @@ newLine
   = "\n" { return { type: 'new line' }; }
 
 emptyLine
-  = spaces:(" " / "\t")+ "\n"? { return { type: 'empty line' }; }
+  = spaces:(" " / "\t")+ !(text) "\n"? { return { type: 'empty line' }; }
 
 text
   = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {

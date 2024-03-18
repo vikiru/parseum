@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --fix-dry-run",
-    "prettier": "eslint --ext js,jsx --fix && prettier --write .",
+    "prettier": "eslint --ext js,jsx,pegjs --fix && prettier --write .",
     "preview": "vite preview"
   },
   "dependencies": {
