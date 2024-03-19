@@ -33,9 +33,12 @@ definitionList
             });
             original += '\n';
             html += '</dt>';
-            definitions.forEach((d) => {
-                original += d.original + '\n';
+            definitions.forEach((d, index) => {
+                original += d.original;
                 html += d.html;
+                if (index < definitions.length - 1) {
+                    original += '\n';
+                }
             });
             html += '</dl>';
             return { type: 'definition list', original, html };
@@ -132,7 +135,21 @@ orderedList = spaces:" "* t:([0-9] "." " " text ("\n" / !.))+ { return { type: '
 
 unorderedList = spaces:" "* t:([-] " " text ("\n" / !.))+ { return { type: 'unordered list', items: t }; }
 
-nestedParagraph = paragraphs:paragraph+ "\n"? { return { paragraphs }; }
+nestedParagraph
+    = paragraphs:paragraph+ "\n"? {
+            let original = '';
+            let html = '<p>';
+            paragraphs.forEach((p, index) => {
+                original += p.original;
+                html += p.html.replace('<p>', '').replace('</p>', '');
+                if (index < paragraphs.length - 1) {
+                    original += '\n';
+                    html += '<br>';
+                }
+            });
+            html += '</p>';
+            return { type: 'paragraph', original, html };
+        }
 
 paragraph
     = !(spaces:" "* ([-] / [0-9] ".")) t:text+ "\n"? {
