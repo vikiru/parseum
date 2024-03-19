@@ -16,9 +16,46 @@ document
     )+ { return elements; }
     / !.
 
-definitionList = term:termDefinition+ { return { type: 'definition list', items: term }; }
+definitionList
+    = term:(text / formatting)+ "\n" definitions:definitionTerm {
+            const termArr = term.flat(Infinity);
+            let original = '';
+            let html = '<dl><dt>';
+            termArr.forEach((t) => {
+                const type = typeof t;
+                if (type === 'object') {
+                    original += t.original;
+                    html += t.html;
+                } else {
+                    original += t;
+                    html += t;
+                }
+            });
+            original += '\n';
+            html += '</dt>';
+            definitions.forEach((d) => {
+                original += d.original + '\n';
+                html += d.html;
+            });
+            html += '</dl>';
+            return { type: 'definition list', original, html };
+        }
 
-termDefinition = term:text+ ":" (spaces:" "* definition:text+ "\n")+ { return { term, definition }; }
+definitionTerm
+    = definitions:(":" " " (text / formatting)+ "\n"?)+ {
+            const definitionArr = definitions.flat(Infinity).join('');
+            const defs = definitionArr.split('\n').filter((d) => d !== '');
+            const cleanedDefs = defs.map((def) => def.replace(': ', ''));
+            const type = 'definition term';
+            const definitionObjs = [];
+            defs.forEach((d) => {
+                let index = defs.indexOf(d);
+                let original = d;
+                let html = `<dd>${cleanedDefs[index]}</dd>`;
+                definitionObjs.push({ type, original, html });
+            });
+            return definitionObjs;
+        }
 
 taskList
     = list:("-" " " items:taskItem+ "\n"?)+ {
@@ -273,7 +310,7 @@ scheme
     / "https" "://"
     / "www" "."
 
-autoLink = scheme (!">" .)* { return text().replace(/^<|>$/g, ''); }
+autoLink = "<" scheme (!">" .)* ">" { return { html: text().replace(/^<|>$/g, '') }; }
 
 comment = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', comment }; }
 
