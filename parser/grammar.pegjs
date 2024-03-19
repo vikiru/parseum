@@ -327,7 +327,13 @@ scheme
     / "https" "://"
     / "www" "."
 
-autoLink = "<" scheme (!">" .)* ">" { return { html: text().replace(/^<|>$/g, '') }; }
+autoLink
+    = "<" scheme (!">" .)* ">" {
+            const address = text().replace(/^<|>$/g, '');
+            const original = `<${address}>`;
+            const html = `<a href="${address}">${address}</a>`;
+            return { type: 'auto link', original, html };
+        }
 
 comment = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', comment }; }
 
