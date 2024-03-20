@@ -107,6 +107,7 @@ header
                     html += l;
                 }
             });
+            original += '\n';
             html += `</h${headerLevel}>`;
             if (headerLevel > 6) {
                 html = html
@@ -114,7 +115,7 @@ header
                     .replace(`</h${headerLevel}>`, '</p>');
                 return { type: 'paragraph', original, html };
             }
-            return { type: 'header', textArr, headerLevel, original, html };
+            return { type: 'header', headerLevel, original, html };
         }
 
 blockquoteContent = (header / image / link / emptyLine / newLine / blockquote / nestedParagraph / list)+
@@ -123,13 +124,21 @@ blockquote = quotes:(">"+ " "*)+ content:(blockquoteContent+ "\n"*) { return { q
 
 codeBlock = "``` " content:(!"" .)* "```"
 
-list = spaces:" "* t:item+ { return { type: 'list', items: t }; }
-
-item
-    = spaces:" "*
-        t:(orderedList / unorderedList / header / image / link / emptyLine / newLine / blockquote / paragraph) {
-            return { type: 'item', content: t };
+list
+    = spaces:" "* items:item+ "\n"? {
+            const mainList = items[0];
+            const type = mainList.type === 'ordered list' ? 'ol' : 'ul';
+            const filteredItems = items.slice(1);
+            let original = items.map((i) => i.original).join('');
+            let html = mainList.html.replace('</${type}>', '');
+            filteredItems.forEach((i) => {
+                html += `<li>${i.html}</li>`;
+            });
+            html += `</${type}>`;
+            return { type: 'list', original, html };
         }
+
+item = spaces:" "* item:(orderedList / unorderedList / header / image / link / blockquote / paragraph) { return item; }
 
 orderedList
     = spaces:" "* t:([0-9] "." " " text ("\n" / !.))+ {
