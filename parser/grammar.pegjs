@@ -313,8 +313,14 @@ horizontalRule
         }
 
 image
-    = "!" "[" altText:$(!"]" .)* "]" "(" url:$(!")" .)* title:(" \"" [a-zA-Z0-9 ]+ "\"")? ")" {
-            return { type: 'image', altText, url, title };
+    = "!" "[" altText:$(!"]" .)* "]" "(" url:$(!")" .)* ")" {
+    		let original = `![${altText}](${url})`;
+            let urlSplit = url.split(/ (.+)/).filter(part => part.trim() !== '');
+            let sourceUrl = urlSplit[0];
+			let title = urlSplit.length > 1 ? urlSplit[1].replace(/"/g, '') : '';
+            let imageTitle = title !== '' ? `title="${title}"` : '';
+            let html = `<img src="${sourceUrl}" alt="${altText}" ${imageTitle}/>`;
+            return { type: 'image', original, html};
         }
 
 link
