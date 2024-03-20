@@ -145,7 +145,19 @@ orderedList
             return { type: 'ordered list', original, html };
         }
 
-unorderedList = spaces:" "* t:([-] " " text ("\n" / !.))+ { return { type: 'unordered list', items: t }; }
+unorderedList
+    = spaces:" "* t:([-] " " text ("\n" / !.))+ {
+            let textArr = t.flat(Infinity);
+            let original = textArr.join('');
+            let html = '<ul>';
+            let splitOriginal = original.split('\n').filter((t) => t !== '');
+            splitOriginal.forEach((s) => {
+                let replacementText = s.replace(/- /g, '<li>') + '</li>';
+                html += replacementText;
+            });
+            html += '</ul>';
+            return { type: 'unordered list', original, html };
+        }
 
 nestedParagraph
     = paragraphs:paragraph+ "\n"? {
