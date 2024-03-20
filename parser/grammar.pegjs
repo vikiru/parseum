@@ -131,7 +131,19 @@ item
             return { type: 'item', content: t };
         }
 
-orderedList = spaces:" "* t:([0-9] "." " " text ("\n" / !.))+ { return { type: 'ordered list', items: t }; }
+orderedList
+    = spaces:" "* t:([0-9] "." " " text ("\n" / !.))+ {
+            let textArr = t.flat(Infinity);
+            let original = textArr.join('');
+            let html = '<ol>';
+            let splitOriginal = original.split('\n').filter((t) => t !== '');
+            splitOriginal.forEach((s) => {
+                let replacementText = s.replace(/\d\. /g, '<li>') + '</li>';
+                html += replacementText;
+            });
+            html += '</ol>';
+            return { type: 'ordered list', original, html };
+        }
 
 unorderedList = spaces:" "* t:([-] " " text ("\n" / !.))+ { return { type: 'unordered list', items: t }; }
 
