@@ -202,13 +202,13 @@ paragraph
             return { type: 'paragraph', original, html };
         }
 
-newLine = "\n" { return { type: 'new line', original: '\n', html: ''}; }
+newLine = "\n" { return { type: 'new line', original: '\n', html: '' }; }
 
-emptyLine = spaces:(" " / "\t")+ !text "\n"? { return { type: 'empty line' , original: spaces.join(''), html: '' }; }
+emptyLine = spaces:(" " / "\t")+ !text "\n"? { return { type: 'empty line', original: spaces.join(''), html: '' }; }
 
 text
     = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {
-            const filteredChars = chars.flat(Infinity).filter(c => c !== undefined);
+            const filteredChars = chars.flat(Infinity).filter((c) => c !== undefined);
             return filteredChars;
         }
 
@@ -381,8 +381,21 @@ autoLink
             return { type: 'auto link', original, html };
         }
 
-comment = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', original: comment, html: '' }; }
+comment
+    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', original: comment, html: '' }; }
 
 htmlTag
-    = "<" tagName:[a-zA-Z0-9]+ ">" content:(htmlTag / (!("<" / ">") .))* "</" tagName2:[a-zA-Z0-9]+ ">"
-    / "<" tagName:[a-zA-Z0-9]+ "/>"
+    = "<"
+        tagName:[a-zA-Z0-9]+
+        attributes:(" "+ (!">" .)*)*
+        ">"
+        content:(htmlTag / (!("<" / ">") .))*
+        "</"
+        tagName2:[a-zA-Z0-9]+
+        ">" {
+            const attributeArr = attributes.flat(Infinity).filter((a) => a !== undefined);
+            const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
+            const original = `<${tagName.join('')}${attributeArr.join('')}>${contentArr.join('')}</${tagName2.join('')}>`;
+            return { type: 'html', original, html: original };
+        }
+    / "<" tagName:[a-zA-Z0-9]+ "/>" { return { type: 'html', original: `<${tagName}/>`, html: `<${tagName}/>` }; }
