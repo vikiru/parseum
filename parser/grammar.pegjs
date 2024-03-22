@@ -121,7 +121,18 @@ blockquoteContent = (header / image / link / emptyLine / newLine / blockquote / 
 
 blockquote = quotes:(">"+ " "*)+ content:(blockquoteContent+ "\n"*) { return { quotes, content }; }
 
-codeBlock = "``` " content:(!"" .)* "```"
+codeBlock
+    = "```" language:[a-zA-z]* content:(!"```" .)* "```" {
+            let original = '```';
+            const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
+            const filteredContent = contentArr.filter((c) => c !== '\n');
+            original += language.join('');
+            original += contentArr.join('');
+            let html = '<pre><code>';
+            html += filteredContent.join('');
+            html += '</code></pre>';
+            return { type: 'code block', original, html };
+        }
 
 list
     = spaces:" "* items:item+ "\n"? {
