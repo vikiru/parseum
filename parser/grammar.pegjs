@@ -84,14 +84,16 @@ taskItem
         }
 
 altHeader
-    = t:text+ "\n" underline:("=="+ / "--"+) "\n"? {
+    = t:text+ "\n" underline:("=="+ / "--"+) &"\n"? {
             const textArr = t.flat(Infinity);
             const underlineArr = underline.flat(Infinity);
             const type = underlineArr[0];
             const level = type === '==' ? 1 : 2;
-            let original = textArr.join('') + '\n' + underlineArr.join('');
-            let html = `<h${level}>${textArr.join('')}</h${level}>`;
-            return { type: 'header', original, html };
+            let originalText = textArr.map(t => typeof t === 'object' ? t.original : t).join('');
+            let htmlText = textArr.map(t => typeof t === 'object' ? t.html : t).join('');
+            let original = originalText + "\n" + underlineArr.join('');
+            let html = `<h${level}>${htmlText}</h${level}>`;
+            return { type: 'header', originalText, html };
         }
 
 header
