@@ -371,7 +371,7 @@ horizontalRule
         }
 
 image
-    = "!" "[" altText:$(!"]" .)* "]" "(" url:$(!")" .)* ")" {
+    = "!" "[" altText:$(!"]" !"\n" .)* "]" "(" url:$(!")" .)* ")" {
             let original = `![${altText}](${url})`;
             let urlSplit = url.split(/ (.+)/).filter((part) => part.trim() !== '');
             let sourceUrl = urlSplit[0];
@@ -382,7 +382,7 @@ image
         }
 
 link
-    = "[" linkText:$(!"]" .)* "]" "(" url:$(!")" .)* ")" {
+    = "[" linkText:$(!"]" !"\n" .)* "]" "(" url:$(!")" .)* ")" {
             let original = `[${linkText}](${url})`;
             let urlSplit = url.split(/ (.+)/).filter((part) => part.trim() !== '');
             let sourceUrl = urlSplit[0];
@@ -398,7 +398,7 @@ scheme
     / "www" "."
 
 autoLink
-    = "<" scheme (!">" .)* ">" {
+    = "<" scheme (!">"  !"\n" .)* ">" {
             const address = text().replace(/^<|>$/g, '');
             const original = `<${address}>`;
             const html = `<a href="${address}">${address}</a>`;
