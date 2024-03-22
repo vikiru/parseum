@@ -208,7 +208,8 @@ emptyLine = spaces:(" " / "\t")+ !text "\n"? { return { type: 'empty line' , ori
 
 text
     = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {
-            return chars;
+            const filteredChars = chars.flat(Infinity).filter(c => c !== undefined);
+            return filteredChars;
         }
 
 formatting
