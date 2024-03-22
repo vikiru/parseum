@@ -15,6 +15,7 @@
   "plugins": [
     "@trivago/prettier-plugin-sort-imports",
     "prettier-plugin-jsdoc",
-    "prettier-plugin-pegjs"
+    "prettier-plugin-pegjs",
+    "prettier-plugin-tailwindcss"
   ]
 }
