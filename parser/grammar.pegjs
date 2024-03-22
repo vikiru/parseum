@@ -10,7 +10,6 @@ document
         / definitionList
         / taskList
         / altHeader
-        / htmlTag
         / nestedParagraph
         / list
     )+ { return elements; }
@@ -207,7 +206,7 @@ newLine = "\n" { return { type: 'new line', original: '\n', html: '' }; }
 emptyLine = spaces:(" " / "\t")+ !text "\n"? { return { type: 'empty line', original: spaces.join(''), html: '' }; }
 
 text
-    = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {
+    = chars:(htmlTag / escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {
             const filteredChars = chars.flat(Infinity).filter((c) => c !== undefined);
             return filteredChars;
         }
