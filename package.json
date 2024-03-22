@@ -36,7 +36,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext js,jsx --fix-dry-run",
-    "prettier": "eslint --ext js,jsx,pegjs --fix && prettier --write ."
+    "prettier": "eslint --ext js,jsx,pegjs --fix && prettier --write .",
+    "parser": "peggy -o src/parser/parser.js src/parser/grammar.pegjs"
   },
   "eslintConfig": {
     "extends": [
