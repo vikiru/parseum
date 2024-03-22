@@ -395,7 +395,10 @@ htmlTag
         ">" {
             const attributeArr = attributes.flat(Infinity).filter((a) => a !== undefined);
             const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
-            const original = `<${tagName.join('')}${attributeArr.join('')}>${contentArr.join('')}</${tagName2.join('')}>`;
+            const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;${contentArr.join('')}&lt;/${tagName2.join('')}&gt;`;
             return { type: 'html', original, html: original };
         }
-    / "<" tagName:[a-zA-Z0-9]+ "/>" { return { type: 'html', original: `<${tagName}/>`, html: `<${tagName}/>` }; }
+    / "<" tagName:[a-zA-Z0-9]+ "/>" {
+            const original = `&lt;${tagName.join('')}&gt;`;
+            return { type: 'html', original, html: original };
+        }
