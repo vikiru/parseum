@@ -202,9 +202,9 @@ paragraph
             return { type: 'paragraph', original, html };
         }
 
-newLine = "\n" { return { type: 'new line' }; }
+newLine = "\n" { return { type: 'new line', original: '\n', html: ''}; }
 
-emptyLine = spaces:(" " / "\t")+ !text "\n"? { return { type: 'empty line' }; }
+emptyLine = spaces:(" " / "\t")+ !text "\n"? { return { type: 'empty line' , original: spaces.join(''), html: '' }; }
 
 text
     = chars:(escapedCharacters / specialCharacters / formatting / [a-zA-Z0-9 \t]+ / !newLine !emptyLine .)+ {
@@ -380,7 +380,7 @@ autoLink
             return { type: 'auto link', original, html };
         }
 
-comment = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', comment }; }
+comment = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', original: comment, html: '' }; }
 
 htmlTag
     = "<" tagName:[a-zA-Z0-9]+ ">" content:(htmlTag / (!("<" / ">") .))* "</" tagName2:[a-zA-Z0-9]+ ">"
