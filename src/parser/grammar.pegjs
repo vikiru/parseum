@@ -12,8 +12,9 @@ document
         / altHeader
         / nestedParagraph
         / list
-    )+ { return elements; }
+    )+ { return { type: 'document', original: elements.map(e => e.original).join(''), html: elements.map(e => e.html).join('')} }
     / !.
+
 
 definitionList
     = term:(text / formatting)+ "\n" definitions:definitionTerm {
