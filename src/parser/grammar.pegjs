@@ -94,7 +94,7 @@ altHeader
             let htmlText = textArr.map(t => typeof t === 'object' ? t.html : t).join('');
             let original = originalText + "\n" + underlineArr.join('');
             let html = `<h${level}>${htmlText}</h${level}>`;
-            return { type: 'header', originalText, html };
+            return { type: 'header', original, html };
         }
 
 header
