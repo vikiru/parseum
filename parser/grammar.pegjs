@@ -84,9 +84,14 @@ taskItem
         }
 
 altHeader
-    = t:text+ "\n" underline:("="+ / "-"+) "\n"? {
-            const level = underline.length === 1 ? 2 : 1;
-            return { type: 'header', level, t, underline };
+    = t:text+ "\n" underline:("=="+ / "--"+) "\n"? {
+            const textArr = t.flat(Infinity);
+            const underlineArr = underline.flat(Infinity);
+            const type = underlineArr[0];
+            const level = type === '==' ? 1 : 2;
+            let original = textArr.join('') + '\n' + underlineArr.join('');
+            let html = `<h${level}>${textArr.join('')}</h${level}>`;
+            return { type: 'header', original, html };
         }
 
 header
@@ -398,7 +403,7 @@ scheme
     / "www" "."
 
 autoLink
-    = "<" scheme (!">"  !"\n" .)* ">" {
+    = "<" scheme (!">" !"\n" .)* ">" {
             const address = text().replace(/^<|>$/g, '');
             const original = `<${address}>`;
             const html = `<a href="${address}">${address}</a>`;
@@ -406,7 +411,9 @@ autoLink
         }
 
 comment
-    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', original: comment, html: '' }; }
+    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ {
+            return { type: 'comment', original: comment.flat(Infinity).join(''), html: '' };
+        }
 
 htmlTag
     = "<"
