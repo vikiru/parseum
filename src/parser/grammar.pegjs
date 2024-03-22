@@ -84,7 +84,7 @@ taskItem
         }
 
 altHeader
-    = t:text+ "\n" underline:("=="+ / "--"+) &"\n"? {
+    = t:text+ "\n" underline:("="+ / "-"+) &"\n"? {
             const textArr = t.flat(Infinity);
             const underlineArr = underline.flat(Infinity);
             const type = underlineArr[0];
@@ -405,7 +405,7 @@ scheme
     / "www" "."
 
 autoLink
-    = "<" scheme (!">" !"\n" .)* ">" {
+    = "<" scheme (!">"  !"\n" .)* ">" {
             const address = text().replace(/^<|>$/g, '');
             const original = `<${address}>`;
             const html = `<a href="${address}">${address}</a>`;
@@ -413,9 +413,7 @@ autoLink
         }
 
 comment
-    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ {
-            return { type: 'comment', original: comment.flat(Infinity).join(''), html: '' };
-        }
+    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', original: comment.flat(Infinity).join(''), html: '' }; }
 
 htmlTag
     = "<"
