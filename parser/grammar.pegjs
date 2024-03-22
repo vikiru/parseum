@@ -299,7 +299,7 @@ specialCharacters
 escapedCharacters = "\\" char:. { return char; }
 
 code
-    = "`" code:(text:(formatting / !"`" .)+)+ "`" {
+    = "`" code:(text:(!"`" !"\n" .)+)+ "`" {
             const text = code.flat(Infinity);
             const original = '`' + text.join('') + '`';
             const html = `<code>${text.join('')}</code>`;
@@ -307,7 +307,7 @@ code
         }
 
 italic
-    = "*" italic:(text:(formatting / !"*" .)+)+ "*" {
+    = "*" italic:(text:(!"*" !"\n" .)+)+ "*" {
             const text = italic.flat(Infinity);
             const original = '*' + text.join('') + '*';
             const html = `<em>${text.join('')}</em>`;
@@ -315,7 +315,7 @@ italic
         }
 
 bold
-    = "**" bold:(text:(formatting / !"**" .)+)+ "**" {
+    = "**" bold:(text:(!"**" !"\n" .)+)+ "**" {
             const text = bold.flat(Infinity);
             const original = '**' + text.join('') + '**';
             const html = `<strong>${text.join('')}</strong>`;
@@ -323,7 +323,7 @@ bold
         }
 
 boldItalic
-    = "***" boldItalic:(text:(formatting / !"***" .)+)+ "***" {
+    = "***" boldItalic:(text:(!"***" !"\n" .)+)+ "***" {
             const text = boldItalic.flat(Infinity);
             const original = '***' + text.join('') + '***';
             const html = `<strong><em>${text.join('')}</em></strong>`;
@@ -331,7 +331,7 @@ boldItalic
         }
 
 strikethrough
-    = "~~" strikethrough:(text:(formatting / !"~~" .)+)+ "~~" {
+    = "~~" strikethrough:(text:(!"~~" !"\n" .)+)+ "~~" {
             const text = strikethrough.flat(Infinity);
             const original = '~~' + text.join('') + '~~';
             const html = `<del>${text.join('')}</del>`;
@@ -339,7 +339,7 @@ strikethrough
         }
 
 emphasis
-    = "==" emphasis:(text:(formatting / !"==" .)+)+ "==" {
+    = "==" emphasis:(text:(!"==" !"\n" .)+)+ "==" {
             const text = emphasis.flat(Infinity);
             const original = '==' + text.join('') + '==';
             const html = `<mark>${text.join('')}</mark>`;
@@ -347,7 +347,7 @@ emphasis
         }
 
 subScript
-    = "~" subScript:(text:(formatting / !"~" .)+)+ "~" {
+    = "~" subScript:(text:(!"~" !"\n" .)+)+ "~" {
             const text = subScript.flat(Infinity);
             const original = '~' + text.join('') + '~';
             const html = `<sub>${text.join('')}</sub>`;
@@ -355,7 +355,7 @@ subScript
         }
 
 superScript
-    = "^" superScript:(text:(formatting / !"^" .)+)+ "^" {
+    = "^" superScript:(text:(!"^" !"\n" .)+)+ "^" {
             const text = superScript.flat(Infinity);
             const original = '^' + text.join('') + '^';
             const html = `<sup>${text.join('')}</sup>`;
