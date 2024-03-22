@@ -123,7 +123,16 @@ blockquote
     = quotes:(">"+ " "*)+ content:blockquoteContent+ {
             const quotesArr = quotes.flat(Infinity);
             const contentArr = content.flat(Infinity);
-            return { quotesArr, contentArr };
+            const original = `${quotesArr.join('')} ${contentArr.map((c) => c.original).join('')}`;
+            let html = '<blockquote>';
+            let htmlMap = [];
+            contentArr.forEach((c) => {
+                c.html = c.html.replace('> ', '').replace('<br>><br>', '</p><p>');
+                htmlMap.push(c);
+            });
+            html += htmlMap.map((h) => h.html).join('');
+            html += '</blockquote>';
+            return { type: 'blockquote', original, html };
         }
 
 codeBlock
