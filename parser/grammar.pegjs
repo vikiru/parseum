@@ -117,9 +117,14 @@ header
             return { type: 'header', headerLevel, original, html };
         }
 
-blockquoteContent = (header / image / link / emptyLine / newLine / blockquote / nestedParagraph / list)+
+blockquoteContent = (header / image / link / blockquote / nestedParagraph / list)+
 
-blockquote = quotes:(">"+ " "*)+ content:(blockquoteContent+ "\n"*) { return { quotes, content }; }
+blockquote
+    = quotes:(">"+ " "*)+ content:blockquoteContent+ {
+            const quotesArr = quotes.flat(Infinity);
+            const contentArr = content.flat(Infinity);
+            return { quotesArr, contentArr };
+        }
 
 codeBlock
     = "```" language:[a-zA-z]* content:(!"```" .)* "```" {
@@ -179,7 +184,7 @@ unorderedList
         }
 
 nestedParagraph
-    = paragraphs:paragraph+ "\n"? {
+    = paragraphs:paragraph+ &("\n"?) {
             let original = '';
             let html = '<p>';
             paragraphs.forEach((p, index) => {
@@ -195,7 +200,7 @@ nestedParagraph
         }
 
 paragraph
-    = !(spaces:" "* ([-] / [0-9] ".")) t:text+ "\n"? {
+    = !(spaces:" "* ([-] / [0-9] ".") / emptyLine / newLine) t:text+ "\n"? {
             const text = t.flat(Infinity);
             let original = '';
             let html = '<p>';
