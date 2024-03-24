@@ -9,12 +9,17 @@ document
         / comment
         / definitionList
         / taskList
-        / altHeader
         / nestedParagraph
         / list
-    )+ { return { type: 'document', original: elements.map(e => e.original).join(''), html: elements.map(e => e.html).join('')} }
+        / altHeader
+    )+ {
+            return {
+                type: 'document',
+                original: elements.map((e) => e.original).join(''),
+                html: elements.map((e) => e.html).join(''),
+            };
+        }
     / !.
-
 
 definitionList
     = term:(text / formatting)+ "\n" definitions:definitionTerm {
@@ -85,14 +90,14 @@ taskItem
         }
 
 altHeader
-    = t:text+ "\n" underline:("="+ / "-"+) &"\n"? {
+    = t:text+ "\n" underline:("="+ / "-"+) &("\n"?) {
             const textArr = t.flat(Infinity);
             const underlineArr = underline.flat(Infinity);
             const type = underlineArr[0];
             const level = type === '==' ? 1 : 2;
-            let originalText = textArr.map(t => typeof t === 'object' ? t.original : t).join('');
-            let htmlText = textArr.map(t => typeof t === 'object' ? t.html : t).join('');
-            let original = originalText + "\n" + underlineArr.join('');
+            let originalText = textArr.map((t) => (typeof t === 'object' ? t.original : t)).join('');
+            let htmlText = textArr.map((t) => (typeof t === 'object' ? t.html : t)).join('');
+            let original = originalText + '\n' + underlineArr.join('');
             let html = `<h${level}>${htmlText}</h${level}>`;
             return { type: 'header', original, html };
         }
@@ -170,33 +175,57 @@ list
             return { type: 'list', original, html };
         }
 
-item = spaces:" "* item:(orderedList / unorderedList / header / image / link / blockquote / paragraph) { return item; }
+item = spaces:" "* item:(orderedList / unorderedList) { return item; }
 
 orderedList
     = spaces:" "* t:([0-9] "." " " text ("\n" / !.))+ {
-            let textArr = t.flat(Infinity);
-            let original = textArr.join('');
+            const textArr = t.flat(Infinity).filter((t) => t !== undefined);
+            let original = '';
             let html = '<ol>';
-            let splitOriginal = original.split('\n').filter((t) => t !== '');
-            splitOriginal.forEach((s) => {
-                let replacementText = s.replace(/\d\. /g, '<li>') + '</li>';
-                html += replacementText;
+            textArr.forEach((t) => {
+                original += typeof t === 'object' ? t.original : t;
             });
-            html += '</ol>';
+            let objects = textArr.filter((t) => typeof t === 'object');
+            let items = original.split('\n');
+            items = items.map((i) => {
+                let text =
+                    i
+                        .replace(/\d\. /g, '<li>')
+                        .replace(/\n/g, '</li>')
+                        .replace(/<li><li>/g, '<li>')
+                        .replace(/<\/li><\/li>/g, '</li>') + '</li>';
+                for (const obj of objects) {
+                    text = text.replace(obj.original, obj.html);
+                }
+                return text;
+            });
+            html += items.join('') + '</ul>';
             return { type: 'ordered list', original, html };
         }
 
 unorderedList
     = spaces:" "* t:([-] " " text ("\n" / !.))+ {
-            let textArr = t.flat(Infinity);
-            let original = textArr.join('');
+            const textArr = t.flat(Infinity).filter((t) => t !== undefined);
+            let original = '';
             let html = '<ul>';
-            let splitOriginal = original.split('\n').filter((t) => t !== '');
-            splitOriginal.forEach((s) => {
-                let replacementText = s.replace(/- /g, '<li>') + '</li>';
-                html += replacementText;
+            textArr.forEach((t) => {
+                original += typeof t === 'object' ? t.original : t;
             });
-            html += '</ul>';
+            let objects = textArr.filter((t) => typeof t === 'object');
+            let items = original.split('\n');
+            items = items.map((i) => {
+                let text =
+                    i
+                        .replace(/- /, '<li>')
+                        .replace(/\n/g, '</li>')
+                        .replace(/<li><li>/g, '<li>')
+                        .replace(/<\/li><\/li>/g, '</li>') + '</li>';
+                for (const obj of objects) {
+                    text = text.replace(obj.original, obj.html);
+                }
+                return text;
+            });
+            html += items.join('') + '</ul>';
             return { type: 'unordered list', original, html };
         }
 
@@ -256,6 +285,7 @@ formatting
     / link
     / autoLink
     / image
+    / codeBlock
 
 specialCharacters
     = !escapedCharacters
@@ -406,7 +436,7 @@ scheme
     / "www" "."
 
 autoLink
-    = "<" scheme (!">"  !"\n" .)* ">" {
+    = "<" scheme (!">" !"\n" .)* ">" {
             const address = text().replace(/^<|>$/g, '');
             const original = `<${address}>`;
             const html = `<a href="${address}">${address}</a>`;
@@ -414,7 +444,9 @@ autoLink
         }
 
 comment
-    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', original: comment.flat(Infinity).join(''), html: '' }; }
+    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ {
+            return { type: 'comment', original: comment.flat(Infinity).join(''), html: '' };
+        }
 
 htmlTag
     = "<"

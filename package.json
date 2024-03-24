@@ -37,7 +37,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint . --ext js,jsx --fix-dry-run",
     "prettier": "eslint --ext js,jsx,pegjs --fix && prettier --write .",
-    "parser": "peggy -o src/parser/parser.js src/parser/grammar.pegjs"
+    "parser": "peggy -o src/parser/parser.js src/parser/grammar.pegjs --format es"
   },
   "eslintConfig": {
     "extends": [
@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@peggyjs/eslint-plugin": "^1.1.0",
+    "@tailwindcss/typography": "^0.5.10",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
