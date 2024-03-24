@@ -55,7 +55,7 @@ function App() {
                 <section id="markdown-input" className="w-1/2">
                     <textarea
                         ref={textareaRef}
-                        placeholder="Bio"
+                        placeholder=""
                         className="textarea textarea-bordered textarea-lg h-full w-full"
                         rows={20}
                         value={text}
