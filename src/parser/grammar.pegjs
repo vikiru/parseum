@@ -17,6 +17,7 @@ document
                 type: 'document',
                 original: elements.map((e) => e.original).join(''),
                 html: elements.map((e) => e.html).join(''),
+                elements,
             };
         }
     / !.
@@ -173,7 +174,7 @@ list
             });
             html += `</${type}>`;
             html = html.replace(/<li><li>/g, '<li>').replace(/<\/li><\/li>/g, '</li>');
-            return { type: 'list', original, html, items };
+            return { type: 'list', original, html };
         }
 
 item = spaces:" "* item:(orderedList / unorderedList) { return item; }
@@ -238,34 +239,46 @@ unorderedList
 nestedParagraph
     = paragraphs:paragraph+ &("\n"?) {
             let original = '';
-            let html = '<p>';
-            paragraphs.forEach((p, index) => {
-                original += p.original;
-                html += p.html.replace('<p>', '').replace('</p>', '');
-                if (index < paragraphs.length - 1) {
-                    original += '\n';
-                    html += '<br>';
-                }
-            });
-            html += '</p>';
+            let html = '';
+            const filteredParagraphs = paragraphs.filter(
+                (p) => p.type !== 'html' && p.html !== '<p></p>' && p.html !== '',
+            );
+            if (filteredParagraphs.length > 0) {
+                html = '<p>';
+                filteredParagraphs.forEach((p, index) => {
+                    original += p.original;
+                    html += p.html.replace('<p>', '').replace('</p>', '').replace('<p></p>', '');
+                    if (index < filteredParagraphs.length - 1) {
+                        original += '\n';
+                        html += '<br>';
+                    }
+                });
+                html += '</p>';
+            }
             return { type: 'paragraph', original, html };
         }
 
 paragraph
     = !(spaces:" "* ([-] / [0-9] ".") / emptyLine / newLine) t:text+ "\n"? {
             const text = t.flat(Infinity);
+            const filteredText = text.filter(
+                (t) => (typeof t === 'object' && t.type !== 'html') || typeof t === 'string',
+            );
             let original = '';
-            let html = '<p>';
-            for (const t of text) {
-                if (typeof t === 'object') {
-                    original += t.original;
-                    html += t.html;
-                } else {
-                    original += t;
-                    html += t;
+            let html = '';
+            if (filteredText.length > 0) {
+                html = '<p>';
+                for (const t of filteredText) {
+                    if (typeof t === 'object') {
+                        original += t.original;
+                        html += t.html;
+                    } else {
+                        original += t;
+                        html += t;
+                    }
                 }
+                html += '</p>';
             }
-            html += '</p>';
             return { type: 'paragraph', original, html };
         }
 
@@ -468,13 +481,16 @@ htmlTag
             const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;${contentArr.join('')}&lt;/${tagName2.join('')}&gt;`;
             return { type: 'html', original, html: '' };
         }
-    / "<" tagName:[a-zA-Z0-9]+ "/>" {
+    / " "* "<" "/"* tagName:[a-zA-Z0-9]+ ">" {
+            const original = `&lt;/${tagName.join('')}&gt;`;
+            return { type: 'html', original, html: '' };
+        }
+    / " "* "<" tagName:[a-zA-Z0-9]+ "/>" {
             const original = `&lt;${tagName.join('')}&gt;`;
             return { type: 'html', original, html: '' };
         }
-    / "<" tagName:[a-zA-Z0-9]+ attributes:(" "+ (!">" .)*)* ">" content:(htmlTag / (!("<" / ">") .))* {
+    / " "* "<" tagName:[a-zA-Z0-9]+ attributes:(" "+ (!">" .)*)* ">" {
             const attributeArr = attributes.flat(Infinity).filter((a) => a !== undefined);
-            const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
-            const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;${contentArr.join('')}&lt;`;
+            const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;&lt;`;
             return { type: 'html', original, html: '' };
         }
