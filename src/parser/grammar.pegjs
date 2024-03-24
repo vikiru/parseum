@@ -153,13 +153,14 @@ codeBlock
     = "```" language:[a-zA-z]* content:(!"```" .)* "```" {
             let original = '```';
             const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
-            const filteredContent = contentArr.filter((c) => c !== '\n');
+            const filteredContent = contentArr.slice(1, contentArr.length - 1);
             original += language.join('');
             original += contentArr.join('');
             let html = '<pre><code>';
             html += filteredContent.join('');
             html += '</code></pre>';
-            return { type: 'code block', original, html };
+            html = html.replace(/\n/g, '<br>');
+            return { type: 'code block', original, html, filteredContent};
         }
 
 list
@@ -174,7 +175,7 @@ list
             });
             html += `</${type}>`;
             html = html.replace(/<li><li>/g, '<li>').replace(/<\/li><\/li>/g, '</li>');
-            return { type: 'list', original, html };
+            return { type: 'list', original, html, items };
         }
 
 item = spaces:" "* item:(orderedList / unorderedList) { return item; }
@@ -240,9 +241,7 @@ nestedParagraph
     = paragraphs:paragraph+ &("\n"?) {
             let original = '';
             let html = '';
-            const filteredParagraphs = paragraphs.filter(
-                (p) => p.type !== 'html' && p.html !== '<p></p>' && p.html !== '',
-            );
+            const filteredParagraphs = paragraphs.filter((p) => p.type !== 'html' && p.html !== '<p></p>' && p.html !== '');
             if (filteredParagraphs.length > 0) {
                 html = '<p>';
                 filteredParagraphs.forEach((p, index) => {
@@ -255,7 +254,7 @@ nestedParagraph
                 });
                 html += '</p>';
             }
-            return { type: 'paragraph', original, html };
+            return { type: 'paragraph', original, html, filteredParagraphs };
         }
 
 paragraph
@@ -279,7 +278,7 @@ paragraph
                 }
                 html += '</p>';
             }
-            return { type: 'paragraph', original, html };
+            return { type: 'paragraph', original, html, filteredText};
         }
 
 newLine = "\n" { return { type: 'new line', original: '\n', html: '' }; }
@@ -305,6 +304,7 @@ formatting
     / autoLink
     / image
     / codeBlock
+    / blockquote
 
 specialCharacters
     = !escapedCharacters
@@ -481,10 +481,11 @@ htmlTag
             const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;${contentArr.join('')}&lt;/${tagName2.join('')}&gt;`;
             return { type: 'html', original, html: '' };
         }
-    / " "* "<" "/"* tagName:[a-zA-Z0-9]+ ">" {
-            const original = `&lt;/${tagName.join('')}&gt;`;
-            return { type: 'html', original, html: '' };
-        }
+    / " "* "<" "/"* tagName:[a-zA-Z0-9]+ ">" 
+    { 
+        const original = `&lt;/${tagName.join('')}&gt;`;
+   		return { type: 'html', original, html: '' };
+    }
     / " "* "<" tagName:[a-zA-Z0-9]+ "/>" {
             const original = `&lt;${tagName.join('')}&gt;`;
             return { type: 'html', original, html: '' };
