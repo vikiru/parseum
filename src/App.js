@@ -63,7 +63,7 @@ function App() {
                         onScroll={handleScroll}
                     ></textarea>
                 </section>
-                <section id="html-output" className="w-1/2 overflow-auto">
+                <section id="html-output" className="w-1/2">
                     <div ref={divRef} className="prose pl-6" dangerouslySetInnerHTML={{ __html: html }} />
                 </section>
             </div>
