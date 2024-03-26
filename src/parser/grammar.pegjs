@@ -131,16 +131,20 @@ header
             return { type: 'header', headerLevel, original, html };
         }
 
-nestedBlockquotes = blockquotes:blockquote+ "\n"* {
-	let original = blockquotes.map(b => b.original).join('');
-    let html = '<blockquote>';
-    blockquotes.forEach(b => {
-    	html += b.html.replace('<blockquote>', '').replace('</blockquote>', '');
-    })
-    html += '</blockquote>';
-    html = html.replace('</p><p>', '<br>').replace('</ol><ol>', '').replace('</ul><ul>', '');
-	return { type: 'blockquote', original, html } 
-}
+nestedBlockquotes
+    = blockquotes:blockquote+ "\n"* {
+            let original = blockquotes.map((b) => b.original).join('');
+            let html = '<blockquote>';
+            blockquotes.forEach((b) => {
+                html += b.html.replace('<blockquote>', '').replace('</blockquote>', '');
+            });
+            html += '</blockquote>';
+            html = html
+                .replace(/<\/p><p>/g, '<br>')
+                .replace(/<\/ol><ol>/g, '')
+                .replace(/<\/ul><ul>/g, '');
+            return { type: 'blockquote', original, html };
+        }
 
 blockquoteContent = (header / image / link / nestedParagraph / list)+
 
@@ -152,12 +156,18 @@ blockquote
             let html = '<blockquote>';
             let htmlMap = [];
             contentArr.forEach((c) => {
-                c.html = c.html.replace('> ', '').replace('<br>><br>', '</p><p>').replace('<blockquote>', '').replace('</blockquote>', '').replace('<br><p>', '<br>').replace('</p></p>', '</p>');
+                c.html = c.html
+                    .replace('> ', '')
+                    .replace('<br>><br>', '</p><p>')
+                    .replace('<blockquote>', '')
+                    .replace('</blockquote>', '')
+                    .replace('<br><p>', '<br>')
+                    .replace('</p></p>', '</p>');
                 htmlMap.push(c);
             });
             html += htmlMap.map((h) => h.html).join('');
             html += '</blockquote>';
-            return { type: 'blockquote', original, html, contentArr};
+            return { type: 'blockquote', original, html, contentArr };
         }
 
 codeBlock
@@ -171,7 +181,7 @@ codeBlock
             html += filteredContent.join('');
             html += '</code></pre>';
             html = html.replace(/\n/g, '<br>');
-            return { type: 'code block', original, html, filteredContent};
+            return { type: 'code block', original, html, filteredContent };
         }
 
 list
@@ -185,7 +195,10 @@ list
                 html += `<li>${i.html}</li>`;
             });
             html += `</${type}>`;
-            html = html.replace(/<li><li>/g, '<li>').replace(/<\/li><\/li>/g, '</li>').replace(`</${type}></${type}>`, `</${type}>`);
+            html = html
+                .replace(/<li><li>/g, '<li>')
+                .replace(/<\/li><\/li>/g, '</li>')
+                .replace(`</${type}></${type}>`, `</${type}>`);
             return { type: 'list', original, html, items };
         }
 
@@ -249,10 +262,12 @@ unorderedList
         }
 
 nestedParagraph
-    = paragraphs:paragraph+ &"\n"* {
+    = paragraphs:paragraph+ &("\n"*) {
             let original = '';
             let html = '';
-            const filteredParagraphs = paragraphs.filter((p) => p.type !== 'html' && p.html !== '<p></p>' && p.html !== '');
+            const filteredParagraphs = paragraphs.filter(
+                (p) => p.type !== 'html' && p.html !== '<p></p>' && p.html !== '',
+            );
             if (filteredParagraphs.length > 0) {
                 html = '<p>';
                 filteredParagraphs.forEach((p, index) => {
@@ -289,7 +304,7 @@ paragraph
                 }
                 html += '</p>';
             }
-            return { type: 'paragraph', original, html, filteredText};
+            return { type: 'paragraph', original, html, filteredText };
         }
 
 newLine = "\n" { return { type: 'new line', original: '\n', html: '' }; }
@@ -492,11 +507,10 @@ htmlTag
             const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;${contentArr.join('')}&lt;/${tagName2.join('')}&gt;`;
             return { type: 'html', original, html: '' };
         }
-    / " "* "<" "/"* tagName:[a-zA-Z0-9]+ ">" 
-    { 
-        const original = `&lt;/${tagName.join('')}&gt;`;
-   		return { type: 'html', original, html: '' };
-    }
+    / " "* "<" "/"* tagName:[a-zA-Z0-9]+ ">" {
+            const original = `&lt;/${tagName.join('')}&gt;`;
+            return { type: 'html', original, html: '' };
+        }
     / " "* "<" tagName:[a-zA-Z0-9]+ "/>" {
             const original = `&lt;${tagName.join('')}&gt;`;
             return { type: 'html', original, html: '' };
