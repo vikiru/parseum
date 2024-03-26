@@ -1,6 +1,6 @@
 document
     = elements:(
-        blockquote
+        nestedBlockquotes
         / codeBlock
         / newLine
         / emptyLine
@@ -131,22 +131,33 @@ header
             return { type: 'header', headerLevel, original, html };
         }
 
-blockquoteContent = (header / image / link / blockquote / nestedParagraph / list)+
+nestedBlockquotes = blockquotes:blockquote+ "\n"* {
+	let original = blockquotes.map(b => b.original).join('');
+    let html = '<blockquote>';
+    blockquotes.forEach(b => {
+    	html += b.html.replace('<blockquote>', '').replace('</blockquote>', '');
+    })
+    html += '</blockquote>';
+    html = html.replace('</p><p>', '<br>');
+	return { type: 'blockquote', original, html } 
+}
+
+blockquoteContent = (header / image / link / nestedParagraph / list)+
 
 blockquote
     = quotes:(">"+ " "*)+ content:blockquoteContent+ {
-            const quotesArr = quotes.flat(Infinity);
-            const contentArr = content.flat(Infinity);
+            const quotesArr = quotes.flat(Infinity).filter((c) => c !== undefined);
+            const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
             const original = `${quotesArr.join('')} ${contentArr.map((c) => c.original).join('')}`;
             let html = '<blockquote>';
             let htmlMap = [];
             contentArr.forEach((c) => {
-                c.html = c.html.replace('> ', '').replace('<br>><br>', '</p><p>');
+                c.html = c.html.replace('> ', '').replace('<br>><br>', '</p><p>').replace('<blockquote>', '').replace('</blockquote>', '').replace('<br><p>', '<br>').replace('</p></p>', '</p>');
                 htmlMap.push(c);
             });
             html += htmlMap.map((h) => h.html).join('');
             html += '</blockquote>';
-            return { type: 'blockquote', original, html };
+            return { type: 'blockquote', original, html, contentArr};
         }
 
 codeBlock
@@ -203,7 +214,7 @@ orderedList
                 }
                 return text;
             });
-            html += items.join('') + '</ul>';
+            html += items.join('') + '</ol>';
             return { type: 'ordered list', original, html };
         }
 
@@ -238,7 +249,7 @@ unorderedList
         }
 
 nestedParagraph
-    = paragraphs:paragraph+ &("\n"?) {
+    = paragraphs:paragraph+ &"\n"* {
             let original = '';
             let html = '';
             const filteredParagraphs = paragraphs.filter((p) => p.type !== 'html' && p.html !== '<p></p>' && p.html !== '');
@@ -258,7 +269,7 @@ nestedParagraph
         }
 
 paragraph
-    = !(spaces:" "* ([-] / [0-9] ".") / emptyLine / newLine) t:text+ "\n"? {
+    = !(spaces:" "* ([-] / [0-9] ".") / emptyLine / newLine / blockquote) t:text+ "\n"? {
             const text = t.flat(Infinity);
             const filteredText = text.filter(
                 (t) => (typeof t === 'object' && t.type !== 'html') || typeof t === 'string',
@@ -304,7 +315,7 @@ formatting
     / autoLink
     / image
     / codeBlock
-    / blockquote
+    / nestedBlockquotes
 
 specialCharacters
     = !escapedCharacters
