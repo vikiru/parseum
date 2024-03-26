@@ -1,9 +1,48 @@
-## Parseum 
+<div align="center" id="logo">
+    <img src="logo.png"/>
+</div>
+
+<div align='center' id="badges">
+
+<a href="https://vikiru.github.io/parseum/">
+	<img src="https://img.shields.io/badge/documentation-docs-orange" alt="Documentation"/>
+</a>
+<a href="https://parseum-v1.web.app">
+    <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="parseum live site hosted via Firebase"/>
+</a>
+<br/>
+ <a href="https://wakatime.com/@vikiru/projects/umhctwxtly">
+  <img src="https://wakatime.com/badge/user/5e62f99d-3a1e-4fd2-8f37-77919d626a67/project/018e1a22-364b-4b87-a797-b55b694a169d.svg"
+  alt="Wakatime Coding Stats for Parseum"/>
+ </a>
+ <br/>
+ <a href="https://github.com/vikiru/parseum/blob/main/LICENSE">
+  <img src="https://img.shields.io/badge/license-MIT-aqua" alt="MIT License Badge"/>
+ </a>
+ <a href="https://github.com/prettier/prettier">
+  <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="Code Style - Prettier"/>
+ </a>
+<br/>
+ <a href="https://github.com/vikiru/parseum/issues?q=is%3Aissue+is%3Aclosed">
+  <img src="https://img.shields.io/github/issues-closed/vikiru/parseum" alt="Closed Issues"/>
+ </a>
+ <a href="https://github.com/vikiru/parseum/pulls?q=is%3Apr+is%3Aclosed">
+  <img src="https://img.shields.io/github/issues-pr-closed/vikiru/parseum?label=closed%20prs" alt="Closed PRs"/>
+ </a>
+  <a href="https://github.com/vikiru/parseum/releases">
+  <img src="https://img.shields.io/github/v/release/vikiru/parseum" alt="Release"/>
+ </a>
+<br/>
+ <a href="https://github.com/vikiru/parseum/actions/workflows/lint.yml">
+  <img src="https://github.com/vikiru/parseum/actions/workflows/lint.yml/badge.svg" alt="GitHub Lint Action Workflow Status"/>
+ </a>
+</div>
+
+---
 
 **Parseum** is a markdown parser and editor built utilizing [Peggy.js](https://github.com/peggyjs/peggy) which generates a parser from a defined **Parsing Expression Grammar (PEG)** file. Combining this parser with **React**, **TailwindCSS**, and **DaisyUI**, allows for the creation of a simple markdown to html parser and editor with the flexibility to grow and evolve as needed by updating the defined grammar file.
 
 ## 📖 Table of Contents
-- [Parseum](#parseum)
 - [📖 Table of Contents](#-table-of-contents)
 - [🌟 Features](#-features)
   - [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
