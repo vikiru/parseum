@@ -12,6 +12,7 @@ document
         / nestedParagraph
         / list
         / altHeader
+        / .
     )+ {
             return {
                 type: 'document',
