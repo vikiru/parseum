@@ -1,5 +1,5 @@
 {
-  "name": "markdown-editor",
+  "name": "parseum",
   "description": "A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.",
   "author": "Visakan Kirubakaran",
   "version": "1.0.0",
