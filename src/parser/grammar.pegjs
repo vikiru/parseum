@@ -138,7 +138,7 @@ nestedBlockquotes = blockquotes:blockquote+ "\n"* {
     	html += b.html.replace('<blockquote>', '').replace('</blockquote>', '');
     })
     html += '</blockquote>';
-    html = html.replace('</p><p>', '<br>');
+    html = html.replace('</p><p>', '<br>').replace('</ol><ol>', '').replace('</ul><ul>', '');
 	return { type: 'blockquote', original, html } 
 }
 
@@ -185,7 +185,7 @@ list
                 html += `<li>${i.html}</li>`;
             });
             html += `</${type}>`;
-            html = html.replace(/<li><li>/g, '<li>').replace(/<\/li><\/li>/g, '</li>');
+            html = html.replace(/<li><li>/g, '<li>').replace(/<\/li><\/li>/g, '</li>').replace(`</${type}></${type}>`, `</${type}>`);
             return { type: 'list', original, html, items };
         }
 
