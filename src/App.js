@@ -71,7 +71,7 @@ function App() {
             <div className="flex">
                 <section id="markdown-input" className="m-2 w-1/2">
                     <textarea
-                        id='input'
+                        id="input"
                         ref={textareaRef}
                         placeholder="Type your markdown here. View the rendered HTML on the right."
                         className="textarea textarea-bordered textarea-lg h-full w-full"

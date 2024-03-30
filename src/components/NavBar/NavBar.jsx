@@ -41,7 +41,7 @@ function NavBar({ saveMarkdown, clearMarkdown }) {
                 <a className="btn btn-ghost text-xl">Parseum</a>
             </div>
             <div className="navbar-end">
-                <button className="btn btn-circle btn-ghost" onClick={saveMarkdown} title='Save Markdown'>
+                <button className="btn btn-circle btn-ghost" onClick={saveMarkdown} title="Save Markdown">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -59,7 +59,7 @@ function NavBar({ saveMarkdown, clearMarkdown }) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 11l2 2m-2-2v4" />
                     </svg>
                 </button>
-                <button className="btn btn-circle btn-ghost" onClick={clearMarkdown} title='Clear Markdown'>
+                <button className="btn btn-circle btn-ghost" onClick={clearMarkdown} title="Clear Markdown">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
