@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function NavBar() {
+function NavBar({ saveMarkdown, clearMarkdown }) {
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">
@@ -26,22 +26,22 @@ function NavBar() {
                         className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
                     >
                         <li>
-                            <a>Homepage</a>
+                            <a href="https://vikiru.github.io/parseum/">Documentation</a>
                         </li>
                         <li>
-                            <a>Portfolio</a>
+                            <a href="https://vikiru.github.io/parseum/syntax/">Supported Syntax</a>
                         </li>
                         <li>
-                            <a>About</a>
+                            <a href="https://github.com/vikiru/parseum">GitHub</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <div className="navbar-center">
-                <a className="btn btn-ghost text-xl">markdown-editor</a>
+                <a className="btn btn-ghost text-xl">Parseum</a>
             </div>
             <div className="navbar-end">
-                <button className="btn btn-circle btn-ghost">
+                <button className="btn btn-circle btn-ghost" onClick={saveMarkdown} title='Save Markdown'>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -53,28 +53,22 @@ function NavBar() {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"
                         />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 3v5a1 1 0 001 1h5" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 11l2 2m-2-2v4" />
                     </svg>
                 </button>
-                <button className="btn btn-circle btn-ghost">
-                    <div className="indicator">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                            />
-                        </svg>
-                        <span className="badge indicator-item badge-primary badge-xs"></span>
-                    </div>
+                <button className="btn btn-circle btn-ghost" onClick={clearMarkdown} title='Clear Markdown'>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
             </div>
         </div>

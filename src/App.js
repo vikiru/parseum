@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import Footer from './components/Footer/Footer.jsx';
 import NavBar from './components/NavBar/NavBar.jsx';
 import { parse } from './parser/parser.js';
 
@@ -27,6 +28,13 @@ function App() {
     const divRef = useRef(null);
 
     useEffect(() => {
+        const savedMarkdown = localStorage.getItem('markdown');
+        if (savedMarkdown) {
+            setText(savedMarkdown);
+        }
+    }, []);
+
+    useEffect(() => {
         if (debouncedText) {
             const parsedHTML = parse(debouncedText);
             setHTML(parsedHTML.html);
@@ -48,25 +56,37 @@ function App() {
         }
     };
 
+    const saveMarkdown = () => {
+        localStorage.setItem('markdown', text);
+    };
+
+    const clearMarkdown = () => {
+        setText('');
+        localStorage.removeItem('markdown');
+    };
+
     return (
         <div>
-            <NavBar />
+            <NavBar saveMarkdown={saveMarkdown} clearMarkdown={clearMarkdown} />
             <div className="flex">
-                <section id="markdown-input" className="w-1/2">
+                <section id="markdown-input" className="m-2 w-1/2">
                     <textarea
+                        id='input'
                         ref={textareaRef}
-                        placeholder=""
+                        placeholder="Type your markdown here. View the rendered HTML on the right."
                         className="textarea textarea-bordered textarea-lg h-full w-full"
                         rows={20}
                         value={text}
                         onChange={handleChange}
                         onScroll={handleScroll}
+                        style={{ resize: 'none' }}
                     ></textarea>
                 </section>
-                <section id="html-output" className="w-1/2">
+                <section id="html-output" className="m-2 w-1/2 overflow-auto">
                     <div ref={divRef} className="prose pl-6" dangerouslySetInnerHTML={{ __html: html }} />
                 </section>
             </div>
+            <Footer />
         </div>
     );
 }
