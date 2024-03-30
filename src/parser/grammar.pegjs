@@ -5,13 +5,13 @@ document
         / newLine
         / emptyLine
         / header
+        / altHeader
         / horizontalRule
         / comment
         / definitionList
         / taskList
         / nestedParagraph
         / list
-        / altHeader
         / .
     )+ {
             return {

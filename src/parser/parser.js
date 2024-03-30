@@ -845,19 +845,19 @@ function peg$parse(input, options) {
                     if (s2 === peg$FAILED) {
                         s2 = peg$parseheader();
                         if (s2 === peg$FAILED) {
-                            s2 = peg$parsehorizontalRule();
+                            s2 = peg$parsealtHeader();
                             if (s2 === peg$FAILED) {
-                                s2 = peg$parsecomment();
+                                s2 = peg$parsehorizontalRule();
                                 if (s2 === peg$FAILED) {
-                                    s2 = peg$parsedefinitionList();
+                                    s2 = peg$parsecomment();
                                     if (s2 === peg$FAILED) {
-                                        s2 = peg$parsetaskList();
+                                        s2 = peg$parsedefinitionList();
                                         if (s2 === peg$FAILED) {
-                                            s2 = peg$parsenestedParagraph();
+                                            s2 = peg$parsetaskList();
                                             if (s2 === peg$FAILED) {
-                                                s2 = peg$parselist();
+                                                s2 = peg$parsenestedParagraph();
                                                 if (s2 === peg$FAILED) {
-                                                    s2 = peg$parsealtHeader();
+                                                    s2 = peg$parselist();
                                                     if (s2 === peg$FAILED) {
                                                         if (input.length > peg$currPos) {
                                                             s2 = input.charAt(peg$currPos);
@@ -893,19 +893,19 @@ function peg$parse(input, options) {
                             if (s2 === peg$FAILED) {
                                 s2 = peg$parseheader();
                                 if (s2 === peg$FAILED) {
-                                    s2 = peg$parsehorizontalRule();
+                                    s2 = peg$parsealtHeader();
                                     if (s2 === peg$FAILED) {
-                                        s2 = peg$parsecomment();
+                                        s2 = peg$parsehorizontalRule();
                                         if (s2 === peg$FAILED) {
-                                            s2 = peg$parsedefinitionList();
+                                            s2 = peg$parsecomment();
                                             if (s2 === peg$FAILED) {
-                                                s2 = peg$parsetaskList();
+                                                s2 = peg$parsedefinitionList();
                                                 if (s2 === peg$FAILED) {
-                                                    s2 = peg$parsenestedParagraph();
+                                                    s2 = peg$parsetaskList();
                                                     if (s2 === peg$FAILED) {
-                                                        s2 = peg$parselist();
+                                                        s2 = peg$parsenestedParagraph();
                                                         if (s2 === peg$FAILED) {
-                                                            s2 = peg$parsealtHeader();
+                                                            s2 = peg$parselist();
                                                             if (s2 === peg$FAILED) {
                                                                 if (input.length > peg$currPos) {
                                                                     s2 = input.charAt(peg$currPos);

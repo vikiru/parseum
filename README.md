@@ -59,6 +59,7 @@
 -   Parsing of simple markdown syntax such as `formatting`, `lists`, `paragraphs`, `headers`
 -   Partial extended markdown syntax support such as `blockquotes`, `definition list`, `task list`, `code block`, `alt header` and additional formatting syntax such as `subscript`, `superscript`, `strikethrough`, `highlight`, etc
 -   Simple UI for a markdown editor allowing a user to enter markdown and view resulting html rendered in a side-by-side view
+-   Ability to save and clear markdown content to and from local storage
 -   Ability to grow and accomodate additional syntax by updating the defined grammar file
 
 ### Unsupported Markdown Syntax
@@ -146,7 +147,7 @@ npm run lint
 npm run prettier
 ```
 
-5. Generate a parser using the defined `grammar.pegjs` file using [Peggy.js](https://peggyjs.org/)
+5. Generate a parser using the defined `grammar.pegjs` file with [Peggy.js](https://peggyjs.org/).
 
 ```bash
 npm run parser
