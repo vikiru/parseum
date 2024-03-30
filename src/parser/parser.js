@@ -596,7 +596,7 @@ function peg$parse(input, options) {
     var peg$f24 = function (boldItalic) {
         const text = boldItalic.flat(Infinity);
         const original = '***' + text.join('') + '***';
-        const html = `<strong><em>${text.join('')}</em></strong>`;
+        const html = `<em><strong>${text.join('')}</strong></em>`;
         return { type: 'bold italic', original, html };
     };
     var peg$f25 = function (strikethrough) {
@@ -634,8 +634,8 @@ function peg$parse(input, options) {
         let urlSplit = url.split(/ (.+)/).filter((part) => part.trim() !== '');
         let sourceUrl = urlSplit[0];
         let title = urlSplit.length > 1 ? urlSplit[1].replace(/"/g, '') : '';
-        let imageTitle = title !== '' ? `title="${title}"` : '';
-        let html = `<img src="${sourceUrl}" alt="${altText}" ${imageTitle}/>`;
+        let imageTitle = title !== '' ? ` title="${title}"` : '';
+        let html = `<img src="${sourceUrl}" alt="${altText}"${imageTitle}/>`;
         return { type: 'image', original, html };
     };
     var peg$f31 = function (linkText, url) {
@@ -643,8 +643,8 @@ function peg$parse(input, options) {
         let urlSplit = url.split(/ (.+)/).filter((part) => part.trim() !== '');
         let sourceUrl = urlSplit[0];
         let title = urlSplit.length > 1 ? urlSplit[1].replace(/"/g, '') : '';
-        let linkTitle = title !== '' ? `title="${title}"` : '';
-        let html = `<a href="${sourceUrl}" ${linkTitle}>${linkText}</a>`;
+        let linkTitle = title !== '' ? ` title="${title}"` : '';
+        let html = `<a href="${sourceUrl}"${linkTitle}>${linkText}</a>`;
         return { type: 'link', original, html };
     };
     var peg$f32 = function () {
