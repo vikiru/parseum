@@ -1,20 +1,27 @@
 document
     = elements:(
-        blockquote
+        nestedBlockquotes
         / codeBlock
         / newLine
         / emptyLine
         / header
+        / altHeader
         / horizontalRule
         / comment
         / definitionList
         / taskList
-        / altHeader
         / nestedParagraph
         / list
-    )+ { return { type: 'document', original: elements.map(e => e.original).join(''), html: elements.map(e => e.html).join('')} }
+        / .
+    )+ {
+            return {
+                type: 'document',
+                original: elements.map((e) => e.original).join(''),
+                html: elements.map((e) => e.html).join(''),
+                elements,
+            };
+        }
     / !.
-
 
 definitionList
     = term:(text / formatting)+ "\n" definitions:definitionTerm {
@@ -85,16 +92,16 @@ taskItem
         }
 
 altHeader
-    = t:text+ "\n" underline:("="+ / "-"+) &"\n"? {
+    = t:text+ "\n" underline:("="+ / "-"+) &("\n"?) {
             const textArr = t.flat(Infinity);
             const underlineArr = underline.flat(Infinity);
             const type = underlineArr[0];
             const level = type === '==' ? 1 : 2;
-            let originalText = textArr.map(t => typeof t === 'object' ? t.original : t).join('');
-            let htmlText = textArr.map(t => typeof t === 'object' ? t.html : t).join('');
-            let original = originalText + "\n" + underlineArr.join('');
+            let originalText = textArr.map((t) => (typeof t === 'object' ? t.original : t)).join('');
+            let htmlText = textArr.map((t) => (typeof t === 'object' ? t.html : t)).join('');
+            let original = originalText + '\n' + underlineArr.join('');
             let html = `<h${level}>${htmlText}</h${level}>`;
-            return { type: 'header', originalText, html };
+            return { type: 'header', original, html };
         }
 
 header
@@ -125,35 +132,57 @@ header
             return { type: 'header', headerLevel, original, html };
         }
 
-blockquoteContent = (header / image / link / blockquote / nestedParagraph / list)+
+nestedBlockquotes
+    = blockquotes:blockquote+ "\n"* {
+            let original = blockquotes.map((b) => b.original).join('');
+            let html = '<blockquote>';
+            blockquotes.forEach((b) => {
+                html += b.html.replace('<blockquote>', '').replace('</blockquote>', '');
+            });
+            html += '</blockquote>';
+            html = html
+                .replace(/<\/p><p>/g, '<br>')
+                .replace(/<\/ol><ol>/g, '')
+                .replace(/<\/ul><ul>/g, '');
+            return { type: 'blockquote', original, html };
+        }
+
+blockquoteContent = (header / image / link / nestedParagraph / list)+
 
 blockquote
     = quotes:(">"+ " "*)+ content:blockquoteContent+ {
-            const quotesArr = quotes.flat(Infinity);
-            const contentArr = content.flat(Infinity);
+            const quotesArr = quotes.flat(Infinity).filter((c) => c !== undefined);
+            const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
             const original = `${quotesArr.join('')} ${contentArr.map((c) => c.original).join('')}`;
             let html = '<blockquote>';
             let htmlMap = [];
             contentArr.forEach((c) => {
-                c.html = c.html.replace('> ', '').replace('<br>><br>', '</p><p>');
+                c.html = c.html
+                    .replace('> ', '')
+                    .replace('<br>><br>', '</p><p>')
+                    .replace('<blockquote>', '')
+                    .replace('</blockquote>', '')
+                    .replace('<br><p>', '<br>')
+                    .replace('</p></p>', '</p>');
                 htmlMap.push(c);
             });
             html += htmlMap.map((h) => h.html).join('');
             html += '</blockquote>';
-            return { type: 'blockquote', original, html };
+            return { type: 'blockquote', original, html, contentArr };
         }
 
 codeBlock
     = "```" language:[a-zA-z]* content:(!"```" .)* "```" {
             let original = '```';
             const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
-            const filteredContent = contentArr.filter((c) => c !== '\n');
+            const filteredContent = contentArr.slice(1, contentArr.length - 1);
             original += language.join('');
             original += contentArr.join('');
             let html = '<pre><code>';
             html += filteredContent.join('');
             html += '</code></pre>';
-            return { type: 'code block', original, html };
+            html = html.replace(/\n/g, '<br>');
+            return { type: 'code block', original, html, filteredContent };
         }
 
 list
@@ -162,76 +191,121 @@ list
             const type = mainList.type === 'ordered list' ? 'ol' : 'ul';
             const filteredItems = items.slice(1);
             let original = items.map((i) => i.original).join('');
-            let html = mainList.html.replace('</${type}>', '');
+            let html = `<${type}>` + mainList.html.replace('</${type}>', '');
             filteredItems.forEach((i) => {
                 html += `<li>${i.html}</li>`;
             });
             html += `</${type}>`;
-            return { type: 'list', original, html };
+            html = html
+                .replace(/<li><li>/g, '<li>')
+                .replace(/<\/li><\/li>/g, '</li>')
+                .replace(`</${type}></${type}>`, `</${type}>`);
+            return { type: 'list', original, html, items };
         }
 
-item = spaces:" "* item:(orderedList / unorderedList / header / image / link / blockquote / paragraph) { return item; }
+item = spaces:" "* item:(orderedList / unorderedList) { return item; }
 
 orderedList
     = spaces:" "* t:([0-9] "." " " text ("\n" / !.))+ {
-            let textArr = t.flat(Infinity);
-            let original = textArr.join('');
-            let html = '<ol>';
-            let splitOriginal = original.split('\n').filter((t) => t !== '');
-            splitOriginal.forEach((s) => {
-                let replacementText = s.replace(/\d\. /g, '<li>') + '</li>';
-                html += replacementText;
+            const textArr = t.flat(Infinity).filter((t) => t !== undefined);
+            let original = '';
+            let html = '';
+            textArr.forEach((t) => {
+                original += typeof t === 'object' ? t.original : t;
             });
-            html += '</ol>';
+            let objects = textArr.filter((t) => typeof t === 'object');
+            let items = original.split('\n').filter((i) => i !== '');
+            items = items.map((i) => {
+                let text =
+                    i
+                        .replace(/^\d\.\s*/, '<li>')
+                        .replace(/\n/g, '</li>')
+                        .replace(/<li><li>/g, '<li>')
+                        .replace(/<\/li><\/li>/g, '</li>')
+                        .replace(/<li><\/li>/g, '') + '</li>';
+                for (const obj of objects) {
+                    text = text.replace(obj.original, obj.html);
+                }
+                return text;
+            });
+            html += items.join('') + '</ol>';
             return { type: 'ordered list', original, html };
         }
 
 unorderedList
     = spaces:" "* t:([-] " " text ("\n" / !.))+ {
-            let textArr = t.flat(Infinity);
-            let original = textArr.join('');
-            let html = '<ul>';
-            let splitOriginal = original.split('\n').filter((t) => t !== '');
-            splitOriginal.forEach((s) => {
-                let replacementText = s.replace(/- /g, '<li>') + '</li>';
-                html += replacementText;
+            const textArr = t.flat(Infinity).filter((t) => t !== undefined);
+            let original = '';
+            let html = '';
+            textArr.forEach((t) => {
+                original += typeof t === 'object' ? t.original : t;
             });
-            html += '</ul>';
+            let objects = textArr.filter((t) => typeof t === 'object');
+            let items = original.split('\n').filter((i) => i !== '');
+            items = items.map((i) => {
+                let text = i
+                    .replace(/^-[\s]*/, '<li>')
+                    .replace(/\n/g, '</li>')
+                    .replace(/<li><li>/g, '<li>')
+                    .replace(/<\/li><\/li>/g, '</li>')
+                    .replace(/<li><\/li>/g, '')
+                    .trim();
+                for (const obj of objects) {
+                    text = text.replace(obj.original, obj.html);
+                }
+                if (!text.includes('</li>')) {
+                    text += '</li>';
+                }
+                return text;
+            });
+            html += items.join('');
             return { type: 'unordered list', original, html };
         }
 
 nestedParagraph
-    = paragraphs:paragraph+ &("\n"?) {
+    = paragraphs:paragraph+ &("\n"*) {
             let original = '';
-            let html = '<p>';
-            paragraphs.forEach((p, index) => {
-                original += p.original;
-                html += p.html.replace('<p>', '').replace('</p>', '');
-                if (index < paragraphs.length - 1) {
-                    original += '\n';
-                    html += '<br>';
-                }
-            });
-            html += '</p>';
-            return { type: 'paragraph', original, html };
+            let html = '';
+            const filteredParagraphs = paragraphs.filter(
+                (p) => p.type !== 'html' && p.html !== '<p></p>' && p.html !== '',
+            );
+            if (filteredParagraphs.length > 0) {
+                html = '<p>';
+                filteredParagraphs.forEach((p, index) => {
+                    original += p.original;
+                    html += p.html.replace('<p>', '').replace('</p>', '').replace('<p></p>', '');
+                    if (index < filteredParagraphs.length - 1) {
+                        original += '\n';
+                        html += '<br>';
+                    }
+                });
+                html += '</p>';
+            }
+            return { type: 'paragraph', original, html, filteredParagraphs };
         }
 
 paragraph
-    = !(spaces:" "* ([-] / [0-9] ".") / emptyLine / newLine) t:text+ "\n"? {
+    = !(spaces:" "* ([-] / [0-9] ".") / emptyLine / newLine / blockquote) t:text+ "\n"? {
             const text = t.flat(Infinity);
+            const filteredText = text.filter(
+                (t) => (typeof t === 'object' && t.type !== 'html') || typeof t === 'string',
+            );
             let original = '';
-            let html = '<p>';
-            for (const t of text) {
-                if (typeof t === 'object') {
-                    original += t.original;
-                    html += t.html;
-                } else {
-                    original += t;
-                    html += t;
+            let html = '';
+            if (filteredText.length > 0) {
+                html = '<p>';
+                for (const t of filteredText) {
+                    if (typeof t === 'object') {
+                        original += t.original;
+                        html += t.html;
+                    } else {
+                        original += t;
+                        html += t;
+                    }
                 }
+                html += '</p>';
             }
-            html += '</p>';
-            return { type: 'paragraph', original, html };
+            return { type: 'paragraph', original, html, filteredText };
         }
 
 newLine = "\n" { return { type: 'new line', original: '\n', html: '' }; }
@@ -256,6 +330,8 @@ formatting
     / link
     / autoLink
     / image
+    / codeBlock
+    / nestedBlockquotes
 
 specialCharacters
     = !escapedCharacters
@@ -406,7 +482,7 @@ scheme
     / "www" "."
 
 autoLink
-    = "<" scheme (!">"  !"\n" .)* ">" {
+    = "<" scheme (!">" !"\n" .)* ">" {
             const address = text().replace(/^<|>$/g, '');
             const original = `<${address}>`;
             const html = `<a href="${address}">${address}</a>`;
@@ -414,7 +490,9 @@ autoLink
         }
 
 comment
-    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ { return { type: 'comment', original: comment.flat(Infinity).join(''), html: '' }; }
+    = comment:("[" [a-zA-Z0-9. ]+ "]" ":" " " "#" text+)+ {
+            return { type: 'comment', original: comment.flat(Infinity).join(''), html: '' };
+        }
 
 htmlTag
     = "<"
@@ -428,9 +506,18 @@ htmlTag
             const attributeArr = attributes.flat(Infinity).filter((a) => a !== undefined);
             const contentArr = content.flat(Infinity).filter((c) => c !== undefined);
             const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;${contentArr.join('')}&lt;/${tagName2.join('')}&gt;`;
-            return { type: 'html', original, html: original };
+            return { type: 'html', original, html: '' };
         }
-    / "<" tagName:[a-zA-Z0-9]+ "/>" {
+    / " "* "<" "/"* tagName:[a-zA-Z0-9]+ ">" {
+            const original = `&lt;/${tagName.join('')}&gt;`;
+            return { type: 'html', original, html: '' };
+        }
+    / " "* "<" tagName:[a-zA-Z0-9]+ "/>" {
             const original = `&lt;${tagName.join('')}&gt;`;
-            return { type: 'html', original, html: original };
+            return { type: 'html', original, html: '' };
+        }
+    / " "* "<" tagName:[a-zA-Z0-9]+ attributes:(" "+ (!">" .)*)* ">" {
+            const attributeArr = attributes.flat(Infinity).filter((a) => a !== undefined);
+            const original = `&lt;${tagName.join('')}${attributeArr.join('')}&gt;&lt;`;
+            return { type: 'html', original, html: '' };
         }
