@@ -373,7 +373,7 @@ function peg$parse(input, options) {
         const textArr = t.flat(Infinity);
         const underlineArr = underline.flat(Infinity);
         const type = underlineArr[0];
-        const level = type === '==' ? 1 : 2;
+        const level = type === '=' ? 1 : 2;
         let originalText = textArr.map((t) => (typeof t === 'object' ? t.original : t)).join('');
         let htmlText = textArr.map((t) => (typeof t === 'object' ? t.html : t)).join('');
         let original = originalText + '\n' + underlineArr.join('');
