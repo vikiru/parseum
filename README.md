@@ -11,8 +11,8 @@
     <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="parseum live site hosted via Firebase"/>
 </a>
 <br/>
- <a href="https://wakatime.com/@vikiru/projects/umhctwxtly">
-  <img src="https://wakatime.com/badge/user/5e62f99d-3a1e-4fd2-8f37-77919d626a67/project/018e1a22-364b-4b87-a797-b55b694a169d.svg"
+ <a href="https://wakatime.com/@vikiru/projects/hzdehaajds">
+  <img src="https://wakatime.com/badge/user/5e62f99d-3a1e-4fd2-8f37-77919d626a67/project/018e902a-0f18-4cf8-b5e2-7922d2216d12.svg"
   alt="Wakatime Coding Stats for Parseum"/>
  </a>
  <br/>
@@ -44,15 +44,15 @@
 
 ## 📖 Table of Contents
 
--   [📖 Table of Contents](#-table-of-contents)
--   [🌟 Features](#-features)
-    -   [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
--   [🛠️ Tech Stack](#️-tech-stack)
--   [📝 Prerequisites](#-prerequisites)
--   [⚡ Setup Instructions](#-setup-instructions)
--   [📜 Available Scripts](#-available-scripts)
--   [✨ Acknowledgments](#-acknowledgments)
--   [©️ License](#️-license)
+- [📖 Table of Contents](#-table-of-contents)
+- [🌟 Features](#-features)
+  - [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📝 Prerequisites](#-prerequisites)
+- [⚡ Setup Instructions](#-setup-instructions)
+- [📜 Available Scripts](#-available-scripts)
+- [✨ Acknowledgments](#-acknowledgments)
+- [©️ License](#️-license)
 
 ## 🌟 Features
 
