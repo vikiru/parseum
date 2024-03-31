@@ -84,11 +84,8 @@ const config = {
             ],
             image: 'logo.png',
             navbar: {
-                title: 'My Site',
-                logo: {
-                    alt: 'Parseum Logo',
-                    src: 'logo.png',
-                },
+                hideOnScroll: true,
+				title: 'Parseum',
                 items: [],
             },
             footer: {

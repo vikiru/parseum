@@ -1,4 +1,5 @@
 ---
+slug: '/'
 title: 📖 Introduction
 ---
 
@@ -14,12 +15,12 @@ title: 📖 Introduction
 <a href="">
     <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="parseum live site hosted via Firebase"/>
 </a>
-<br/>
+
  <a href="https://wakatime.com/@vikiru/projects/hzdehaajds">
   <img src="https://wakatime.com/badge/user/5e62f99d-3a1e-4fd2-8f37-77919d626a67/project/018e902a-0f18-4cf8-b5e2-7922d2216d12.svg"
   alt="Wakatime Coding Stats for Parseum"/>
  </a>
- <br/>
+ 
  <a href="https://github.com/vikiru/parseum/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/license-MIT-aqua" alt="MIT License Badge"/>
  </a>
@@ -36,7 +37,7 @@ title: 📖 Introduction
   <a href="https://github.com/vikiru/parseum/releases">
   <img src="https://img.shields.io/github/v/release/vikiru/parseum" alt="Release"/>
  </a>
-<br/>
+
  <a href="https://github.com/vikiru/parseum/actions/workflows/lint.yml">
   <img src="https://github.com/vikiru/parseum/actions/workflows/lint.yml/badge.svg" alt="GitHub Lint Action Workflow Status"/>
  </a>
