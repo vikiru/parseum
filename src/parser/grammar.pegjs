@@ -92,11 +92,11 @@ taskItem
         }
 
 altHeader
-    = t:text+ "\n" underline:("="+ / "-"+) &("\n"?) {
+    = t:text+ "\n" !list underline:("="+ / "-"+) &("\n"?) {
             const textArr = t.flat(Infinity);
             const underlineArr = underline.flat(Infinity);
             const type = underlineArr[0];
-            const level = type === '==' ? 1 : 2;
+            const level = type === '=' ? 1 : 2;
             let originalText = textArr.map((t) => (typeof t === 'object' ? t.original : t)).join('');
             let htmlText = textArr.map((t) => (typeof t === 'object' ? t.html : t)).join('');
             let original = originalText + '\n' + underlineArr.join('');
@@ -168,7 +168,7 @@ blockquote
             });
             html += htmlMap.map((h) => h.html).join('');
             html += '</blockquote>';
-            return { type: 'blockquote', original, html, contentArr };
+            return { type: 'blockquote', original, html };
         }
 
 codeBlock
@@ -182,7 +182,7 @@ codeBlock
             html += filteredContent.join('');
             html += '</code></pre>';
             html = html.replace(/\n/g, '<br>');
-            return { type: 'code block', original, html, filteredContent };
+            return { type: 'code block', original, html };
         }
 
 list
@@ -281,7 +281,7 @@ nestedParagraph
                 });
                 html += '</p>';
             }
-            return { type: 'paragraph', original, html, filteredParagraphs };
+            return { type: 'paragraph', original, html };
         }
 
 paragraph
@@ -305,7 +305,7 @@ paragraph
                 }
                 html += '</p>';
             }
-            return { type: 'paragraph', original, html, filteredText };
+            return { type: 'paragraph', original, html };
         }
 
 newLine = "\n" { return { type: 'new line', original: '\n', html: '' }; }
@@ -410,7 +410,7 @@ boldItalic
     = "***" boldItalic:(text:(!"***" !"\n" .)+)+ "***" {
             const text = boldItalic.flat(Infinity);
             const original = '***' + text.join('') + '***';
-            const html = `<strong><em>${text.join('')}</em></strong>`;
+            const html = `<em><strong>${text.join('')}</strong></em>`;
             return { type: 'bold italic', original, html };
         }
 
@@ -460,8 +460,8 @@ image
             let urlSplit = url.split(/ (.+)/).filter((part) => part.trim() !== '');
             let sourceUrl = urlSplit[0];
             let title = urlSplit.length > 1 ? urlSplit[1].replace(/"/g, '') : '';
-            let imageTitle = title !== '' ? `title="${title}"` : '';
-            let html = `<img src="${sourceUrl}" alt="${altText}" ${imageTitle}/>`;
+            let imageTitle = title !== '' ? ` title="${title}"` : '';
+            let html = `<img src="${sourceUrl}" alt="${altText}"${imageTitle}/>`;
             return { type: 'image', original, html };
         }
 
@@ -471,8 +471,8 @@ link
             let urlSplit = url.split(/ (.+)/).filter((part) => part.trim() !== '');
             let sourceUrl = urlSplit[0];
             let title = urlSplit.length > 1 ? urlSplit[1].replace(/"/g, '') : '';
-            let linkTitle = title !== '' ? `title="${title}"` : '';
-            let html = `<a href="${sourceUrl}" ${linkTitle}>${linkText}</a>`;
+            let linkTitle = title !== '' ? ` title="${title}"` : '';
+            let html = `<a href="${sourceUrl}"${linkTitle}>${linkText}</a>`;
             return { type: 'link', original, html };
         }
 
