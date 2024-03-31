@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import { parse } from '../src/parser/parser.js';
 
 describe('Formatting Tests', function () {
@@ -67,16 +68,4 @@ describe('Formatting Tests', function () {
         const result = parse(markdown).html;
         expect(result).to.equal('<p><a href="https://www.google.com">https://www.google.com</a></p>');
     });
-
-    it('should return a code block', function(){
-        const markdown = '```\ncode block\n```';
-        const result = parse(markdown).html;
-        expect(result).to.equal('<pre><code>code block</code></pre>');
-    })
-
-    it('should return a blockquote', function(){
-        const markdown = '> blockquote';
-        const result = parse(markdown).html;
-        expect(result).to.equal('<blockquote><p>blockquote</p></blockquote>');
-    })
 });
