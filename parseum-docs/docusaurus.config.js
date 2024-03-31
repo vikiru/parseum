@@ -82,13 +82,12 @@ const config = {
                         'Parseum is a simple markdown-to-html parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.',
                 },
             ],
-            image: '',
+            image: 'logo.png',
             navbar: {
                 title: 'My Site',
                 logo: {
                     alt: 'Parseum Logo',
                     src: 'logo.png',
-                    align: 'left',
                 },
                 items: [],
             },
