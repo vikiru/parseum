@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import { parse } from '../src/parser/parser.js';
 
 describe('Excluded Syntax Tests', function () {
@@ -38,9 +39,9 @@ describe('Excluded Syntax Tests', function () {
         expect(result).to.equal('');
     });
 
-    it('should exclude a comment from html', function(){
+    it('should exclude a comment from html', function () {
         const markdown = '[comment1]: # This is a comment.';
         const result = parse(markdown).html;
         expect(result).to.equal('');
-    })
+    });
 });

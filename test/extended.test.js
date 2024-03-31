@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import { parse } from '../src/parser/parser.js';
 
 describe('Extended Syntax Tests', function () {
@@ -34,27 +35,27 @@ describe('Extended Syntax Tests', function () {
         expect(result).to.equal('<blockquote><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></blockquote>');
     });
 
-    it('should match a horizontal rule', function(){
+    it('should match a horizontal rule', function () {
         const markdown = '---';
         const result = parse(markdown).html;
         expect(result).to.equal('<hr>');
-    })
+    });
 
-    it('should return a paragraph with an emoji', function(){
-        const markdown = '🖋️'
+    it('should return a paragraph with an emoji', function () {
+        const markdown = '🖋️';
         const result = parse(markdown).html;
         expect(result).to.equal('<p>🖋️</p>');
-    })
+    });
 
-    it('should properly escape characters', function(){
+    it('should properly escape characters', function () {
         const markdown = '\\`\\*\\_\\[\\]\\(\\)';
         const result = parse(markdown).html;
         expect(result).to.equal('<p>`*_[]()</p>');
-    })
+    });
 
-    it('should recognize special characters', function(){
+    it('should recognize special characters', function () {
         const markdown = '@!?=';
         const result = parse(markdown).html;
         expect(result).to.equal('<p>@!?=</p>');
-    })
+    });
 });
