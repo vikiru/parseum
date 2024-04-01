@@ -91,7 +91,7 @@
     "@types/sinon": "^17.0.3",
     "@typescript-eslint/parser": "^6.20.0",
     "autoprefixer": "^10.4.17",
-    "chai": "^4.4.1",
+    "chai": "^5.1.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-comment-length": "^1.7.3",
