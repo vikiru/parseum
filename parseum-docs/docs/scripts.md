@@ -33,3 +33,9 @@ npm run prettier
 ```bash
 npm run parser
 ```
+
+6. Run all tests.
+
+```bash
+npm test
+```
