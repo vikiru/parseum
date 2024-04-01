@@ -7,8 +7,8 @@
 <a href="https://vikiru.github.io/parseum/">
 	<img src="https://img.shields.io/badge/documentation-docs-orange" alt="Documentation"/>
 </a>
-<a href="">
-    <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="parseum live site hosted via Firebase"/>
+<a href="https://parseum.1.us-1.fl0.io/">
+    <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="Parseum live site hosted via Fl0"/>
 </a>
 <br/>
  <a href="https://wakatime.com/@vikiru/projects/hzdehaajds">
@@ -47,16 +47,16 @@
 
 ## 📖 Table of Contents
 
--   [📖 Table of Contents](#-table-of-contents)
--   [🌟 Features](#-features)
-    -   [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
--   [🛠️ Tech Stack](#️-tech-stack)
--   [📝 Prerequisites](#-prerequisites)
--   [⚡ Setup Instructions](#-setup-instructions)
--   [🔍 Testing](#-testing)
--   [📜 Available Scripts](#-available-scripts)
--   [✨ Acknowledgments](#-acknowledgments)
--   [©️ License](#️-license)
+- [📖 Table of Contents](#-table-of-contents)
+- [🌟 Features](#-features)
+  - [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📝 Prerequisites](#-prerequisites)
+- [⚡ Setup Instructions](#-setup-instructions)
+- [🔍 Testing](#-testing)
+- [📜 Available Scripts](#-available-scripts)
+- [✨ Acknowledgments](#-acknowledgments)
+- [©️ License](#️-license)
 
 ## 🌟 Features
 
@@ -89,7 +89,7 @@
 -   Reference Links
 -   Emoji Support (currently pasting emojis is supported, but for example `:joy:` does not return an emoji with its resulting unicode representation)
 
-A comprehensive overview detailing all supported Markdown syntax can be located within the documentation under the [Syntax Overview](/syntax) section. Each element has a dedicated page detailing an overview of what the element is and example input Markdown and resulting output HTML.
+A comprehensive overview detailing all supported Markdown syntax can be located within the documentation under the [Syntax Overview](https://vikiru.github.io/parseum/syntax/) section. Each element has a dedicated page detailing an overview of what the element is and example input Markdown and resulting output HTML.
 
 ## 🛠️ Tech Stack
 
