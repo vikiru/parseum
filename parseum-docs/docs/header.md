@@ -27,7 +27,7 @@ A **header** is an element that is usually used to represent the title of a dist
 <h4>This is a header of level 4</h4>
 <h5>This is a header of level 5</h5>
 <h6>This is a header of level 6</h6>
-<p>####### This is a normal paragraph. </p>
+<p>####### This is a normal paragraph.</p>
 ```
 
 ### Alternate Header Syntax (Setext Header)

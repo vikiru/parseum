@@ -16,9 +16,9 @@ An **image** is an element that can visually enhance text by embedding an image 
 
 ```html
 <p>
-    <img src="https://example.com" alt="image"/>
+    <img src="https://example.com" alt="image" />
 </p>
 <p>
-    <img src="https://example.com" alt="image" title="This is a image title"/>
+    <img src="https://example.com" alt="image" title="This is a image title" />
 </p>
 ```

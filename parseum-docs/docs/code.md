@@ -13,7 +13,5 @@ title: Code
 ```
 
 ```html
-<p>
-    <code>This is an inline code text</code> and this is not.
-</p>
+<p><code>This is an inline code text</code> and this is not.</p>
 ```

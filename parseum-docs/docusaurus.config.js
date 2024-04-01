@@ -74,7 +74,7 @@ const config = {
             metadata: [
                 {
                     name: 'keywords',
-                    content: 'Parseum, markdown, html, parser, editor, react, tailwindcss, daisyui, peggy.js',
+                    content: 'Parseum, markdown, html, parser, editor, peggy.js, react, tailwindcss, daisyui',
                 },
                 {
                     name: 'description',
@@ -82,15 +82,65 @@ const config = {
                         'Parseum is a simple markdown-to-html parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.',
                 },
             ],
-            image: 'logo.png',
             navbar: {
                 hideOnScroll: true,
-				title: 'Parseum',
-                items: [],
+                title: 'Parseum',
+                items: [
+                    {
+                        position: 'left',
+                        label: 'Features',
+                        href: '/features',
+                    },
+                    {
+                        position: 'left',
+                        label: 'Syntax Overview',
+                        href: '/syntax',
+                    },
+                ],
+            },
+            docs: {
+                sidebar: {
+                    hideable: true,
+                    autoCollapseCategories: true,
+                },
             },
             footer: {
                 style: 'dark',
                 links: [
+                    {
+                        title: 'Getting Started',
+                        items: [
+                            {
+                                label: 'Home',
+                                to: '/',
+                            },
+                            {
+                                label: 'Prerequisites',
+                                to: '/prerequisites',
+                            },
+                            {
+                                label: 'Setup',
+                                to: '/setup',
+                            },
+                        ],
+                    },
+                    {
+                        title: 'Development',
+                        items: [
+                            {
+                                label: 'Scripts',
+                                to: '/scripts',
+                            },
+                            {
+                                label: 'Tech Stack',
+                                to: '/stack',
+                            },
+                            {
+                                label: 'Syntax Overview',
+                                to: '/syntax',
+                            },
+                        ],
+                    },
                     {
                         title: 'Conclusion',
                         items: [

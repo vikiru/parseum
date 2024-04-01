@@ -13,7 +13,5 @@ title: Strikethrough
 ```
 
 ```html
-<p>
-    <del>~This text is using strikethrough</del> and this text is not.
-</p>
+<p><del>~This text is using strikethrough</del> and this text is not.</p>
 ```

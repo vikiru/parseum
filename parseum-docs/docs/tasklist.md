@@ -15,11 +15,7 @@ A **task list** is an element typically used to create a list of tasks, each wit
 
 ```html
 <ul>
-    <li>
-        <input type="checkbox" disabled/>Finish writing documentation for Parseum
-    </li>
-    <li>
-        <input type="checkbox" checked disabled/>Finish Markdown Parser and Editor Backend and Frontend
-    </li>
+    <li><input type="checkbox" disabled />Finish writing documentation for Parseum</li>
+    <li><input type="checkbox" checked disabled />Finish Markdown Parser and Editor Backend and Frontend</li>
 </ul>
 ```

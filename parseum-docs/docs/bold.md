@@ -13,7 +13,5 @@ title: Bold
 ```
 
 ```html
-<p>
-    <strong>This text is bolded</strong> and this text is not.
-</p>
+<p><strong>This text is bolded</strong> and this text is not.</p>
 ```

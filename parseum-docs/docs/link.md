@@ -22,4 +22,3 @@ A **link** is an element which allows for the creation of a hyperlink pointing t
     <a href="https://example.com" title="This is a link title">link</a>
 </p>
 ```
-

@@ -13,7 +13,5 @@ title: Italic
 ```
 
 ```html
-<p>
-    <em>This text is italic</em> and this text is not.
-</p>
+<p><em>This text is italic</em> and this text is not.</p>
 ```
