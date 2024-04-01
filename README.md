@@ -47,27 +47,27 @@
 
 ## 📖 Table of Contents
 
-- [📖 Table of Contents](#-table-of-contents)
-- [🌟 Features](#-features)
-  - [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📝 Prerequisites](#-prerequisites)
-- [⚡ Setup Instructions](#-setup-instructions)
-- [🔍 Testing](#-testing)
-- [📜 Available Scripts](#-available-scripts)
-- [✨ Acknowledgments](#-acknowledgments)
-- [©️ License](#️-license)
+-   [📖 Table of Contents](#-table-of-contents)
+-   [🌟 Features](#-features)
+    -   [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
+-   [🛠️ Tech Stack](#️-tech-stack)
+-   [📝 Prerequisites](#-prerequisites)
+-   [⚡ Setup Instructions](#-setup-instructions)
+-   [🔍 Testing](#-testing)
+-   [📜 Available Scripts](#-available-scripts)
+-   [✨ Acknowledgments](#-acknowledgments)
+-   [©️ License](#️-license)
 
 ## 🌟 Features
 
 -   Parsing of simple markdown syntax such as:
-    - `paragraph`
-    - `header`
-    - `horizontal rule`
-    - `list`
-    - `link`
-    - `image`
-    - formatting such as `italic`, `bold`, `bold italic`, `code`, `emphasis`
+    -   `paragraph`
+    -   `header`
+    -   `horizontal rule`
+    -   `list`
+    -   `link`
+    -   `image`
+    -   formatting such as `italic`, `bold`, `bold italic`, `code`, `emphasis`
 -   Partial extended markdown syntax support such as:
     -   `alternate header syntax`
     -   `blockquotes`
