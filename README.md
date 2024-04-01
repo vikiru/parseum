@@ -36,6 +36,9 @@
  <a href="https://github.com/vikiru/parseum/actions/workflows/lint.yml">
   <img src="https://github.com/vikiru/parseum/actions/workflows/lint.yml/badge.svg" alt="GitHub Lint Action Workflow Status"/>
  </a>
+  <a href="https://github.com/vikiru/parseum/actions/workflows/test.yml">
+    <img src="https://github.com/vikiru/parseum/actions/workflows/test.yml/badge.svg"/>
+ </a>
 </div>
 
 ---
@@ -44,20 +47,35 @@
 
 ## 📖 Table of Contents
 
--   [📖 Table of Contents](#-table-of-contents)
--   [🌟 Features](#-features)
-    -   [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
--   [🛠️ Tech Stack](#️-tech-stack)
--   [📝 Prerequisites](#-prerequisites)
--   [⚡ Setup Instructions](#-setup-instructions)
--   [📜 Available Scripts](#-available-scripts)
--   [✨ Acknowledgments](#-acknowledgments)
--   [©️ License](#️-license)
+- [📖 Table of Contents](#-table-of-contents)
+- [🌟 Features](#-features)
+  - [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📝 Prerequisites](#-prerequisites)
+- [⚡ Setup Instructions](#-setup-instructions)
+- [🔍 Testing](#-testing)
+- [📜 Available Scripts](#-available-scripts)
+- [✨ Acknowledgments](#-acknowledgments)
+- [©️ License](#️-license)
 
 ## 🌟 Features
 
--   Parsing of simple markdown syntax such as `formatting`, `lists`, `paragraphs`, `headers`
--   Partial extended markdown syntax support such as `blockquotes`, `definition list`, `task list`, `code block`, `alt header` and additional formatting syntax such as `subscript`, `superscript`, `strikethrough`, `highlight`, etc
+-   Parsing of simple markdown syntax such as:
+    - `paragraph`
+    - `header`
+    - `horizontal rule`
+    - `list`
+    - `link`
+    - `image`
+    - formatting such as `italic`, `bold`, `bold italic`, `code`, `emphasis`
+-   Partial extended markdown syntax support such as:
+    -   `alternate header syntax`
+    -   `blockquotes`
+    -   `code block`
+    -   `comments`
+    -   `definition list`
+    -   `task list`
+    -   additional formatting syntax such as `subscript`,`superscript`, `strikethrough`, `highlight`, etc
 -   Simple UI for a markdown editor allowing a user to enter markdown and view resulting html rendered in a side-by-side view
 -   Ability to save and clear markdown content to and from local storage
 -   Ability to grow and accomodate additional syntax by updating the defined grammar file
@@ -67,7 +85,11 @@
 -   Nested lists (and inclusion of other elements within lists)
 -   Nested blockquotes (with different levels)
 -   Tables
--   Footnotes, Reference Links, Emoji Support (currently pasting emojis is supported, but for example `:joy:` does not return an emoji with its resulting unicode representation)
+-   Footnotes
+-   Reference Links
+-   Emoji Support (currently pasting emojis is supported, but for example `:joy:` does not return an emoji with its resulting unicode representation)
+
+A comprehensive overview detailing all supported Markdown syntax can be located within the documentation under the [Syntax Overview](/syntax) section. Each element has a dedicated page detailing an overview of what the element is and example input Markdown and resulting output HTML.
 
 ## 🛠️ Tech Stack
 
@@ -121,6 +143,16 @@ cd parseum
 npm install
 ```
 
+## 🔍 Testing
+
+The comprehensive suite of tests for this project is housed within the **[test](/test)** directory. These tests are primarily designed to verify the functionality of the parser and ensure that the resulting HTML is as expected for the input Markdown.
+
+The tests can be run with the following command:
+
+```bash
+npm test
+```
+
 ## 📜 Available Scripts
 
 1. Start the app in the development environment.
@@ -153,6 +185,12 @@ npm run prettier
 npm run parser
 ```
 
+6. Run all tests.
+
+```bash
+npm test
+```
+
 ## ✨ Acknowledgments
 
 -   [Peggy.js](https://github.com/peggyjs/peggy)
@@ -160,6 +198,7 @@ npm run parser
 -   [Peggy.js Documentation](https://peggyjs.org/documentation)
 -   [Markdown Guide Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
 -   [regex101](https://regex101.com/)
+-   [Fl0](https://www.fl0.com/)
 -   [Docusaurus](https://docusaurus.io/)
 -   [GitHub Pages](https://pages.github.com/)
 -   [Shields Badges](https://github.com/badges/shields)
