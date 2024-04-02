@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="Parseum live site hosted via Fl0"/>
 </a>
 <br/>
- <a href="https://wakatime.com/@vikiru/projects/hzdehaajds">
+<a href="https://wakatime.com/@vikiru/projects/hzdehaajds">
   <img src="https://wakatime.com/badge/user/5e62f99d-3a1e-4fd2-8f37-77919d626a67/project/018e902a-0f18-4cf8-b5e2-7922d2216d12.svg"
   alt="Wakatime Coding Stats for Parseum"/>
  </a>
@@ -23,14 +23,14 @@
   <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="Code Style - Prettier"/>
  </a>
 <br/>
+<a href="https://github.com/vikiru/parseum/releases">
+  <img src="https://img.shields.io/github/v/release/vikiru/parseum" alt="Release"/>
+ </a>
  <a href="https://github.com/vikiru/parseum/issues?q=is%3Aissue+is%3Aclosed">
   <img src="https://img.shields.io/github/issues-closed/vikiru/parseum" alt="Closed Issues"/>
  </a>
  <a href="https://github.com/vikiru/parseum/pulls?q=is%3Apr+is%3Aclosed">
   <img src="https://img.shields.io/github/issues-pr-closed/vikiru/parseum?label=closed%20prs" alt="Closed PRs"/>
- </a>
-  <a href="https://github.com/vikiru/parseum/releases">
-  <img src="https://img.shields.io/github/v/release/vikiru/parseum" alt="Release"/>
  </a>
 <br/>
  <a href="https://github.com/vikiru/parseum/actions/workflows/lint.yml">
