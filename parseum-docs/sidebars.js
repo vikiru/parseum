@@ -63,10 +63,10 @@ const sidebars = {
             ],
         },
         {
-          type: 'category',
-          label: 'Conclusion',
-          items: ['acknowledgments'],
-      },
+            type: 'category',
+            label: 'Conclusion',
+            items: ['acknowledgments'],
+        },
     ],
 };
 

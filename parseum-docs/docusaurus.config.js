@@ -73,6 +73,10 @@ const config = {
         ({
             metadata: [
                 {
+                    name: 'author',
+                    content: 'Visakan Kirubakaran',
+                },
+                {
                     name: 'keywords',
                     content: 'Parseum, markdown, html, parser, editor, peggy.js, react, tailwindcss, daisyui',
                 },

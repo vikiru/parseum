@@ -5,13 +5,13 @@ title: 🌟 Features
 ## 🌟 Features
 
 -   Parsing of simple markdown syntax such as:
-    - `paragraph`
-    - `header`
-    - `horizontal rule`
-    - `list`
-    - `link`
-    - `image`
-    - formatting such as `italic`, `bold`, `bold italic`, `code`, `emphasis`
+    -   `paragraph`
+    -   `header`
+    -   `horizontal rule`
+    -   `list`
+    -   `link`
+    -   `image`
+    -   formatting such as `italic`, `bold`, `bold italic`, `code`, `emphasis`
 -   Partial extended markdown syntax support such as:
     -   `alternate header syntax`
     -   `blockquotes`
