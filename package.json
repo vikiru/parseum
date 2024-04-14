@@ -31,7 +31,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint . --ext js,jsx --fix-dry-run",
     "prettier": "eslint --ext js,jsx,pegjs --fix && prettier --write .",
-    "parser": "peggy -o src/parser/parser.js src/parser/grammar.pegjs --format es"
+    "parser": "peggy -o src/parser/parser.js src/parser/grammar.pegjs --format es",
+    "deploy": "npm run build && surge ./build/ parseum.surge.sh"
   },
   "eslintConfig": {
     "extends": [
