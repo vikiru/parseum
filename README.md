@@ -49,16 +49,16 @@
 
 ## 📖 Table of Contents
 
-- [📖 Table of Contents](#-table-of-contents)
-- [🌟 Features](#-features)
-  - [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📝 Prerequisites](#-prerequisites)
-- [⚡ Setup Instructions](#-setup-instructions)
-- [🔍 Testing](#-testing)
-- [📜 Available Scripts](#-available-scripts)
-- [✨ Acknowledgments](#-acknowledgments)
-- [©️ License](#️-license)
+-   [📖 Table of Contents](#-table-of-contents)
+-   [🌟 Features](#-features)
+    -   [Unsupported Markdown Syntax](#unsupported-markdown-syntax)
+-   [🛠️ Tech Stack](#️-tech-stack)
+-   [📝 Prerequisites](#-prerequisites)
+-   [⚡ Setup Instructions](#-setup-instructions)
+-   [🔍 Testing](#-testing)
+-   [📜 Available Scripts](#-available-scripts)
+-   [✨ Acknowledgments](#-acknowledgments)
+-   [©️ License](#️-license)
 
 ## 🌟 Features
 
