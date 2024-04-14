@@ -12,8 +12,8 @@ title: 📖 Introduction
 <a href="https://vikiru.github.io/parseum/">
 	<img src="https://img.shields.io/badge/documentation-docs-orange" alt="Documentation"/>
 </a>
-<a href="https://parseum.1.us-1.fl0.io/">
-    <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="Parseum live site hosted via Fl0"/>
+<a href="https://parseum.surge.sh/">
+    <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="Parseum live site hosted via Surge.sh"/>
 </a>
 
  <a href="https://wakatime.com/@vikiru/projects/hzdehaajds">

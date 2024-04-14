@@ -17,7 +17,7 @@ Frontend:
 
 Hosting:
 
--   [Fl0](https://www.fl0.com/)
+-   [Surge.sh](https://surge.sh/)
 
 Documentation:
 
