@@ -7,8 +7,8 @@
 <a href="https://vikiru.github.io/parseum/">
 	<img src="https://img.shields.io/badge/documentation-docs-orange" alt="Documentation"/>
 </a>
-<a href="https://parseum.1.us-1.fl0.io/">
-    <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="Parseum live site hosted via Fl0"/>
+<a href="https://parseum.surge.sh/">
+    <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="Parseum live site hosted via Surge.sh"/>
 </a>
 <br/>
 <a href="https://wakatime.com/@vikiru/projects/hzdehaajds">
@@ -108,7 +108,7 @@ Frontend:
 
 Hosting:
 
--   [Fl0](https://www.fl0.com/)
+-   [Surge.sh](https://surge.sh/)
 
 Documentation:
 
@@ -200,7 +200,7 @@ npm test
 -   [Peggy.js Documentation](https://peggyjs.org/documentation)
 -   [Markdown Guide Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
 -   [regex101](https://regex101.com/)
--   [Fl0](https://www.fl0.com/)
+-   [Surge.sh](https://surge.sh/)
 -   [Docusaurus](https://docusaurus.io/)
 -   [GitHub Pages](https://pages.github.com/)
 -   [Shields Badges](https://github.com/badges/shields)
