@@ -107,7 +107,7 @@
     "eslint-plugin-tailwindcss": "^3.14.1",
     "istanbul-badges-readme": "^1.8.5",
     "mocha": "^10.4.0",
-    "nodemon": "^3.1.0",
+    "nodemon": "^3.1.7",
     "nyc": "^15.1.0",
     "open-cli": "^8.0.0",
     "peggy": "^4.0.2",
