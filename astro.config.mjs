@@ -71,6 +71,7 @@ export default defineConfig({
           items: [{ label: 'Acknowledgments', slug: 'conclusion/acknowledgments' }],
         },
       ],
+      credits: true,
       plugins: [
         starlightLinksValidatorPlugin({
           errorOnRelativeLinks: false,

@@ -1,5 +1,5 @@
 ---
-title: ✨ Acknowledgements
+title: ✨ Acknowledgments
 description: Thanks and acknowledgments
 template: doc
 ---
