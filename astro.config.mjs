@@ -1,7 +1,6 @@
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
-import starlightScrollToTop from 'starlight-scroll-to-top';
 import starlightThemeRapidePlugin from 'starlight-theme-rapide';
 
 export default defineConfig({
@@ -73,7 +72,6 @@ export default defineConfig({
         },
       ],
       plugins: [
-        starlightScrollToTop({ smoothScroll: true, showProgressRing: false }),
         starlightLinksValidatorPlugin({
           errorOnRelativeLinks: false,
         }),
