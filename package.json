@@ -1,0 +1,25 @@
+{
+  "name": "parseum-docs",
+  "author": "Visakan Kirubakaran",
+  "version": "2.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "gh-pages -d dist",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.37.1",
+    "astro": "^5.6.1",
+    "sharp": "^0.34.2",
+    "starlight-links-validator": "^0.19.2",
+    "starlight-scroll-to-top": "^0.4.0",
+    "starlight-theme-rapide": "^0.5.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.10",
+    "gh-pages": "^6.3.0"
+  }
+}
