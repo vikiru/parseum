@@ -28,9 +28,5 @@ template: doc
 
 -   Nested lists (and inclusion of other elements within lists)
 -   Nested blockquotes (with different levels)
--   Tables
--   Footnotes
--   Reference Links
--   Emoji Support (currently pasting emojis is supported, but for example `:joy:` does not return an emoji with its resulting unicode representation)
 
-A comprehensive overview detailing all supported Markdown syntax can be located within the documentation under the [Syntax Overview](../syntax/) section. Each element has a dedicated page detailing an overview of what the element is and example input Markdown and resulting output HTML.
+A comprehensive overview detailing all supported Markdown syntax can be located within the documentation under the [Syntax Overview](/parseum/syntax/) section. Each element has a dedicated page detailing an overview of what the element is and example input Markdown and resulting output HTML.

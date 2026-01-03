@@ -4,7 +4,7 @@ description: Overview of the tech stack used in Parseum
 template: doc
 ---
 
-Backend:
+Parser Core:
 
 -   [Node.js](https://nodejs.org/en)
 -   [Peggy.js](https://github.com/peggyjs/peggy)
@@ -15,20 +15,20 @@ Frontend:
 -   [TailwindCSS](https://tailwindcss.com/)
 -   [DaisyUI](https://daisyui.com/)
 
-Hosting:
-
--   [Surge.sh](https://surge.sh/)
-
 Documentation:
 
--   Docs are built using [Docusaurus](https://docusaurus.io/)
-    -   Search functionality provided by: [docusaurus-lunr-search](https://github.com/praveenn77/docusaurus-lunr-search)
-    -   Analytics using [Google Analytics](https://marketingplatform.google.com/about/analytics/)
--   Documentation site hosted via [GitHub Pages](https://pages.github.com/)
+-   Docs are built using [Starlight](https://starlight.astro.build/) by [Astro](https://astro.build/)
+-   Link validation: [starlight-links-validator](https://github.com/HiDeoo/starlight-links-validator)
+-   Theme: [starlight-theme-rapide](https://github.com/HiDeoo/starlight-theme-rapide)
+-   Documentation site hosted via [GitHub Pages](https://docs.github.com/en/pages)
 
 Dev Tools:
 
--   [ESLint](https://eslint.org/)
--   [Prettier](https://prettier.io/)
+-   [Biome](https://biomejs.dev/)
 -   [WakaTime](https://wakatime.com/)
 -   [Peggy.js Online Editor](https://peggyjs.org/online)
+
+Deployment:
+
+-   [GitHub Pages](https://docs.github.com/en/pages)
+-   [gh-pages](https://github.com/tschaub/gh-pages)
