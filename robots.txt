@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: /parseum/sitemap-index.xml
