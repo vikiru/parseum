@@ -1,10 +1,63 @@
 <head>
 	<meta charset="UTF-8" />
-	<meta name="description" content="Parseum is a simple markdown-to-html parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI." />
-	<meta name="keywords" content="Parseum, markdown, html, parser, editor, peggy.js, react, tailwindcss, daisyui" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<!-- Security Headers -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+	<meta http-equiv="X-Frame-Options" content="DENY">
+	<meta http-equiv="X-Content-Type-Options" content="nosniff">
+	<meta name="referrer" content="strict-origin-when-cross-origin">
+	<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+	
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI." />
+	<meta name="keywords" content="Parseum, documentation, markdown, html, parser, editor, peggy.js, react, tailwindcss, daisyui" />
 	<meta name="author" content="Visakan Kirubakaran" />
-	<meta name="viewport" content="width=device-width" />
-	<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+	<meta name="theme-color" content="#3b82f6" />
+	
+	<!-- Open Graph -->
+	<meta property="og:title" content="Parseum Documentation" />
+	<meta property="og:description" content="Official documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI." />
+	<meta property="og:image" content="https://vikiru.github.io/parseum/logo.png" />
+	<meta property="og:url" content="https://vikiru.github.io/parseum/" />
+	<meta property="og:type" content="website" />
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Parseum Documentation" />
+	<meta name="twitter:description" content="Official documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI." />
+	<meta name="twitter:image" content="https://vikiru.github.io/parseum/logo.png" />
+	
+	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+	<link rel="canonical" href="https://vikiru.github.io/parseum/" />
 	<meta name="generator" content={Astro.generator} />
-	<title>Parseum</title>
+	<title>Parseum Documentation</title>
+	
+	<!-- JSON-LD Structured Data -->
+	<script type="application/ld+json" is:inline>
+	{
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		"name": "Parseum Documentation",
+		"description": "Documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.",
+		"url": "https://vikiru.github.io/parseum/",
+		"image": "https://vikiru.github.io/parseum/logo.png",
+		"author": {
+			"@type": "Person",
+			"name": "Visakan Kirubakaran"
+		},
+		"about": {
+			"@type": "SoftwareApplication",
+			"name": "Parseum",
+			"description": "A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI",
+			"applicationCategory": "DeveloperApplication",
+			"operatingSystem": "Web",
+			"programmingLanguage": "JavaScript",
+			"keywords": ["markdown", "html", "parser", "editor", "peggy.js", "react", "tailwindcss", "daisyui"]
+		},
+		"inLanguage": "en",
+		"license": "https://opensource.org/licenses/MIT",
+		"sameAs": "https://github.com/vikiru/parseum"
+	}
+	</script>
 </head>

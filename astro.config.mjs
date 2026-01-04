@@ -7,6 +7,16 @@ export default defineConfig({
   base: '/parseum/',
   site: 'https://vikiru.github.io/parseum/',
   output: 'static',
+  vite: {
+    build: {
+      minify: 'terser',
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
+  },
   integrations: [
     starlight({
       title: 'Parseum',
