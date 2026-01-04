@@ -1,6 +1,6 @@
 ---
 title: 📜 Available Scripts
-description: Available scripts for Parseum development
+description: Available scripts for Parseum development.
 template: doc
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 🔍 Testing
-description: Executing tests for the Markdown parser
+description: Executing tests for the Markdown parser.
 template: doc
 ---
 

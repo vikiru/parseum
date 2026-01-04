@@ -1,6 +1,6 @@
 ---
 title: Bold Italic
-description: Markdown syntax for bold italic text formatting in Parseum
+description: Markdown syntax for bold italic text formatting in Parseum.
 slug: syntax/formatting/bold-italic
 ---
 

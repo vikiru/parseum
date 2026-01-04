@@ -1,6 +1,6 @@
 ---
 title: Autolink
-description: Markdown syntax for automatic links in Parseum
+description: Markdown syntax for automatic links in Parseum.
 slug: syntax/extended/auto-link
 ---
 

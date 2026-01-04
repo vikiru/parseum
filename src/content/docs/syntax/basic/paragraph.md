@@ -1,6 +1,6 @@
 ---
 title: Paragraph
-description: Markdown syntax for paragraphs and line breaks in Parseum
+description: Markdown syntax for paragraphs and line breaks in Parseum.
 slug: syntax/basic/paragraph
 ---
 

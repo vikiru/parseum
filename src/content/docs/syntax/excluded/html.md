@@ -1,6 +1,6 @@
 ---
 title: HTML Tag
-description: How HTML tags are handled and excluded in Parseum markdown parsing
+description: How HTML tags are handled and excluded in Parseum markdown parsing.
 slug: syntax/excluded/html
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 🛠️ Tech Stack
-description: Overview of the tech stack used in Parseum
+description: Overview of the tech stack used in Parseum.
 template: doc
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 🌟 Features
-description: Features and capabilities of the Markdown parser
+description: Features and capabilities of the Markdown parser.
 template: doc
 ---
 

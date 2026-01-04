@@ -1,6 +1,6 @@
 ---
 title: List
-description: Markdown syntax for ordered and unordered lists in Parseum
+description: Markdown syntax for ordered and unordered lists in Parseum.
 slug: syntax/basic/list
 ---
 

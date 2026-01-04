@@ -1,6 +1,6 @@
 ---
 title: Italic
-description: Markdown syntax for italic text formatting in Parseum
+description: Markdown syntax for italic text formatting in Parseum.
 slug: syntax/formatting/italic
 ---
 

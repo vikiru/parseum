@@ -1,6 +1,6 @@
 ---
 title: Horizontal Rule
-description: Markdown syntax for horizontal rules in Parseum
+description: Markdown syntax for horizontal rules in Parseum.
 slug: syntax/basic/horizontal-rule
 ---
 

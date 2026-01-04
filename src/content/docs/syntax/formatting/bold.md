@@ -1,6 +1,6 @@
 ---
 title: Bold
-description: Markdown syntax for bold text formatting in Parseum
+description: Markdown syntax for bold text formatting in Parseum.
 slug: syntax/formatting/bold
 ---
 

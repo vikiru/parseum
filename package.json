@@ -7,7 +7,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist --dotfiles --nojekyll",
     "astro": "astro",
     "lint": "biome lint",
     "format": "biome check --write"

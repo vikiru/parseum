@@ -1,6 +1,6 @@
 ---
 title: Subscript
-description: Markdown syntax for subscript text formatting in Parseum
+description: Markdown syntax for subscript text formatting in Parseum.
 slug: syntax/extended/subscript
 ---
 

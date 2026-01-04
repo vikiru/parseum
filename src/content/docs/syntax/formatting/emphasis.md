@@ -1,6 +1,6 @@
 ---
 title: Emphasis
-description: Markdown syntax for highlighted text emphasis in Parseum
+description: Markdown syntax for highlighted text emphasis in Parseum.
 slug: syntax/formatting/emphasis
 ---
 

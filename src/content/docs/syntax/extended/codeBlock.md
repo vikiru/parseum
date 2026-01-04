@@ -1,6 +1,6 @@
 ---
 title: Code Block
-description: Markdown syntax for code blocks and multi-line code in Parseum
+description: Markdown syntax for code blocks and multi-line code in Parseum.
 slug: syntax/extended/code-block
 ---
 

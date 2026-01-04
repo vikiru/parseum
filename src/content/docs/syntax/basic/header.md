@@ -1,6 +1,6 @@
 ---
 title: Header
-description: Markdown syntax for headers and headings in Parseum
+description: Markdown syntax for headers and headings in Parseum.
 ---
 
 A **header** is an element that is usually used to represent the title of a distinct section of text, denoted by a `#`. A header ranges from level 1 to level 6, where the level of the header is determined by the number of `#` characters and if the number of `#` characters exceeds 6, it will be parsed as a paragraph.

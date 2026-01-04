@@ -1,6 +1,6 @@
 ---
 title: 📝 Prerequisites
-description: Required dependencies for running Parseum
+description: Required dependencies for running Parseum.
 template: doc
 ---
 

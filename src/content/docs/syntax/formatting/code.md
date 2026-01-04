@@ -1,6 +1,6 @@
 ---
 title: Code
-description: Markdown syntax for inline code formatting in Parseum
+description: Markdown syntax for inline code formatting in Parseum.
 slug: syntax/formatting/code
 ---
 

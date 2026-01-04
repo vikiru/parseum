@@ -1,6 +1,6 @@
 ---
 title: Comment
-description: Markdown syntax for comments that don't render in Parseum output
+description: Markdown syntax for comments that don't render in Parseum output.
 slug: syntax/excluded/comment
 ---
 

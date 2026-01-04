@@ -5,18 +5,8 @@ import starlightThemeRapidePlugin from 'starlight-theme-rapide';
 
 export default defineConfig({
   base: '/parseum/',
-  site: 'https://vikiru.github.io/parseum/',
+  site: 'https://vikiru.github.io',
   output: 'static',
-  vite: {
-    build: {
-      minify: 'terser',
-      rollupOptions: {
-        output: {
-          manualChunks: undefined,
-        },
-      },
-    },
-  },
   integrations: [
     starlight({
       title: 'Parseum',

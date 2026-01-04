@@ -1,8 +1,8 @@
 ---
 title: 📝 Syntax Overview
+description: Comprehensive guide to all Markdown syntax supported by Parseum, including basic, formatting, extended syntax, and excluded elements.
 slug: syntax
 template: doc
-
 ---
 
 ### Basic Syntax

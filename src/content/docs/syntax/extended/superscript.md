@@ -1,6 +1,6 @@
 ---
 title: Superscript
-description: Markdown syntax for superscript text formatting in Parseum
+description: Markdown syntax for superscript text formatting in Parseum.
 slug: syntax/extended/superscript
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Link
-description: Markdown syntax for links and hyperlinks in Parseum
+description: Markdown syntax for links and hyperlinks in Parseum.
 slug: syntax/basic/link
 ---
 

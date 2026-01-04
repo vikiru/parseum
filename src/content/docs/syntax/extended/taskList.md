@@ -1,6 +1,6 @@
 ---
 title: Task List
-description: Markdown syntax for interactive task lists with checkboxes in Parseum
+description: Markdown syntax for interactive task lists with checkboxes in Parseum.
 slug: syntax/extended/task-list
 ---
 

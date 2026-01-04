@@ -1,6 +1,6 @@
 ---
 title: Image
-description: Markdown syntax for embedding images in Parseum
+description: Markdown syntax for embedding images in Parseum.
 slug: syntax/basic/image
 ---
 

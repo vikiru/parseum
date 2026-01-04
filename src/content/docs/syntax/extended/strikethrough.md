@@ -1,6 +1,6 @@
 ---
 title: Strikethrough
-description: Markdown syntax for strikethrough text formatting in Parseum
+description: Markdown syntax for strikethrough text formatting in Parseum.
 slug: syntax/extended/strikethrough
 ---
 

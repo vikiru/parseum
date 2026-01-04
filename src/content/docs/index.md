@@ -1,6 +1,6 @@
 ---
 title: Parseum 
-description: Overview of Parseum - a Markdown parser and editor built with Peggy.js
+description: Overview of Parseum - a Markdown parser and editor built with Peggy.js.
 hero:
   tagline: A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.
   actions:

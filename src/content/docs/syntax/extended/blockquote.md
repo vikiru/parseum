@@ -1,6 +1,6 @@
 ---
 title: Blockquote
-description: Markdown syntax for blockquotes and quoted text in Parseum
+description: Markdown syntax for blockquotes and quoted text in Parseum.
 slug: syntax/extended/blockquote
 ---
 

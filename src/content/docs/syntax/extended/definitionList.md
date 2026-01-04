@@ -1,6 +1,6 @@
 ---
 title: Definition List
-description: Markdown syntax for definition lists with terms and definitions in Parseum
+description: Markdown syntax for definition lists with terms and definitions in Parseum.
 slug: syntax/extended/definition-list
 ---
 
