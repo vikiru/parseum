@@ -1,6 +1,6 @@
 ---
 title: Parseum 
-description: Overview of Parseum - a markdown parser and editor built with Peggy.js
+description: Overview of Parseum - a Markdown parser and editor built with Peggy.js
 hero:
   tagline: A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.
   actions:
@@ -12,10 +12,10 @@ hero:
       icon: github
 head:
   - tag: title
-    content: "Parseum Documentaion | Home"
+    content: "Parseum Documentation | Home"
 ---
 
-**Parseum** is a markdown parser and editor built utilizing [Peggy.js](https://github.com/peggyjs/peggy) which generates a parser from a defined **Parsing Expression Grammar (PEG)** file. Combining this parser with **React**, **TailwindCSS**, and **DaisyUI**, allows for the creation of a simple markdown to html parser and editor with the flexibility to grow and evolve as needed by updating the defined grammar file.
+**Parseum** is a Markdown parser and editor built utilizing [Peggy.js](https://github.com/peggyjs/peggy) which generates a parser from a defined **Parsing Expression Grammar (PEG)** file. Combining this parser with **React**, **TailwindCSS**, and **DaisyUI** allows for the creation of a simple Markdown to HTML parser and editor with the flexibility to grow and evolve as needed by updating the defined grammar file.
 
 
 ## ©️ License

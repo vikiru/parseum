@@ -1,6 +1,6 @@
 ---
 title: ⚡ Setup
-description: How to set up Parseum for development
+description: Setting up Parseum for local development
 template: doc
 ---
 

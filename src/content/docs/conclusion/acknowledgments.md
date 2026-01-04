@@ -1,6 +1,6 @@
 ---
 title: ✨ Acknowledgments
-description: Thanks and acknowledgments
+description: Acknowledgments for resources and tools used in building Parseum
 template: doc
 ---
 

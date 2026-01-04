@@ -1,6 +1,6 @@
 ---
 title: 🔍 Testing
-description: How to run tests for Parseum
+description: Executing tests for the Markdown parser
 template: doc
 ---
 
