@@ -1,63 +1,123 @@
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
-	<!-- Security Headers -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
-	<meta http-equiv="X-Frame-Options" content="DENY">
-	<meta http-equiv="X-Content-Type-Options" content="nosniff">
-	<meta name="referrer" content="strict-origin-when-cross-origin">
-	<meta http-equiv="X-XSS-Protection" content="1; mode=block">
-	
-	<!-- SEO Meta Tags -->
-	<meta name="description" content="Documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI." />
-	<meta name="keywords" content="Parseum, documentation, markdown, html, parser, editor, peggy.js, react, tailwindcss, daisyui" />
-	<meta name="author" content="Visakan Kirubakaran" />
-	<meta name="theme-color" content="#3b82f6" />
-	
-	<!-- Open Graph -->
-	<meta property="og:title" content="Parseum Documentation" />
-	<meta property="og:description" content="Official documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI." />
-	<meta property="og:image" content="https://vikiru.github.io/parseum/logo.png" />
-	<meta property="og:url" content="https://vikiru.github.io/parseum/" />
-	<meta property="og:type" content="website" />
-	
-	<!-- Twitter -->
-	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content="Parseum Documentation" />
-	<meta name="twitter:description" content="Official documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI." />
-	<meta name="twitter:image" content="https://vikiru.github.io/parseum/logo.png" />
-	
-	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
-	<link rel="canonical" href="https://vikiru.github.io/parseum/" />
-	<meta name="generator" content={Astro.generator} />
-	<title>Parseum Documentation</title>
-	
-	<!-- JSON-LD Structured Data -->
-	<script type="application/ld+json" is:inline>
-	{
-		"@context": "https://schema.org",
-		"@type": "WebSite",
-		"name": "Parseum Documentation",
-		"description": "Documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.",
-		"url": "https://vikiru.github.io/parseum/",
-		"image": "https://vikiru.github.io/parseum/logo.png",
-		"author": {
-			"@type": "Person",
-			"name": "Visakan Kirubakaran"
-		},
-		"about": {
-			"@type": "SoftwareApplication",
-			"name": "Parseum",
-			"description": "A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI",
-			"applicationCategory": "DeveloperApplication",
-			"operatingSystem": "Web",
-			"programmingLanguage": "JavaScript",
-			"keywords": ["markdown", "html", "parser", "editor", "peggy.js", "react", "tailwindcss", "daisyui"]
-		},
-		"inLanguage": "en",
-		"license": "https://opensource.org/licenses/MIT",
-		"sameAs": "https://github.com/vikiru/parseum"
-	}
-	</script>
-</head>
+---
+import DefaultHead from "@astrojs/starlight/components/Head.astro";
+import { getEntry } from "astro:content";
+import type {
+	Person,
+	WebSite,
+	TechArticle,
+	SoftwareSourceCode,
+} from "schema-dts";
+
+const SITE_URL = "https://vikiru.github.io";
+const base = "/parseum/";
+
+const pathname = Astro.url.pathname;
+const canonical = `${SITE_URL}${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
+const entryId = pathname === "/parseum" ? "index" : pathname.replace(base, "");
+const entry = await getEntry("docs", entryId); // e.g. "development/stack"
+const title = entry?.data.title;
+const description = entry?.data.description;
+
+const GITHUB_AUTHOR = "https://github.com/vikiru";
+const GITHUB_REPO = "https://github.com/vikiru/parseum";
+const PARSEUM_LIVE_URL = "https://parseum.surge.sh/";
+
+const PERSON_LD: Person = {
+	"@type": "Person",
+	name: "Visakan Kirubakaran",
+	jobTitle: "Software Engineer",
+	url: "https://vikiru.vercel.app",
+	sameAs: [GITHUB_AUTHOR, "https://linkedin.com/in/viskirubakaran"],
+	alumniOf: {
+		"@type": "EducationalOrganization",
+		name: "Carleton University",
+	},
+};
+
+const SOFTWARE_LD: SoftwareSourceCode = {
+	"@type": "SoftwareSourceCode",
+	name: "Parseum",
+	description:
+		"A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI",
+	url: PARSEUM_LIVE_URL,
+	codeRepository: GITHUB_REPO,
+	programmingLanguage: "JavaScript",
+	license: "https://opensource.org/licenses/MIT",
+	author: PERSON_LD,
+	keywords: [
+		"markdown",
+		"html",
+		"parser",
+		"editor",
+		"peggy.js",
+		"react",
+		"tailwindcss",
+		"daisyui",
+	],
+	inLanguage: "en",
+	runtimePlatform: "Web",
+};
+
+const HOMEPAGE_LD: WebSite = {
+	"@type": "WebSite",
+	author: PERSON_LD,
+	license: "https://opensource.org/licenses/MIT",
+	inLanguage: "en",
+	url: `${SITE_URL}/parseum/`,
+	name: "Parseum Documentation",
+	description:
+		"Documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.",
+	image: `${SITE_URL}/parseum/logo.png`,
+	about: SOFTWARE_LD,
+	sameAs: [GITHUB_REPO],
+};
+
+const PAGE_LD: TechArticle = {
+	"@type": "TechArticle",
+	headline: title,
+	description: description,
+	author: PERSON_LD,
+	inLanguage: "en",
+	mainEntityOfPage: canonical,
+	url: canonical,
+};
+
+const isHome = pathname === "/parseum" || pathname === "/parseum/";
+---
+
+<DefaultHead {...entry} />
+
+<!-- Security Headers -->
+<meta
+	http-equiv="Content-Security-Policy"
+	content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
+/>
+<meta http-equiv="X-Frame-Options" content="DENY" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+
+<!-- SEO Meta Tags -->
+<meta
+	name="keywords"
+	content="Parseum, documentation, markdown, html, parser, editor, peggy.js, react, tailwindcss, daisyui"
+/>
+<meta name="author" content="Visakan Kirubakaran" />
+<meta name="theme-color" content="#3b82f6" />
+
+<!-- Twitter -->
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={`${SITE_URL}/parseum/logo.png`} />
+
+<!-- JSON-LD Structured Data -->
+{
+	isHome ? (
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify(HOMEPAGE_LD)}
+		/>
+	) : (
+		<script type="application/ld+json" set:html={JSON.stringify(PAGE_LD)} />
+	)
+}
