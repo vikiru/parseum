@@ -10,17 +10,8 @@
 <a href="https://parseum.surge.sh/">
     <img src="https://img.shields.io/badge/Web-live%20site-blue" alt="Parseum live site hosted via Surge.sh"/>
 </a>
-<br/>
-<a href="https://wakatime.com/@vikiru/projects/hzdehaajds">
-  <img src="https://wakatime.com/badge/user/5e62f99d-3a1e-4fd2-8f37-77919d626a67/project/018e902a-0f18-4cf8-b5e2-7922d2216d12.svg"
-  alt="Wakatime Coding Stats for Parseum"/>
- </a>
- <br/>
  <a href="https://github.com/vikiru/parseum/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/license-MIT-aqua" alt="MIT License Badge"/>
- </a>
- <a href="https://github.com/prettier/prettier">
-  <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="Code Style - Prettier"/>
  </a>
 <br/>
 <a href="https://github.com/vikiru/parseum/releases">
@@ -112,17 +103,16 @@ Hosting:
 
 Documentation:
 
--   Docs are built using [Docusaurus](https://docusaurus.io/)
-    -   Search functionality provided by: [docusaurus-lunr-search](https://github.com/praveenn77/docusaurus-lunr-search)
-    -   Analytics using [Google Analytics](https://marketingplatform.google.com/about/analytics/)
--   Documentation site hosted via [GitHub Pages](https://pages.github.com/)
+-   Docs are built using [Starlight](https://starlight.astro.build/) by [Astro](https://astro.build/)
+-   Link validation: [starlight-links-validator](https://github.com/HiDeoo/starlight-links-validator)
+-   Theme: [starlight-theme-rapide](https://github.com/HiDeoo/starlight-theme-rapide)
+-   Documentation site hosted via [GitHub Pages](https://docs.github.com/en/pages)
 
 Dev Tools:
 
--   [ESLint](https://eslint.org/)
--   [Prettier](https://prettier.io/)
--   [WakaTime](https://wakatime.com/)
--   [Peggy.js Online Editor](https://peggyjs.org/online)
+- [Biome](https://biomejs.dev/)
+- [Knip](https://github.com/webpro-nl/knip)
+- [Peggy.js Online Editor](https://peggyjs.org/online)
 
 ## 📝 Prerequisites
 
@@ -142,7 +132,7 @@ cd parseum
 2. Download and install all required dependencies.
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## 🔍 Testing
@@ -152,45 +142,69 @@ The comprehensive suite of tests for this project is housed within the **[test](
 The tests can be run with the following command:
 
 ```bash
-npm test
+pnpm test
 ```
 
 ## 📜 Available Scripts
 
-1. Start the app in the development environment.
+1. Start the development server.
 
 ```bash
-npm run start
+pnpm dev
 ```
 
-2. Build the project files and optimize for production.
+2. Build the production version of the application.
 
 ```bash
-npm run build
+pnpm build
 ```
 
-3. Lint all files and check if there are any issues, with [ESLint](https://eslint.org/).
+3. Preview the production version of the application.
 
 ```bash
-npm run lint
+pnpm preview
 ```
 
-4. Fix all ESLint issues then format the files with [Prettier](https://prettier.io/).
+5. Lint files using [Biome](https://biomejs.dev).
 
 ```bash
-npm run prettier
+pnpm lint
 ```
 
-5. Generate a parser using the defined `grammar.pegjs` file with [Peggy.js](https://peggyjs.org/).
+6. Format files using [Biome](https://biomejs.dev).
 
 ```bash
-npm run parser
+pnpm format
 ```
 
-6. Run all tests.
+7. Run TypeScript type checks without emitting files.
 
 ```bash
-npm test
+pnpm typecheck
+```
+
+8. Check for unused dependencies and files using [Knip](https://github.com/webpro-nl/knip).
+
+```bash
+pnpm unused
+```
+
+9. Generate a parser using the defined [grammar.pegjs](/src/parser/grammar.pegjs) file with [Peggy.js](https://peggyjs.org/).
+
+```bash
+pnpm parser
+```
+
+10. Run all tests.
+
+```bash
+pnpm test
+```
+
+11. Deploy to [Surge.sh](https://surge.sh/).
+
+```bash
+pnpm deploy
 ```
 
 ## ✨ Acknowledgments
@@ -201,6 +215,8 @@ npm test
 -   [Markdown Guide Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
 -   [regex101](https://regex101.com/)
 -   [Surge.sh](https://surge.sh/)
+- [Lefthook](https://github.com/evilmartians/lefthook)
+- [Semantic Release](https://github.com/semantic-release/semantic-release)
 -   [Docusaurus](https://docusaurus.io/)
 -   [GitHub Pages](https://pages.github.com/)
 -   [Shields Badges](https://github.com/badges/shields)
