@@ -1,0 +1,11 @@
+onlyBuiltDependencies:
+  - core-js
+  - core-js-pure
+  - esbuild
+  - lefthook
+
+overrides:
+  jspdf@<=3.0.4: '>=4.0.0'
+  nth-check@<2.0.1: '>=2.0.1'
+  postcss@<8.4.31: '>=8.4.31'
+  webpack-dev-server@<=5.2.0: '>=5.2.1'
