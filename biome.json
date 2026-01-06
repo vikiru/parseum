@@ -93,7 +93,7 @@
     },
     "linter": {
         "domains": {
-            "next": "recommended",
+            "next": "none",
             "project": "none",
             "react": "recommended"
         },
