@@ -14,7 +14,7 @@ function NavBar({ saveMarkdown, clearMarkdown }) {
               <path d="M4 6h16M4 12h16M4 18h7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
             </svg>
           </div>
-          <ul className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
+          <ul className="menu dropdown-content menu-sm z-1 mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
             <li>
               <a href="https://vikiru.github.io/parseum/">Documentation</a>
             </li>
