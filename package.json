@@ -18,8 +18,7 @@
     "editor",
     "peggy.js",
     "react",
-    "tailwindcss",
-    "daisyui"
+    "tailwindcss"
   ],
   "bugs": {
     "url": "https://github.com/vikiru/parseum/issues"
@@ -36,12 +35,6 @@
     "test": "cross-env NODE_ENV=testing nyc --reporter=json-summary --reporter=text mocha test/test.js",
     "parser": "peggy -o src/parser/parser.js src/parser/grammar.pegjs --format es",
     "deploy": "pnpm build && surge ./build/ parseum.surge.sh"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [

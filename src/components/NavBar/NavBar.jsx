@@ -3,7 +3,7 @@ function NavBar({ saveMarkdown, clearMarkdown }) {
     <div className="navbar bg-base-100">
       <div className="navbar-start">
         <div className="dropdown">
-          <div className="btn btn-circle btn-ghost" role="button" tabIndex={0} >
+          <div className="btn btn-circle btn-ghost" role="button" tabIndex={0}>
             <svg
               className="h-5 w-5"
               fill="none"
