@@ -101,7 +101,7 @@
     "rules": {
       "recommended": true,
       "a11y": "info",
-      "complexity": "off",
+      "complexity": "info",
       "performance": "info",
       "nursery": "off",
       "style": {
@@ -111,7 +111,8 @@
       "suspicious": {
         "noConsole": "off",
         "noReactSpecificProps": "off",
-        "noShorthandPropertyOverrides": "off"
+        "noShorthandPropertyOverrides": "off",
+        "noArrayIndexKey": "off"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
