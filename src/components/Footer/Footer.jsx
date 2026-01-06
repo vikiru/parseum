@@ -1,5 +1,3 @@
-import React, { useEffect, useRef, useState } from 'react';
-
 function Footer() {
   return (
     <footer className="footer footer-center bg-primary p-10 text-base-content">
