@@ -3,10 +3,15 @@ import { defineConfig } from 'astro/config';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
 import starlightThemeRapidePlugin from 'starlight-theme-rapide';
 
+/** @type {import('astro/config').Config} */
 export default defineConfig({
   base: '/parseum/',
   site: 'https://vikiru.github.io',
   output: 'static',
+  trailingSlash: 'never',
+  build: {
+    minify: true,
+  },
   integrations: [
     starlight({
       title: 'Parseum',
@@ -71,7 +76,11 @@ export default defineConfig({
           items: [{ label: 'Acknowledgments', slug: 'conclusion/acknowledgments' }],
         },
       ],
+      components: {
+        Head: './src/components/Head.astro',
+      },
       credits: true,
+      lastUpdated: false,
       plugins: [
         starlightLinksValidatorPlugin({
           errorOnRelativeLinks: false,

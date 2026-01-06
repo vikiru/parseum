@@ -29,4 +29,4 @@ template: doc
 -   Nested lists (and inclusion of other elements within lists)
 -   Nested blockquotes (with different levels)
 
-A comprehensive overview detailing all supported Markdown syntax can be found in the documentation under the [Syntax Overview](/parseum/syntax/) section. Each element has a dedicated page with an overview of what the element is and example input Markdown and resulting output HTML.
+A comprehensive overview detailing all supported Markdown syntax can be found in the documentation under the [Syntax Overview](/parseum/syntax) section. Each element has a dedicated page with an overview of what the element is and example input Markdown and resulting output HTML.
