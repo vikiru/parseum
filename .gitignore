@@ -1,3 +1,7 @@
+.astro
+
+*.md
+
 # Logs
 logs
 *.log
@@ -8,7 +12,8 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 # Editor directories and files
-.vscode/*
+.vscode
+.windsurf
 !.vscode/extensions.json
 .idea
 .DS_Store
