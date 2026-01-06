@@ -4,38 +4,62 @@ description: Available scripts for Parseum development.
 template: doc
 ---
 
-1. Start the app in the development environment.
+1. Start the development server.
 
 ```bash
-pnpm start
+pnpm dev
 ```
 
-2. Build the project files and optimize for production.
+2. Build the production version of the application.
 
 ```bash
 pnpm build
 ```
 
-3. Lint all files and check if there are any issues, with [ESLint](https://eslint.org/).
+3. Preview the production version of the application.
+
+```bash
+pnpm preview
+```
+
+5. Lint files using [Biome](https://biomejs.dev).
 
 ```bash
 pnpm lint
 ```
 
-4. Fix all ESLint issues then format the files with [Prettier](https://prettier.io/).
+6. Format files using [Biome](https://biomejs.dev).
 
 ```bash
-pnpm prettier
+pnpm format
 ```
 
-5. Generate a parser using the defined `grammar.pegjs` file with [Peggy.js](https://peggyjs.org/).
+7. Run TypeScript type checks without emitting files.
+
+```bash
+pnpm typecheck
+```
+
+8. Check for unused dependencies and files using [Knip](https://github.com/webpro-nl/knip).
+
+```bash
+pnpm unused
+```
+
+9. Generate a parser using the defined [grammar.pegjs](https://github.com/vikiru/parseum/blob/main/src/parser/grammar.pegjs) file with [Peggy.js](https://peggyjs.org/).
 
 ```bash
 pnpm parser
 ```
 
-6. Run all tests.
+10. Run all tests.
 
 ```bash
 pnpm test
+```
+
+11. Deploy to [Surge.sh](https://surge.sh/).
+
+```bash
+pnpm deploy
 ```

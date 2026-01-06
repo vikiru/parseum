@@ -10,6 +10,8 @@ template: doc
 -   [Markdown Guide Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
 -   [regex101](https://regex101.com/)
 -   [Surge.sh](https://surge.sh/)
+-   [Lefthook](https://github.com/evilmartians/lefthook)
+-   [Semantic Release](https://github.com/semantic-release/semantic-release)
 -   [Docusaurus](https://docusaurus.io/)
 -   [GitHub Pages](https://pages.github.com/)
 -   [Shields Badges](https://github.com/badges/shields)

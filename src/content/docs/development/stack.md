@@ -4,7 +4,7 @@ description: Overview of the tech stack used in Parseum.
 template: doc
 ---
 
-Parser Core:
+Backend:
 
 -   [Node.js](https://nodejs.org/en)
 -   [Peggy.js](https://github.com/peggyjs/peggy)
@@ -15,6 +15,10 @@ Frontend:
 -   [TailwindCSS](https://tailwindcss.com/)
 -   [DaisyUI](https://daisyui.com/)
 
+Hosting:
+
+-   [Surge.sh](https://surge.sh/)
+
 Documentation:
 
 -   Docs are built using [Starlight](https://starlight.astro.build/) by [Astro](https://astro.build/)
@@ -24,11 +28,8 @@ Documentation:
 
 Dev Tools:
 
--   [Biome](https://biomejs.dev/)
--   [WakaTime](https://wakatime.com/)
--   [Peggy.js Online Editor](https://peggyjs.org/online)
+- [Biome](https://biomejs.dev/)
+- [Knip](https://github.com/webpro-nl/knip)
+- [Peggy.js Online Editor](https://peggyjs.org/online)
 
-Deployment:
 
--   [GitHub Pages](https://docs.github.com/en/pages)
--   [gh-pages](https://github.com/tschaub/gh-pages)
