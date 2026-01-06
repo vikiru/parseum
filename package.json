@@ -8,7 +8,17 @@
     "type": "git",
     "url": "https://github.com/vikiru/parseum"
   },
-  "keywords": ["Parseum", "markdown", "html", "parser", "editor", "peggy.js", "react", "tailwindcss", "daisyui"],
+  "keywords": [
+    "Parseum",
+    "markdown",
+    "html",
+    "parser",
+    "editor",
+    "peggy.js",
+    "react",
+    "tailwindcss",
+    "daisyui"
+  ],
   "bugs": {
     "url": "https://github.com/vikiru/parseum/issues"
   },
@@ -28,7 +38,10 @@
     "deploy": "npm run build && surge ./build/ parseum.surge.sh"
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
