@@ -1,75 +1,91 @@
 ---
 import DefaultHead from "@astrojs/starlight/components/Head.astro";
 import { getEntry } from "astro:content";
+import { documentationConfig } from "../../docs.config.ts";
 import type {
 	Person,
 	WebSite,
 	TechArticle,
 	SoftwareSourceCode,
+	Graph,
 } from "schema-dts";
 
-const SITE_URL = "https://vikiru.github.io";
-const base = "/parseum/";
+const {
+	siteUrl,
+	base,
+	authorName,
+	githubAuthor,
+	linkedinProfile,
+	alumniUniversity,
+	jobTitle,
+	githubRepo,
+	liveDemoUrl,
+	projectVersion,
+	projectStartDate,
+	projectEndDate,
+	programmingLanguage,
+	license,
+	keywords,
+	themeColor,
+	logoFileName,
+	faviconFileName,
+} = documentationConfig;
+
+const SITE_URL = siteUrl;
+const logoPath = `${base}/${logoFileName}`;
+const faviconPath = `${base}/${faviconFileName}`;
 
 const pathname = Astro.url.pathname;
 const canonical = `${SITE_URL}${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
 const entryId = pathname === "/parseum" ? "index" : pathname.replace(base, "");
 const entry = await getEntry("docs", entryId); // e.g. "development/stack"
+
 const title = entry?.data.title;
 const description = entry?.data.description;
 
-const GITHUB_AUTHOR = "https://github.com/vikiru";
-const GITHUB_REPO = "https://github.com/vikiru/parseum";
-const PARSEUM_LIVE_URL = "https://parseum.surge.sh/";
-
 const PERSON_LD: Person = {
 	"@type": "Person",
-	name: "Visakan Kirubakaran",
-	jobTitle: "Software Engineer",
-	url: "https://vikiru.vercel.app",
-	sameAs: [GITHUB_AUTHOR, "https://linkedin.com/in/viskirubakaran"],
+	name: authorName,
+	jobTitle: jobTitle,
+	url: documentationConfig.portfolioWebsite,
+	sameAs: [githubAuthor, linkedinProfile],
 	alumniOf: {
 		"@type": "EducationalOrganization",
-		name: "Carleton University",
+		name: alumniUniversity,
 	},
 };
 
 const SOFTWARE_LD: SoftwareSourceCode = {
 	"@type": "SoftwareSourceCode",
-	name: "Parseum",
-	description:
-		"A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI",
-	url: PARSEUM_LIVE_URL,
-	codeRepository: GITHUB_REPO,
-	programmingLanguage: "JavaScript",
-	license: "https://opensource.org/licenses/MIT",
+	name: documentationConfig.title.replace(" Documentation", ""),
+	description: documentationConfig.description.replace(
+		"Documentation for ",
+		"",
+	),
+	url: liveDemoUrl,
+	codeRepository: githubRepo,
+	programmingLanguage: programmingLanguage,
+	license: license,
 	author: PERSON_LD,
-	keywords: [
-		"markdown",
-		"html",
-		"parser",
-		"editor",
-		"peggy.js",
-		"react",
-		"tailwindcss",
-		"daisyui",
-	],
+	keywords: keywords,
 	inLanguage: "en",
 	runtimePlatform: "Web",
+	version: projectVersion,
+	dateCreated: projectStartDate,
+	dateModified: projectEndDate,
 };
 
 const HOMEPAGE_LD: WebSite = {
 	"@type": "WebSite",
 	author: PERSON_LD,
-	license: "https://opensource.org/licenses/MIT",
+	license: license,
 	inLanguage: "en",
-	url: `${SITE_URL}/parseum/`,
-	name: "Parseum Documentation",
-	description:
-		"Documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.",
-	image: `${SITE_URL}/parseum/logo.png`,
+	url: `${SITE_URL}${base}/`,
+	name: documentationConfig.title,
+	description: documentationConfig.description,
+	image: `${SITE_URL}${logoPath}`,
 	about: SOFTWARE_LD,
-	sameAs: [GITHUB_REPO],
+	sameAs: [githubRepo],
 };
 
 const PAGE_LD: TechArticle = {
@@ -83,34 +99,29 @@ const PAGE_LD: TechArticle = {
 };
 
 const isHome = pathname === "/parseum" || pathname === "/parseum/";
+const keywordsString = keywords.join(", ");
+
+const graphData = isHome
+	? [PERSON_LD, SOFTWARE_LD, HOMEPAGE_LD]
+	: [PERSON_LD, PAGE_LD];
+
+const GRAPH_LD: Graph = {
+	"@context": "https://schema.org",
+	"@graph": graphData,
+};
 ---
 
 <DefaultHead {...entry} />
 
-<link rel="preload" as="image" href={`${SITE_URL}/parseum/logo.png`} type="image/png" />
-<link rel="preload" as="image" href={`${SITE_URL}/parseum/favicon.ico`} type="image/x-icon" />
-
 <!-- SEO Meta Tags -->
-<meta
-	name="keywords"
-	content="Parseum, documentation, markdown, html, parser, editor, peggy.js, react, tailwindcss, daisyui"
-/>
-<meta name="author" content="Visakan Kirubakaran" />
-<meta name="theme-color" content="#3b82f6" />
+<meta name="keywords" content={keywordsString} />
+<meta name="author" content={authorName} />
+<meta name="theme-color" content={themeColor} />
 
 <!-- Twitter -->
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={`${SITE_URL}/parseum/logo.png`} />
+<meta name="twitter:image" content={`${SITE_URL}${logoPath}`} />
 
 <!-- JSON-LD Structured Data -->
-{
-	isHome ? (
-		<script
-			type="application/ld+json"
-			set:html={JSON.stringify(HOMEPAGE_LD)}
-		/>
-	) : (
-		<script type="application/ld+json" set:html={JSON.stringify(PAGE_LD)} />
-	)
-}
+<script type="application/ld+json" set:html={JSON.stringify(GRAPH_LD)} />

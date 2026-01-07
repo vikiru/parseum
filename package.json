@@ -13,7 +13,7 @@
     "format": "biome check --write"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.37.1",
+    "@astrojs/starlight": "^0.37.2",
     "astro": "^5.16.6",
     "schema-dts": "^1.1.5",
     "sharp": "^0.34.5",
