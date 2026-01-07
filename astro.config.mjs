@@ -6,7 +6,7 @@ import { documentationConfig } from './docs.config.ts';
 
 /** @type {import('astro/config').Config} */
 export default defineConfig({
-  base: documentationConfig.base + '/',
+  base: `${documentationConfig.base}/`,
   site: documentationConfig.siteUrl,
   output: 'static',
   trailingSlash: 'never',

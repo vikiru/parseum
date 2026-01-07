@@ -33,7 +33,6 @@ const {
 
 const SITE_URL = siteUrl;
 const logoPath = `${base}/${logoFileName}`;
-const faviconPath = `${base}/${faviconFileName}`;
 
 const pathname = Astro.url.pathname;
 const canonical = `${SITE_URL}${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
@@ -43,7 +42,7 @@ const entry = await getEntry("docs", entryId); // e.g. "development/stack"
 const title = entry?.data.title;
 const description = entry?.data.description;
 
-const PERSON_LD: Person = {
+const personLd: Person = {
 	"@type": "Person",
 	name: authorName,
 	jobTitle: jobTitle,
@@ -55,7 +54,7 @@ const PERSON_LD: Person = {
 	},
 };
 
-const SOFTWARE_LD: SoftwareSourceCode = {
+const softwareLd: SoftwareSourceCode = {
 	"@type": "SoftwareSourceCode",
 	name: documentationConfig.title.replace(" Documentation", ""),
 	description: documentationConfig.description.replace(
@@ -66,7 +65,7 @@ const SOFTWARE_LD: SoftwareSourceCode = {
 	codeRepository: githubRepo,
 	programmingLanguage: programmingLanguage,
 	license: license,
-	author: PERSON_LD,
+	author: personLd,
 	keywords: keywords,
 	inLanguage: "en",
 	runtimePlatform: "Web",
@@ -75,24 +74,24 @@ const SOFTWARE_LD: SoftwareSourceCode = {
 	dateModified: projectEndDate,
 };
 
-const HOMEPAGE_LD: WebSite = {
+const homepageLd: WebSite = {
 	"@type": "WebSite",
-	author: PERSON_LD,
+	author: personLd,
 	license: license,
 	inLanguage: "en",
 	url: `${SITE_URL}${base}/`,
 	name: documentationConfig.title,
 	description: documentationConfig.description,
 	image: `${SITE_URL}${logoPath}`,
-	about: SOFTWARE_LD,
+	about: softwareLd,
 	sameAs: [githubRepo],
 };
 
-const PAGE_LD: TechArticle = {
+const pageLd: TechArticle = {
 	"@type": "TechArticle",
 	headline: title,
 	description: description,
-	author: PERSON_LD,
+	author: personLd,
 	inLanguage: "en",
 	mainEntityOfPage: canonical,
 	url: canonical,
@@ -102,10 +101,10 @@ const isHome = pathname === "/parseum" || pathname === "/parseum/";
 const keywordsString = keywords.join(", ");
 
 const graphData = isHome
-	? [PERSON_LD, SOFTWARE_LD, HOMEPAGE_LD]
-	: [PERSON_LD, PAGE_LD];
+	? [personLd, softwareLd, homepageLd]
+	: [personLd, pageLd];
 
-const GRAPH_LD: Graph = {
+const graphLd: Graph = {
 	"@context": "https://schema.org",
 	"@graph": graphData,
 };
@@ -124,4 +123,4 @@ const GRAPH_LD: Graph = {
 <meta name="twitter:image" content={`${SITE_URL}${logoPath}`} />
 
 <!-- JSON-LD Structured Data -->
-<script type="application/ld+json" set:html={JSON.stringify(GRAPH_LD)} />
+<script type="application/ld+json" set:html={JSON.stringify(graphLd)} />
