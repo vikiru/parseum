@@ -36,8 +36,7 @@ export const documentationConfig: DocumentationConfig = {
     license: 'https://opensource.org/licenses/MIT',
   },
   assets: {
-    themeColor: '#3b82f6',
+    themeColor: '#000',
     logoFileName: 'logo.png',
-    faviconFileName: 'favicon.ico',
   },
 };

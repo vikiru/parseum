@@ -13,13 +13,13 @@ import {
 import type { TechArticle, Graph } from "schema-dts";
 
 const {
-	site: { siteUrl, base, title: siteTitle },
-	assets: { logoFileName, themeColor, faviconFileName },
+	site: { siteUrl, base, title: siteTitle, documentationUrl },
+	assets: { logoFileName, themeColor },
 	project: { keywords, name: projectName },
 	author: { name: authorName },
 } = documentationConfig;
 
-const logoPath = `${base}/${logoFileName}`;
+const logoPath = `${documentationUrl}/${logoFileName}`;
 const keywordsString = keywords.join(", ");
 
 const pathname = Astro.url.pathname;
@@ -68,7 +68,7 @@ if (is404) {
 		inLanguage: "en",
 		mainEntityOfPage: canonical,
 		url: canonical,
-		image: `${siteUrl}${logoPath}`,
+		image: `${logoPath}`,
 		publisher: { "@id": personId },
 		about: { "@id": softwareId },
 		isPartOf: { "@id": homepageId },
@@ -94,14 +94,61 @@ const graphLd: Graph = {
 <meta name="description" content={description} />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="canonical" href={canonical} />
-<link
-	rel="icon"
-	type="image/x-icon"
-	href={`${siteUrl}${base}/${faviconFileName}`}
-/>
 <meta name="author" content={authorName} />
 <meta name="theme-color" content={themeColor} />
 <meta name="keywords" content={keywordsString} />
+
+<!-- Favicons -->
+<link
+	rel="icon"
+	type="image/x-icon"
+	href={`${documentationUrl}/favicon-light.ico`}
+/>
+<link
+	rel="icon"
+	type="image/png"
+	sizes="32x32"
+	href={`${documentationUrl}/favicon-32x32-light.png`}
+/>
+<link
+	rel="icon"
+	type="image/png"
+	sizes="16x16"
+	href={`${documentationUrl}/favicon-16x16-light.png`}
+/>
+<link
+	rel="apple-touch-icon"
+	sizes="180x180"
+	href={`${documentationUrl}/apple-touch-icon-light.png`}
+/>
+<link rel="manifest" href={`${documentationUrl}/manifest.json`} />
+
+<link
+	rel="icon"
+	type="image/png"
+	sizes="32x32"
+	media="(prefers-color-scheme: dark)"
+	href={`${documentationUrl}/favicon-32x32-dark.png`}
+/>
+<link
+	rel="icon"
+	type="image/png"
+	sizes="16x16"
+	media="(prefers-color-scheme: dark)"
+	href={`${documentationUrl}/favicon-16x16-dark.png`}
+/>
+<link
+	rel="apple-touch-icon"
+	sizes="180x180"
+	media="(prefers-color-scheme: dark)"
+	href={`${documentationUrl}/apple-touch-icon-dark.png`}
+/>
+<link
+	rel="icon"
+	type="image/x-icon"
+	media="(prefers-color-scheme: dark)"
+	href={`${documentationUrl}/favicon-dark.ico`}
+/>
 
 <!-- Open Graph / Facebook -->
 <meta property="og:title" content={title} />
@@ -110,13 +157,14 @@ const graphLd: Graph = {
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content="en" />
 <meta property="og:site_name" content={siteTitle} />
-<meta property="og:image" content={`${siteUrl}${logoPath}`} />
+<meta property="og:image" content={`${logoPath}`} />
 <meta property="og:image:alt" content={`${projectName} logo`} />
 
 <!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={`${siteUrl}${logoPath}`} />
+<meta name="twitter:image" content={`${logoPath}`} />
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(graphLd)} />

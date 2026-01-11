@@ -37,7 +37,6 @@ export type ProjectConfig = {
 export type AssetsConfig = {
   themeColor: string;
   logoFileName: string;
-  faviconFileName: string;
 };
 
 export type DocumentationConfig = {
