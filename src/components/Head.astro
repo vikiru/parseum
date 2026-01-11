@@ -19,12 +19,11 @@ const {
 	author: { name: authorName },
 } = documentationConfig;
 
-const SITE_URL = siteUrl;
 const logoPath = `${base}/${logoFileName}`;
 const keywordsString = keywords.join(", ");
 
 const pathname = Astro.url.pathname;
-const canonical = `${SITE_URL}${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
+const canonical = `${siteUrl}${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
 
 const normalizedPath = pathname.endsWith("/")
 	? pathname.slice(0, -1)
@@ -69,7 +68,7 @@ if (is404) {
 		inLanguage: "en",
 		mainEntityOfPage: canonical,
 		url: canonical,
-		image: `${SITE_URL}${logoPath}`,
+		image: `${siteUrl}${logoPath}`,
 		publisher: { "@id": personId },
 		about: { "@id": softwareId },
 		isPartOf: { "@id": homepageId },
@@ -98,7 +97,7 @@ const graphLd: Graph = {
 <link
 	rel="icon"
 	type="image/x-icon"
-	href={`${SITE_URL}${base}/${faviconFileName}`}
+	href={`${siteUrl}${base}/${faviconFileName}`}
 />
 <meta name="author" content={authorName} />
 <meta name="theme-color" content={themeColor} />
@@ -111,13 +110,13 @@ const graphLd: Graph = {
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content="en" />
 <meta property="og:site_name" content={siteTitle} />
-<meta property="og:image" content={`${SITE_URL}${logoPath}`} />
+<meta property="og:image" content={`${siteUrl}${logoPath}`} />
 <meta property="og:image:alt" content={`${projectName} logo`} />
 
 <!-- Twitter -->
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={`${SITE_URL}${logoPath}`} />
+<meta name="twitter:image" content={`${siteUrl}${logoPath}`} />
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(graphLd)} />
