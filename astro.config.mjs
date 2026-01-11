@@ -1,10 +1,9 @@
+import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
 import starlightThemeRapidePlugin from 'starlight-theme-rapide';
 import { documentationConfig } from './docs.config';
-
-import sitemap from '@astrojs/sitemap';
 
 const {
   site: { title, base, siteUrl, projectDescription, documentationUrl, websiteLastModified },

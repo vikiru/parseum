@@ -1,5 +1,4 @@
 ---
-import DefaultHead from "@astrojs/starlight/components/Head.astro";
 import { getEntry } from "astro:content";
 import { documentationConfig } from "../../docs.config.ts";
 import {
@@ -14,9 +13,10 @@ import {
 import type { TechArticle, Graph } from "schema-dts";
 
 const {
-	site: { siteUrl, base },
-	assets: { logoFileName },
-	project: { keywords },
+	site: { siteUrl, base, title: siteTitle },
+	assets: { logoFileName, themeColor },
+	project: { keywords, name: projectName },
+	author: { name: authorName },
 } = documentationConfig;
 
 const SITE_URL = siteUrl;
@@ -32,18 +32,35 @@ const normalizedPath = pathname.endsWith("/")
 const entryId =
 	normalizedPath === base ? "index" : normalizedPath.replace(`${base}/`, "");
 
-const entry = await getEntry("docs", entryId);
+let entry = await getEntry("docs", entryId);
+let is404 = entry === undefined;
+
 const isHome = normalizedPath === base;
 
-const title = entry?.data.title;
-const description = entry?.data.description;
-const pageId = isHome ? homepageId : `${canonical}#page`;
+const title = is404 ? "404 | Page Not Found" : entry?.data.title;
+const description = is404
+	? "The page you are looking for does not exist."
+	: entry?.data.description;
+const pageId = is404
+	? `${canonical}#404`
+	: isHome
+		? homepageId
+		: `${canonical}#page`;
 
-let graphData: any[] = [];
-let pageLd: TechArticle | null = null;
+let graphData: any[] = [personLd, softwareLd, webAppLd];
 
-if (!isHome) {
-	pageLd = {
+if (is404) {
+	// Handle 404
+	graphData.push({
+		"@type": "WebPage",
+		"@id": pageId,
+		url: canonical,
+		name: title,
+		description: description,
+	});
+} else if (!isHome && !is404) {
+	// Handle normal doc page
+	const pageLd: TechArticle = {
 		"@type": "TechArticle",
 		"@id": pageId,
 		headline: title,
@@ -57,9 +74,10 @@ if (!isHome) {
 		about: { "@id": softwareId },
 		isPartOf: { "@id": homepageId },
 	};
-	graphData.push(personLd, pageLd, webAppLd);
+	graphData.push(pageLd);
 } else {
-	graphData.push(personLd, softwareLd, homepageLd, webAppLd);
+	// Handle home page
+	graphData.push(homepageLd);
 }
 
 const graphLd: Graph = {
@@ -68,12 +86,25 @@ const graphLd: Graph = {
 };
 ---
 
-<DefaultHead {...entry} />
-
 <!-- SEO Meta Tags -->
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="canonical" href={canonical} />
+<link rel="icon" type="image/x-icon" href={`${SITE_URL}/favicon.ico`} />
+<meta name="author" content={authorName} />
+<meta name="theme-color" content={themeColor} />
 <meta name="keywords" content={keywordsString} />
-<meta name="author" content={documentationConfig.author.name} />
-<meta name="theme-color" content={documentationConfig.assets.themeColor} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={is404 ? "website" : "article"} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content="en" />
+<meta property="og:site_name" content={siteTitle} />
+<meta property="og:image" content={`${SITE_URL}${logoPath}`} />
+<meta property="og:image:alt" content={`${projectName} logo`} />
 
 <!-- Twitter -->
 <meta name="twitter:title" content={title} />
