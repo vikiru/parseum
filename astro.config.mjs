@@ -7,7 +7,7 @@ import { documentationConfig } from './docs.config';
 import sitemap from '@astrojs/sitemap';
 
 const {
-  site: { title, description, siteUrl, base, documentationUrl, websiteLastModified },
+  site: { title, base, siteUrl, projectDescription, documentationUrl, websiteLastModified },
   assets: { faviconFileName, logoFileName },
   project: { githubRepo, liveDemoUrl },
 } = documentationConfig;
@@ -28,7 +28,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title,
-      tagline: description.replace('Documentation for ', ''),
+      tagline: projectDescription,
       favicon: faviconFileName,
       logo: {
         src: `./public/${logoFileName}`,

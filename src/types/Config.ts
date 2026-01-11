@@ -1,6 +1,7 @@
 export type SiteConfig = {
   title: string;
   description: string;
+  projectDescription: string;
   siteUrl: string;
   base: string;
   documentationUrl: string;

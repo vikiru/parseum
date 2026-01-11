@@ -5,6 +5,7 @@ export const documentationConfig: DocumentationConfig = {
     title: 'Parseum Documentation',
     description:
       'Documentation for Parseum - A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.',
+    projectDescription: 'A markdown to HTML parser and editor built using Peggy.js, React, TailwindCSS and DaisyUI.',
     siteUrl: 'https://vikiru.github.io',
     base: '/parseum',
     documentationUrl: 'https://vikiru.github.io/parseum',

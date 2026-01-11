@@ -24,27 +24,35 @@ const entryId =
 		? "index"
 		: pathname.replace(documentationConfig.site.base, "");
 const entry = await getEntry("docs", entryId);
-
-const title = entry?.data.title;
-const description = entry?.data.description;
-
-const pageLd: TechArticle = {
-	"@type": "TechArticle",
-	headline: title,
-	description: description,
-	author: { "@id": personId },
-	about: { "@id": softwareId },
-	inLanguage: "en",
-	mainEntityOfPage: canonical,
-	url: canonical,
-};
-
 const isHome = pathname === "/parseum" || pathname === "/parseum/";
 const keywordsString = documentationConfig.project.keywords.join(", ");
 
-const graphData = isHome
-	? [personLd, softwareLd, homepageLd, webAppLd]
-	: [personLd, pageLd, webAppLd];
+const title = entry?.data.title;
+const description = entry?.data.description;
+const pageId = isHome ? homepageId : `${canonical}#page`;
+
+let graphData: any[] = [];
+let pageLd: TechArticle | null = null;
+
+if (!isHome) {
+	pageLd = {
+		"@type": "TechArticle",
+		"@id": pageId,
+		headline: title,
+		description: description,
+		author: { "@id": personId },
+		inLanguage: "en",
+		mainEntityOfPage: canonical,
+		url: canonical,
+		image: `${SITE_URL}${logoPath}`,
+		publisher: { "@id": personId },
+		about: { "@id": softwareId },
+		isPartOf: { "@id": homepageId },
+	};
+	graphData.push(personLd, pageLd, webAppLd);
+} else {
+	graphData.push(personLd, softwareLd, homepageLd, webAppLd);
+}
 
 const graphLd: Graph = {
 	"@context": "https://schema.org",

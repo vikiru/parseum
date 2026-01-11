@@ -2,7 +2,7 @@ import type { Person, SoftwareSourceCode, WebApplication, WebSite } from "schema
 import { documentationConfig } from "./docs.config";
 
 const {
-  site: { title, description, siteUrl, base, websiteLastModified },
+  site: { title, description, projectDescription, siteUrl, base, websiteLastModified, documentationUrl },
   author: { 
     name, 
     alternateName, 
@@ -12,7 +12,7 @@ const {
     portfolioWebsite, 
     githubProfile, 
     linkedinProfile, 
-    universityName: alumniUniversity, 
+    universityName, 
     universityUrl, 
     universityLogo 
   },
@@ -47,7 +47,7 @@ const personLd: Person = {
   sameAs: [githubProfile, linkedinProfile],
   alumniOf: {
     "@type": "EducationalOrganization",
-    name: alumniUniversity,
+    name: universityName,
     url: universityUrl,
     logo: universityLogo,
   },
@@ -57,44 +57,54 @@ const softwareLd: SoftwareSourceCode = {
   "@type": "SoftwareSourceCode",
   "@id": softwareId,
   name: projectName,
-  author: personLd,
-  maintainer: personLd,
-  description: description,
-  keywords: keywords,
+  description: projectDescription,
   url: githubRepo,
+  author: { "@id": personId },
+  maintainer: { "@id": personId },
+  keywords: keywords,
   version: version,
   programmingLanguage: programmingLanguage,
   license: license,
-  dateCreated: startDate,
-  dateModified: endDate,
+  dateCreated: new Date(startDate).toISOString(),
+  dateModified: new Date(endDate).toISOString(),
   codeRepository: githubRepo,
-  runtimePlatform: "Web",
+  runtimePlatform: ["Node.js", "Web", "Browser"],
+  targetProduct: { "@id": webAppId },
 };
 
 const homepageLd: WebSite = {
   "@type": "WebSite",
   "@id": homepageId,
-  author: personLd,
+  name: title,
+  alternateName: projectName,
+  description: description,
+  url: `${siteUrl}${base}/`,
+  creator: { "@id": personId },
   license: license,
   inLanguage: "en",
   dateModified: websiteLastModified.toISOString(),
-  url: `${siteUrl}${base}/`,
-  name: title,
-  description: description,
   image: `${siteUrl}${base}/${logoFileName}`,
   about: { "@id": softwareId },
-  sameAs: [githubProfile, linkedinProfile],
+  sameAs: [githubRepo, liveDemoUrl],
+  mainEntity: { "@id": softwareId },
+  mainEntityOfPage: `${documentationUrl}/`,
 };
 
 const webAppLd: WebApplication = {
   "@type": "WebApplication",
   "@id": webAppId,
   name: projectName,
-  description: description.replace("Documentation for ", ""),
+  description: projectDescription,
   url: liveDemoUrl,
   applicationCategory: "DeveloperApplication",
   operatingSystem: "Web",
   browserRequirements: "Requires JavaScript and a modern web browser",
+  softwareVersion: version,
+  copyrightHolder: { "@id": personId },
+  copyrightNotice: "Copyright 2024 Visakan Kirubakaran. All rights reserved.",
+  copyrightYear: 2024,
+  mainEntity: { "@id": softwareId },
+  mainEntityOfPage: liveDemoUrl,
 };
 
 export { personId, softwareId, homepageId, webAppId, personLd, softwareLd, homepageLd, webAppLd };
