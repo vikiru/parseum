@@ -6,7 +6,6 @@ import {
 	personId,
 	softwareId,
 	homepageId,
-	webAppId,
 	personLd,
 	softwareLd,
 	homepageLd,
@@ -14,18 +13,27 @@ import {
 } from "../../schemas.ts";
 import type { TechArticle, Graph } from "schema-dts";
 
-const SITE_URL = documentationConfig.site.siteUrl;
-const logoPath = `${documentationConfig.site.base}/${documentationConfig.assets.logoFileName}`;
+const {
+	site: { siteUrl, base },
+	assets: { logoFileName },
+	project: { keywords },
+} = documentationConfig;
+
+const SITE_URL = siteUrl;
+const logoPath = `${base}/${logoFileName}`;
+const keywordsString = keywords.join(", ");
 
 const pathname = Astro.url.pathname;
 const canonical = `${SITE_URL}${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
+
+const normalizedPath = pathname.endsWith("/")
+	? pathname.slice(0, -1)
+	: pathname;
 const entryId =
-	pathname === "/parseum"
-		? "index"
-		: pathname.replace(documentationConfig.site.base, "");
+	normalizedPath === base ? "index" : normalizedPath.replace(`${base}/`, "");
+
 const entry = await getEntry("docs", entryId);
-const isHome = pathname === "/parseum" || pathname === "/parseum/";
-const keywordsString = documentationConfig.project.keywords.join(", ");
+const isHome = normalizedPath === base;
 
 const title = entry?.data.title;
 const description = entry?.data.description;
