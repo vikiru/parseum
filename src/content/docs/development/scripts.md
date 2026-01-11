@@ -61,5 +61,5 @@ pnpm test
 11. Deploy to [Surge.sh](https://surge.sh/).
 
 ```bash
-pnpm deploy
+pnpm run deploy
 ```

@@ -7,33 +7,33 @@ template: doc
 
 ### Basic Syntax
 
--   [Paragraph](syntax/basic/paragraph)
--   [Header](syntax/basic/header)
--   [Horizontal Rule](syntax/basic/horizontal-rule)
--   [List](syntax/basic/list)
--   [Link](syntax/basic/link)
--   [Image](syntax/basic/image)
+- [Paragraph](/parseum/syntax/basic/paragraph)
+- [Header](/parseum/syntax/basic/header)
+- [Horizontal Rule](/parseum/syntax/basic/horizontal-rule)
+- [List](/parseum/syntax/basic/list)
+- [Link](/parseum/syntax/basic/link)
+- [Image](/parseum/syntax/basic/image)
 
 ### Formatting Syntax
 
--   [Italic](syntax/formatting/italic)
--   [Bold](syntax/formatting/bold)
--   [Bold Italic](syntax/formatting/bold-italic)
--   [Code](syntax/formatting/code)
--   [Emphasis](syntax/formatting/emphasis)
+- [Italic](/parseum/syntax/formatting/italic)
+- [Bold](/parseum/syntax/formatting/bold)
+- [Bold Italic](/parseum/syntax/formatting/bold-italic)
+- [Code](/parseum/syntax/formatting/code)
+- [Emphasis](/parseum/syntax/formatting/emphasis)
 
 ### Extended Syntax
 
--   [Auto Link](syntax/extended/auto-link)
--   [Blockquote](syntax/extended/blockquote)
--   [Code Block](syntax/extended/code-block)
--   [Definition List](syntax/extended/definition-list)
--   [Task List](syntax/extended/task-list)
--   [Strikethrough](syntax/extended/strikethrough)
--   [Subscript](syntax/extended/subscript)
--   [Superscript](syntax/extended/superscript)
+- [Auto Link](/parseum/syntax/extended/auto-link)
+- [Blockquote](/parseum/syntax/extended/blockquote)
+- [Code Block](/parseum/syntax/extended/code-block)
+- [Definition List](/parseum/syntax/extended/definition-list)
+- [Task List](/parseum/syntax/extended/task-list)
+- [Strikethrough](/parseum/syntax/extended/strikethrough)
+- [Subscript](/parseum/syntax/extended/subscript)
+- [Superscript](/parseum/syntax/extended/superscript)
 
 ### Excluded Syntax
 
--   [HTML Tags](syntax/excluded/html)
--   [Comment](syntax/excluded/comment)
+- [HTML Tags](/parseum/syntax/excluded/html)
+- [Comment](/parseum/syntax/excluded/comment)
