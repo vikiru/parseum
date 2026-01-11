@@ -16,7 +16,7 @@ export const documentationConfig: DocumentationConfig = {
     alternateName: 'Vis Kirubakaran',
     firstName: 'Visakan',
     lastName: 'Kirubakaran',
-    jobTitle: 'Software Engineer',
+    jobTitle: 'Software Developer',
     portfolioWebsite: 'https://vikiru.vercel.app',
     githubProfile: 'https://github.com/vikiru',
     linkedinProfile: 'https://linkedin.com/in/viskirubakaran',

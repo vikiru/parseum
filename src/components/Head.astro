@@ -14,7 +14,7 @@ import type { TechArticle, Graph } from "schema-dts";
 
 const {
 	site: { siteUrl, base, title: siteTitle },
-	assets: { logoFileName, themeColor },
+	assets: { logoFileName, themeColor, faviconFileName },
 	project: { keywords, name: projectName },
 	author: { name: authorName },
 } = documentationConfig;
@@ -86,12 +86,20 @@ const graphLd: Graph = {
 };
 ---
 
+<!-- Security Headers -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+
 <!-- SEO Meta Tags -->
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="canonical" href={canonical} />
-<link rel="icon" type="image/x-icon" href={`${SITE_URL}/favicon.ico`} />
+<link
+	rel="icon"
+	type="image/x-icon"
+	href={`${SITE_URL}${base}/${faviconFileName}`}
+/>
 <meta name="author" content={authorName} />
 <meta name="theme-color" content={themeColor} />
 <meta name="keywords" content={keywordsString} />
