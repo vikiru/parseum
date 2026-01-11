@@ -1,4 +1,9 @@
+!src/content/docs/*.md
 *.md 
+.codanna
+.fastembed_cache
+.codannaignore
+
 
 # Dependencies
 node_modules/

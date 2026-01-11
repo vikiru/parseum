@@ -2,31 +2,48 @@ import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
 import starlightThemeRapidePlugin from 'starlight-theme-rapide';
-import { documentationConfig } from './docs.config.ts';
+import { documentationConfig } from './docs.config';
+
+import sitemap from '@astrojs/sitemap';
+
+const {
+  site: { title, description, siteUrl, base, documentationUrl, websiteLastModified },
+  assets: { faviconFileName, logoFileName },
+  project: { githubRepo, liveDemoUrl },
+} = documentationConfig;
 
 /** @type {import('astro/config').Config} */
 export default defineConfig({
-  base: `${documentationConfig.base}/`,
-  site: documentationConfig.siteUrl,
+  base: `${base}/`,
+  site: siteUrl,
   output: 'static',
   trailingSlash: 'never',
-  build: {
-    minify: true,
+  vite: {
+    resolve: {
+      alias: {
+        '@': '/src',
+      },
+    },
   },
   integrations: [
     starlight({
-      title: documentationConfig.title.replace(' Documentation', ''),
-      tagline: documentationConfig.description.replace('Documentation for ', ''),
-      favicon: documentationConfig.faviconFileName,
+      title,
+      tagline: description.replace('Documentation for ', ''),
+      favicon: faviconFileName,
       logo: {
-        src: `./public/${documentationConfig.logoFileName}`,
+        src: `./public/${logoFileName}`,
         replacesTitle: true,
       },
       social: [
         {
           icon: 'github',
           label: 'GitHub',
-          href: documentationConfig.githubRepo,
+          href: githubRepo,
+        },
+        {
+          icon: 'external',
+          label: 'Live Demo',
+          href: liveDemoUrl,
         },
       ],
       tableOfContents: {
@@ -89,5 +106,14 @@ export default defineConfig({
         starlightThemeRapidePlugin(),
       ],
     }),
+    sitemap({
+      serialize(item) {
+        item.lastmod = websiteLastModified.toISOString();
+        item.changefreq = 'monthly';
+        item.priority = item.url === documentationUrl ? 1 : 0.7;
+        return item;
+      },
+    }),
+    (await import('@playform/compress')).default(),
   ],
 });

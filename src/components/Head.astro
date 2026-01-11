@@ -2,107 +2,49 @@
 import DefaultHead from "@astrojs/starlight/components/Head.astro";
 import { getEntry } from "astro:content";
 import { documentationConfig } from "../../docs.config.ts";
-import type {
-	Person,
-	WebSite,
-	TechArticle,
-	SoftwareSourceCode,
-	Graph,
-} from "schema-dts";
+import {
+	personId,
+	softwareId,
+	homepageId,
+	webAppId,
+	personLd,
+	softwareLd,
+	homepageLd,
+	webAppLd,
+} from "../../schemas.ts";
+import type { TechArticle, Graph } from "schema-dts";
 
-const {
-	siteUrl,
-	base,
-	authorName,
-	githubAuthor,
-	linkedinProfile,
-	alumniUniversity,
-	jobTitle,
-	githubRepo,
-	liveDemoUrl,
-	projectVersion,
-	projectStartDate,
-	projectEndDate,
-	programmingLanguage,
-	license,
-	keywords,
-	themeColor,
-	logoFileName,
-	faviconFileName,
-} = documentationConfig;
-
-const SITE_URL = siteUrl;
-const logoPath = `${base}/${logoFileName}`;
+const SITE_URL = documentationConfig.site.siteUrl;
+const logoPath = `${documentationConfig.site.base}/${documentationConfig.assets.logoFileName}`;
 
 const pathname = Astro.url.pathname;
 const canonical = `${SITE_URL}${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
-const entryId = pathname === "/parseum" ? "index" : pathname.replace(base, "");
-const entry = await getEntry("docs", entryId); // e.g. "development/stack"
+const entryId =
+	pathname === "/parseum"
+		? "index"
+		: pathname.replace(documentationConfig.site.base, "");
+const entry = await getEntry("docs", entryId);
 
 const title = entry?.data.title;
 const description = entry?.data.description;
-
-const personLd: Person = {
-	"@type": "Person",
-	name: authorName,
-	jobTitle: jobTitle,
-	url: documentationConfig.portfolioWebsite,
-	sameAs: [githubAuthor, linkedinProfile],
-	alumniOf: {
-		"@type": "EducationalOrganization",
-		name: alumniUniversity,
-	},
-};
-
-const softwareLd: SoftwareSourceCode = {
-	"@type": "SoftwareSourceCode",
-	name: documentationConfig.title.replace(" Documentation", ""),
-	description: documentationConfig.description.replace(
-		"Documentation for ",
-		"",
-	),
-	url: liveDemoUrl,
-	codeRepository: githubRepo,
-	programmingLanguage: programmingLanguage,
-	license: license,
-	author: personLd,
-	keywords: keywords,
-	inLanguage: "en",
-	runtimePlatform: "Web",
-	version: projectVersion,
-	dateCreated: projectStartDate,
-	dateModified: projectEndDate,
-};
-
-const homepageLd: WebSite = {
-	"@type": "WebSite",
-	author: personLd,
-	license: license,
-	inLanguage: "en",
-	url: `${SITE_URL}${base}/`,
-	name: documentationConfig.title,
-	description: documentationConfig.description,
-	image: `${SITE_URL}${logoPath}`,
-	about: softwareLd,
-	sameAs: [githubRepo],
-};
 
 const pageLd: TechArticle = {
 	"@type": "TechArticle",
 	headline: title,
 	description: description,
-	author: personLd,
+	author: { "@id": personId },
+	about: { "@id": softwareId },
 	inLanguage: "en",
 	mainEntityOfPage: canonical,
 	url: canonical,
 };
 
 const isHome = pathname === "/parseum" || pathname === "/parseum/";
-const keywordsString = keywords.join(", ");
+const keywordsString = documentationConfig.project.keywords.join(", ");
 
 const graphData = isHome
-	? [personLd, softwareLd, homepageLd]
-	: [personLd, pageLd];
+	? [personLd, softwareLd, homepageLd, webAppLd]
+	: [personLd, pageLd, webAppLd];
 
 const graphLd: Graph = {
 	"@context": "https://schema.org",
@@ -114,8 +56,8 @@ const graphLd: Graph = {
 
 <!-- SEO Meta Tags -->
 <meta name="keywords" content={keywordsString} />
-<meta name="author" content={authorName} />
-<meta name="theme-color" content={themeColor} />
+<meta name="author" content={documentationConfig.author.name} />
+<meta name="theme-color" content={documentationConfig.assets.themeColor} />
 
 <!-- Twitter -->
 <meta name="twitter:title" content={title} />
